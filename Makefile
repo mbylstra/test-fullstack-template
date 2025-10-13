@@ -1,4 +1,4 @@
-.PHONY: flutter-run-web flutter-run flutter-analyze format run-widgetbook-web rebase-from-latest-template merge-latest-template help
+.PHONY: flutter-run-web flutter-run flutter-analyze format run-widgetbook-web adb-wsl rebase-from-latest-template merge-latest-template help
 
 .DEFAULT_GOAL := help
 
@@ -9,6 +9,7 @@ help:
 	@echo "  make flutter-analyze   - Run Flutter analyzer"
 	@echo "  make format            - Format Dart code"
 	@echo "  make run-widgetbook-web - Run Widgetbook in web mode on port 8081"
+	@echo "  make adb-wsl           - Connect to Android device from WSL"
 	@echo "  make rebase-from-latest-template - Rebase current branch on latest template changes"
 	@echo "  make merge-latest-template - Merge latest template changes into current branch"
 
