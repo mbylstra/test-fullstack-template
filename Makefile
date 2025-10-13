@@ -1,4 +1,4 @@
-.PHONY: flutter-run-web flutter-run flutter-analyze format run-widgetbook-web adb-wsl rebase-from-latest-template merge-latest-template help
+.PHONY: flutter-run-web flutter-run flutter-analyze format run-widgetbook-web adb-wsl rebase-from-latest-template merge-latest-template update-dependencies help
 
 .DEFAULT_GOAL := help
 
@@ -12,6 +12,7 @@ help:
 	@echo "  make adb-wsl           - Connect to Android device from WSL"
 	@echo "  make rebase-from-latest-template - Rebase current branch on latest template changes"
 	@echo "  make merge-latest-template - Merge latest template changes into current branch"
+	@echo "  make update-dependencies - Update all Dart dependencies"
 
 flutter-run-web:
 	flutter run -d web-server --web-port=8080
@@ -37,3 +38,6 @@ rebase-from-latest-template:
 
 merge-latest-template:
 	./scripts/merge-latest-template.sh
+
+update-dependencies:
+	dart pub upgrade
