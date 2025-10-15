@@ -1,4 +1,4 @@
-.PHONY: flutter-run-web flutter-run flutter-analyze format run-widgetbook-web adb-wsl rebase-from-latest-template merge-latest-template update-dependencies track-template-repo help
+.PHONY: flutter-run-web flutter-run flutter-analyze format run-widgetbook-web adb-wsl rebase-from-latest-template merge-latest-template update-dependencies track-template-repo customize-template help
 
 .DEFAULT_GOAL := help
 
@@ -14,6 +14,7 @@ help:
 	@echo "  make merge-latest-template - Merge latest template changes into current branch"
 	@echo "  make update-dependencies - Update all Dart dependencies"
 	@echo "  make track-template-repo - Set up git remote to track template repository"
+	@echo "  make customize-template - Customize template with your app name and Firebase project"
 
 flutter-run-web:
 	flutter run -d web-server --web-port=8080
@@ -45,3 +46,6 @@ update-dependencies:
 
 track-template-repo:
 	./scripts/track-template-repo.sh
+
+customize-template:
+	@scripts/customize-template.sh
