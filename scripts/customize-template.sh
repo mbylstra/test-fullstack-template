@@ -138,7 +138,4 @@ echo
 echo -e "${GREEN}✓ Template customization complete!${NC}"
 echo
 echo -e "${YELLOW}Next steps:${NC}"
-echo "  1. Update Firebase configuration by running: flutterfire configure"
-echo "  2. Review and update any additional app-specific configuration"
-echo "  3. Run: flutter pub get"
-echo
+echo "  Continue following the steps in the README.md
