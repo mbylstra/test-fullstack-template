@@ -138,4 +138,4 @@ echo
 echo -e "${GREEN}✓ Template customization complete!${NC}"
 echo
 echo -e "${YELLOW}Next steps:${NC}"
-echo "  Continue following the steps in the README.md
+echo "  Continue following the steps in the README.md"
