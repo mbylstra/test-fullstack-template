@@ -1,5 +1,28 @@
 # Flutter Template
 
+## How To use this template
+
+### Set up the repo
+
+Create a new project on github
+git clone git@github.com:mbylstra/flutter-template.git your-project-name
+git remote remove origin
+git remote add origin git@github.com:mbylstra/your-project-name.git
+git push
+
+### Replace project names
+
+cd scripts
+./customize-template.sh
+
+### Install packages
+
+(from root)
+flutter pub get
+cd widgetbook && flutter pub get
+
+### Prompt AI
+
 To spin off a new project, write this prompt with thinking on (replacing new_project_name and prefix with your desired names):
 
 This is currently a template. I want to spin off a new project named Grouseries. Create a new
