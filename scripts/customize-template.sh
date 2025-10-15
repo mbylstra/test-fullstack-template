@@ -65,6 +65,13 @@ fi
 echo
 echo -e "${GREEN}Updating files...${NC}"
 
+# Set sed suffix based on OS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    SED_SUFFIX=" ''"
+else
+    SED_SUFFIX=""
+fi
+
 # Function to replace in file (works on both macOS and Linux)
 replace_in_file() {
     local file=$1
@@ -89,6 +96,22 @@ replace_in_file "android/app/build.gradle.kts" "$OLD_ANDROID_PACKAGE" "$NEW_ANDR
 echo "  - android/app/src/main/AndroidManifest.xml"
 replace_in_file "android/app/src/main/AndroidManifest.xml" "$OLD_APP_NAME" "$NEW_APP_NAME"
 
+# Move MainActivity.kt to new package directory structure
+echo "  - Moving MainActivity.kt to new package directory"
+OLD_ANDROID_PATH="android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | tr '.' '/')"
+NEW_ANDROID_PATH="android/app/src/main/kotlin/$(echo $NEW_ANDROID_PACKAGE | tr '.' '/')"
+
+if [ -f "$OLD_ANDROID_PATH/MainActivity.kt" ]; then
+    mkdir -p "$NEW_ANDROID_PATH"
+    mv "$OLD_ANDROID_PATH/MainActivity.kt" "$NEW_ANDROID_PATH/MainActivity.kt"
+
+    # Update package declaration in MainActivity.kt
+    replace_in_file "$NEW_ANDROID_PATH/MainActivity.kt" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
+
+    # Remove old directory structure if empty
+    rm -rf "android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | cut -d'.' -f1)"
+fi
+
 # Update iOS files
 echo "  - ios/Runner/Info.plist"
 replace_in_file "ios/Runner/Info.plist" "$OLD_APP_NAME" "$NEW_APP_NAME"
@@ -100,6 +123,10 @@ replace_in_file "ios/Runner.xcodeproj/project.pbxproj" "$OLD_IOS_BUNDLE" "$NEW_I
 # Update Dart files
 echo "  - lib/screens/home_screen.dart"
 replace_in_file "lib/screens/home_screen.dart" "$OLD_APP_NAME" "$NEW_APP_NAME"
+
+# Update Dart import references
+echo "  - Updating Dart import references"
+find lib -type f -name "*.dart" -exec sed -i${SED_SUFFIX} "s|package:$OLD_PACKAGE_NAME|package:$NEW_PACKAGE_NAME|g" {} \;
 
 # Update README
 if [ -f "README.md" ]; then
