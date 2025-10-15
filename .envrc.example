@@ -1,0 +1,2 @@
+export CONTEXT7_API_KEY=add-your-key-here
+export ANDROID_IP_ADDRESS_FOR_WSL_ADB=192.168.0.100
