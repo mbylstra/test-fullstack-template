@@ -23,15 +23,38 @@ cd widgetbook && flutter pub get
 
 ### Prompt AI
 
-To spin off a new project, write this prompt with thinking on (replacing new_project_name and prefix with your desired names):
+### Step 1
 
-This is currently a template. I want to spin off a new project named Grouseries. Create a new
-firebase project with firebase mcp named {new_project_name} (or {prefix}-{new_project_name} grouseries if that name is not available). Update any files with the new name and remove any referencies to the flutter-template firebase project.
+```
+This is repo that was cloned from a Template. The existing config files are from the template. We must create new Firebase entities for our new project.
 
-Make sure to set up Firebase Authentication for Web, Android and iOS. Tell me if I need to configure anything manually from the firebase website. I will tell you once I have done that and then you can continue configuring things. Make sure to fetch the latest google-services.json using firebase mcp.
+Create a new firebase project using firebase mcp named {{project_name}} (or {{prefix}}-{{project_name}} if that name is not available).
 
-Create a new firestore database using Firebase MCP.
+Make sure to set up Firebase Authentication for Web, Android and iOS. This project will use Google Authentication (sign in with Google button) Tell me if I need to configure anything manually from the firebase website. I will tell you once I have done that and then you can continue configuring things. Make sure to fetch the latest google-services.json or any other files that need replacing using firebase mcp.
 
-AI is not exactly thorough so after that you will probably need to prompt:
+Create a new firestore database using Firebase MCP. Do not change the existing firestore.rules and firestore.index.json from the template.
+```
 
-There are still lots of references to the flutter template. Do a proper search.
+AI should give you a link to a web page where you need to "get started" with authentication, then enable Google authentication, then click enable button and enter your support email.
+
+### Step 2
+
+Then give this prompt:
+
+```
+I got this message after enabling Google auth:
+
+Download the latest configuration file
+Enabling Google sign-in for the first time creates new OAuth clients, which are automatically added to the config files for your apps.
+Download and replace the configuration files in your apps so that you can use Google sign-in for your apps.
+After replacing your config files, finish setting up Google sign-in for Android and Apple apps.
+
+For the android app: Provide SHA-1 fingerprint, and then download and replace the configuration file in your app. Go to Project settings > Your apps section.
+For the iOS app: download GoogleService-Info.plist
+
+Do this stuff using firebase mcp.
+```
+
+### Test
+
+Run the app with `make flutter-run`
