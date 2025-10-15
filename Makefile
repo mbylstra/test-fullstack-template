@@ -1,4 +1,4 @@
-.PHONY: flutter-run-web flutter-run flutter-analyze format run-widgetbook-web adb-wsl rebase-from-latest-template merge-latest-template update-dependencies help
+.PHONY: flutter-run-web flutter-run flutter-analyze format run-widgetbook-web adb-wsl rebase-from-latest-template merge-latest-template update-dependencies track-template-repo help
 
 .DEFAULT_GOAL := help
 
@@ -13,6 +13,7 @@ help:
 	@echo "  make rebase-from-latest-template - Rebase current branch on latest template changes"
 	@echo "  make merge-latest-template - Merge latest template changes into current branch"
 	@echo "  make update-dependencies - Update all Dart dependencies"
+	@echo "  make track-template-repo - Set up git remote to track template repository"
 
 flutter-run-web:
 	flutter run -d web-server --web-port=8080
@@ -41,3 +42,6 @@ merge-latest-template:
 
 update-dependencies:
 	dart pub upgrade
+
+track-template-repo:
+	./scripts/track-template-repo.sh
