@@ -11,6 +11,12 @@ git remote remove origin
 git remote add origin git@github.com:mbylstra/your-project-name.git
 git push
 
+### Enable tracking of the template repo
+
+This is so we can merge/rebase changes to the template in the future
+
+`make track-template-repo`
+
 ### Replace project names
 
 cd scripts
