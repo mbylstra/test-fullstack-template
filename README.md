@@ -27,6 +27,11 @@ This is so we can merge/rebase changes to the template in the future
 flutter pub get
 cd widgetbook && flutter pub get
 
+### Set up Claude
+
+copy .envrc.example to .envrc and fill in the values
+start claude (shouldn't be any warnings)
+
 ### Prompt AI
 
 ### Step 1
