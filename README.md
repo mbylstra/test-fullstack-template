@@ -19,8 +19,7 @@ This is so we can merge/rebase changes to the template in the future
 
 ### Replace project names
 
-cd scripts
-./customize-template.sh
+`make customize-template`
 
 ### Install packages
 
