@@ -85,81 +85,113 @@ replace_in_file() {
     fi
 }
 
-# Update pubspec.yaml
+# Function to replace in all files in a directory (excluding binary files)
+replace_in_directory() {
+    local dir=$1
+    local old=$2
+    local new=$3
+
+    if [ ! -d "$dir" ]; then
+        return
+    fi
+
+    # Only process text files, exclude binary files
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        find "$dir" -type f ! -name "*.png" ! -name "*.jpg" ! -name "*.jpeg" ! -name "*.ico" ! -name "*.jar" ! -name "*.keystore" ! -name "*.ttf" ! -name "*.otf" -exec grep -Il . {} \; 2>/dev/null | while read -r file; do
+            sed -i '' "s|$old|$new|g" "$file" 2>/dev/null || true
+        done
+    else
+        find "$dir" -type f ! -name "*.png" ! -name "*.jpg" ! -name "*.jpeg" ! -name "*.ico" ! -name "*.jar" ! -name "*.keystore" ! -name "*.ttf" ! -name "*.otf" -exec grep -Il . {} \; 2>/dev/null | while read -r file; do
+            sed -i "s|$old|$new|g" "$file" 2>/dev/null || true
+        done
+    fi
+}
+
+# Update root level files
 echo "  - pubspec.yaml"
 replace_in_file "pubspec.yaml" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 
-# Update Android files
-echo "  - android/app/build.gradle.kts"
-replace_in_file "android/app/build.gradle.kts" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
-
-echo "  - android/app/src/main/AndroidManifest.xml"
-replace_in_file "android/app/src/main/AndroidManifest.xml" "$OLD_APP_NAME" "$NEW_APP_NAME"
-
-# Move MainActivity.kt to new package directory structure
-echo "  - Moving MainActivity.kt to new package directory"
-OLD_ANDROID_PATH="android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | tr '.' '/')"
-NEW_ANDROID_PATH="android/app/src/main/kotlin/$(echo $NEW_ANDROID_PACKAGE | tr '.' '/')"
-
-if [ -f "$OLD_ANDROID_PATH/MainActivity.kt" ]; then
-    mkdir -p "$NEW_ANDROID_PATH"
-    mv "$OLD_ANDROID_PATH/MainActivity.kt" "$NEW_ANDROID_PATH/MainActivity.kt"
-
-    # Update package declaration in MainActivity.kt
-    replace_in_file "$NEW_ANDROID_PATH/MainActivity.kt" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
-
-    # Remove old directory structure if empty
-    rm -rf "android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | cut -d'.' -f1)"
-fi
-
-# Update iOS files
-echo "  - ios/Runner/Info.plist"
-replace_in_file "ios/Runner/Info.plist" "$OLD_APP_NAME" "$NEW_APP_NAME"
-replace_in_file "ios/Runner/Info.plist" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
-
-echo "  - ios/Runner.xcodeproj/project.pbxproj"
-replace_in_file "ios/Runner.xcodeproj/project.pbxproj" "$OLD_IOS_BUNDLE" "$NEW_IOS_BUNDLE"
-
-# Update Dart files
-echo "  - lib/screens/home_screen.dart"
-replace_in_file "lib/screens/home_screen.dart" "$OLD_APP_NAME" "$NEW_APP_NAME"
-
-# Update Dart import references
-echo "  - Updating Dart import references"
-find lib -type f -name "*.dart" -exec sed -i${SED_SUFFIX} "s|package:$OLD_PACKAGE_NAME|package:$NEW_PACKAGE_NAME|g" {} \;
-
-# Update README
 if [ -f "README.md" ]; then
     echo "  - README.md"
     replace_in_file "README.md" "$OLD_APP_NAME" "$NEW_APP_NAME"
 fi
 
-# Update Firebase files
 echo "  - firebase.json"
 replace_in_file "firebase.json" "$OLD_FIREBASE_PROJECT" "$NEW_FIREBASE_PROJECT"
 
-echo "  - lib/firebase_options.dart"
-replace_in_file "lib/firebase_options.dart" "$OLD_FIREBASE_PROJECT" "$NEW_FIREBASE_PROJECT"
+# Update Android directory
+echo "  - android/"
+replace_in_directory "android" "$OLD_APP_NAME" "$NEW_APP_NAME"
+replace_in_directory "android" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "android" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
+replace_in_directory "android" "$OLD_FIREBASE_PROJECT" "$NEW_FIREBASE_PROJECT"
 
-if [ -f "android/app/google-services.json" ]; then
-    echo "  - android/app/google-services.json"
-    replace_in_file "android/app/google-services.json" "$OLD_FIREBASE_PROJECT" "$NEW_FIREBASE_PROJECT"
-    replace_in_file "android/app/google-services.json" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
+# Move MainActivity.kt to new package directory structure
+OLD_ANDROID_PATH="android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | tr '.' '/')"
+NEW_ANDROID_PATH="android/app/src/main/kotlin/$(echo $NEW_ANDROID_PACKAGE | tr '.' '/')"
+
+if [ -f "$OLD_ANDROID_PATH/MainActivity.kt" ]; then
+    echo "  - Moving MainActivity.kt to new package directory"
+    mkdir -p "$NEW_ANDROID_PATH"
+    mv "$OLD_ANDROID_PATH/MainActivity.kt" "$NEW_ANDROID_PATH/MainActivity.kt"
+    # Remove old directory structure if empty
+    rm -rf "android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | cut -d'.' -f1)"
 fi
 
-echo
-echo -e "${GREEN}Committing changes...${NC}"
+# Update iOS directory
+echo "  - ios/"
+replace_in_directory "ios" "$OLD_APP_NAME" "$NEW_APP_NAME"
+replace_in_directory "ios" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "ios" "$OLD_IOS_BUNDLE" "$NEW_IOS_BUNDLE"
 
-# Add all changes
-git add -A
+# Update macOS directory
+echo "  - macos/"
+replace_in_directory "macos" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "macos" "$OLD_IOS_BUNDLE" "$NEW_IOS_BUNDLE"
+replace_in_directory "macos" "$OLD_PACKAGE_NAME.app" "$NEW_PACKAGE_NAME.app"
 
-# Create commit
-git commit -m "chore: Customize template for '$NEW_APP_NAME'
+# Update Linux directory
+echo "  - linux/"
+replace_in_directory "linux" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "linux" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
 
-- Update app name to '$NEW_APP_NAME'
-- Update package name to '$NEW_PACKAGE_NAME'
-- Update bundle IDs: Android ($NEW_ANDROID_PACKAGE), iOS ($NEW_IOS_BUNDLE)
-- Update Firebase project to '$NEW_FIREBASE_PROJECT'"
+# Update Windows directory
+echo "  - windows/"
+replace_in_directory "windows" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "windows" "$OLD_PACKAGE_NAME.exe" "$NEW_PACKAGE_NAME.exe"
+
+# Update Web directory
+echo "  - web/"
+replace_in_directory "web" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+
+# Update lib directory
+echo "  - lib/"
+replace_in_directory "lib" "$OLD_APP_NAME" "$NEW_APP_NAME"
+replace_in_directory "lib" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
+replace_in_directory "lib" "$OLD_FIREBASE_PROJECT" "$NEW_FIREBASE_PROJECT"
+
+# Update test directory
+echo "  - test/"
+replace_in_directory "test" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
+
+# Update widgetbook directory
+echo "  - widgetbook/"
+replace_in_directory "widgetbook" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "widgetbook" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
+
+# echo
+# echo -e "${GREEN}Committing changes...${NC}"
+
+# # Add all changes
+# git add -A
+
+# # Create commit
+# git commit -m "chore: Customize template for '$NEW_APP_NAME'
+
+# - Update app name to '$NEW_APP_NAME'
+# - Update package name to '$NEW_PACKAGE_NAME'
+# - Update bundle IDs: Android ($NEW_ANDROID_PACKAGE), iOS ($NEW_IOS_BUNDLE)
+# - Update Firebase project to '$NEW_FIREBASE_PROJECT'"
 
 echo
 echo -e "${GREEN}✓ Template customization complete!${NC}"
