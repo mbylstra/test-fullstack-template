@@ -189,19 +189,19 @@ echo "  - widgetbook/"
 replace_in_directory "widgetbook" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 replace_in_directory "widgetbook" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
 
-# echo
-# echo -e "${GREEN}Committing changes...${NC}"
+echo
+echo -e "${GREEN}Committing changes...${NC}"
 
-# # Add all changes
-# git add -A
+# Add all changes
+git add -A
 
-# # Create commit
-# git commit -m "chore: Customize template for '$NEW_APP_NAME'
+# Create commit
+git commit -m "chore: Customize template for '$NEW_APP_NAME'
 
-# - Update app name to '$NEW_APP_NAME'
-# - Update package name to '$NEW_PACKAGE_NAME'
-# - Update bundle IDs: Android ($NEW_ANDROID_PACKAGE), iOS ($NEW_IOS_BUNDLE)
-# - Update Firebase project to '$NEW_FIREBASE_PROJECT'"
+- Update app name to '$NEW_APP_NAME'
+- Update package name to '$NEW_PACKAGE_NAME'
+- Update bundle IDs: Android ($NEW_ANDROID_PACKAGE), iOS ($NEW_IOS_BUNDLE)
+- Update Firebase project to '$NEW_FIREBASE_PROJECT'"
 
 echo
 echo -e "${GREEN}✓ Template customization complete!${NC}"
