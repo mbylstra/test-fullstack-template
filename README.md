@@ -1,4 +1,4 @@
-# Flutter Template
+# Meal Chooser
 
 ## How To use this template
 
@@ -50,13 +50,15 @@ start claude (shouldn't be any warnings)
 ```
 This is repo that was cloned from a Template. The existing config files are from the template. We must create new Firebase entities for our new project.
 
-Create a new firebase project using firebase mcp named {{project_name}} (or {{prefix}}-{{project_name}} if that name is not available).
+Create a new firebase project using firebase mcp named mb-meal-chooser
 
 Make sure to set up Firebase Authentication for Web, Android and iOS. This project will use Google Authentication (sign in with Google button) Tell me if I need to configure anything manually from the firebase website. I will tell you once I have done that and then you can continue configuring things. Make sure to fetch the latest google-services.json or any other files that need replacing using firebase mcp.
 
-Create a new firestore database using Firebase MCP. Do not change the existing firestore.rules and firestore.indexes.json from the template. Firebase init will overwrite the firestore.rules and firestore.indexes.json so you will need to check them out with git.
+Create a new firestore database using Firebase MCP. Do not change the existing firestore.rules and firestore.index.json from the templateThis is repo that was cloned from a Template. The existing config files are from the template. We must create new Firebase entities for our new project.
 
-Deploy the firestore.rules and firestore.indexes.json
+Make sure to set up Firebase Authentication for Web, Android and iOS. This project will use Google Authentication (sign in with Google button) Tell me if I need to configure anything manually from the firebase website. I will tell you once I have done that and then you can continue configuring things. Make sure to fetch the latest google-services.json or any other files that need replacing using firebase mcp.
+
+Create a new firestore database using Firebase MCP. Do not change the existing firestore.rules and firestore.index.json from the template.
 ```
 
 AI should give you a link to a web page where you need to "get started" with authentication, then enable Google authentication, then click enable button and enter your support email.
@@ -81,4 +83,7 @@ Do this stuff using firebase mcp.
 
 ### Test
 
-Run the app with `make flutter-run`
+- Run the app with `make flutter-run`
+- Sign in
+- Go to the notes screen. Try adding a note. Check in the firebase web console whether it's correctly adding the note to the correct firebase project. You might see "index is currently being built" in which case you'll need to wait a little while first.
+
