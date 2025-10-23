@@ -26,8 +26,17 @@ This is so we can merge/rebase changes to the template in the future
 ### Install packages
 
 (from root)
+```
 flutter pub get
 cd widgetbook && flutter pub get
+```
+
+### Quick test
+Connect phone with cable
+```
+make flutter-run
+```
+Just check if it compiles and runs
 
 ### Set up Claude
 
