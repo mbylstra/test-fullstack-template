@@ -134,8 +134,18 @@ if [ -f "$OLD_ANDROID_PATH/MainActivity.kt" ]; then
     echo "  - Moving MainActivity.kt to new package directory"
     mkdir -p "$NEW_ANDROID_PATH"
     mv "$OLD_ANDROID_PATH/MainActivity.kt" "$NEW_ANDROID_PATH/MainActivity.kt"
-    # Remove old directory structure if empty
-    rm -rf "android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | cut -d'.' -f1)"
+    # Remove old directory structure if empty, working from deepest to shallowest
+    # Stop if directory is not empty or if it's part of the new path
+    CURRENT_DIR="$OLD_ANDROID_PATH"
+    while [ "$CURRENT_DIR" != "android/app/src/main/kotlin" ] && [ -d "$CURRENT_DIR" ]; do
+        # Only remove if directory is empty and not part of new path
+        if [ -z "$(ls -A "$CURRENT_DIR")" ] && [[ "$NEW_ANDROID_PATH" != "$CURRENT_DIR"* ]]; then
+            rmdir "$CURRENT_DIR"
+            CURRENT_DIR="$(dirname "$CURRENT_DIR")"
+        else
+            break
+        fi
+    done
 fi
 
 # Update iOS directory
