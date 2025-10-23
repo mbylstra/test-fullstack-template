@@ -54,7 +54,9 @@ Create a new firebase project using firebase mcp named {{project_name}} (or {{pr
 
 Make sure to set up Firebase Authentication for Web, Android and iOS. This project will use Google Authentication (sign in with Google button) Tell me if I need to configure anything manually from the firebase website. I will tell you once I have done that and then you can continue configuring things. Make sure to fetch the latest google-services.json or any other files that need replacing using firebase mcp.
 
-Create a new firestore database using Firebase MCP. Do not change the existing firestore.rules and firestore.index.json from the template.
+Create a new firestore database using Firebase MCP. Do not change the existing firestore.rules and firestore.indexes.json from the template. Firebase init will overwrite the firestore.rules and firestore.indexes.json so you will need to check them out with git.
+
+Deploy the firestore.rules and firestore.indexes.json
 ```
 
 AI should give you a link to a web page where you need to "get started" with authentication, then enable Google authentication, then click enable button and enter your support email.
