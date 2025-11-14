@@ -1,4 +1,4 @@
-# Meal Chooser
+# Flutter Template 
 
 ## How To use this template
 
