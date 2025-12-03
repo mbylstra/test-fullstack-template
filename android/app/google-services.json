@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "762525351037",
-    "project_id": "mb-flutter-template",
-    "storage_bucket": "mb-flutter-template.firebasestorage.app"
+    "project_id": "simple-flutter-template",
+    "storage_bucket": "simple-flutter-template.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:762525351037:android:303ded1597c4a7be310514",
         "android_client_info": {
-          "package_name": "com.example.flutter_template"
+          "package_name": "com.example.simple_flutter_template"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "762525351037-cagnp9f3gslqm6b3t9thj4knrptchiob.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.flutter_template",
+            "package_name": "com.example.simple_flutter_template",
             "certificate_hash": "d2e42f90ee9f64f88a64ae52291e2f20e8798bce"
           }
         },

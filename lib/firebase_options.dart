@@ -44,25 +44,25 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyAZztg4l_y_G2t64akrR-9kSWW5VV66gDI',
     appId: '1:762525351037:web:e70494ed54c992a8310514',
     messagingSenderId: '762525351037',
-    projectId: 'mb-flutter-template',
-    authDomain: 'mb-flutter-template.firebaseapp.com',
-    storageBucket: 'mb-flutter-template.firebasestorage.app',
+    projectId: 'simple-flutter-template',
+    authDomain: 'simple-flutter-template.firebaseapp.com',
+    storageBucket: 'simple-flutter-template.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAA0DAlN_cW36UzE_uDVdVrpvFlUOPIlz8',
     appId: '1:762525351037:android:303ded1597c4a7be310514',
     messagingSenderId: '762525351037',
-    projectId: 'mb-flutter-template',
-    storageBucket: 'mb-flutter-template.firebasestorage.app',
+    projectId: 'simple-flutter-template',
+    storageBucket: 'simple-flutter-template.firebasestorage.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAoZFgjuRqjGwpbrK25jtigr3EOx6og3Vg',
     appId: '1:762525351037:ios:62a5a5d7ddf363d5310514',
     messagingSenderId: '762525351037',
-    projectId: 'mb-flutter-template',
-    storageBucket: 'mb-flutter-template.firebasestorage.app',
+    projectId: 'simple-flutter-template',
+    storageBucket: 'simple-flutter-template.firebasestorage.app',
     androidClientId:
         '762525351037-7mfrdt0ik62t17ut2q50os0oqkueljf8.apps.googleusercontent.com',
     iosClientId:
@@ -74,8 +74,8 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyAoZFgjuRqjGwpbrK25jtigr3EOx6og3Vg',
     appId: '1:762525351037:ios:62a5a5d7ddf363d5310514',
     messagingSenderId: '762525351037',
-    projectId: 'mb-flutter-template',
-    storageBucket: 'mb-flutter-template.firebasestorage.app',
+    projectId: 'simple-flutter-template',
+    storageBucket: 'simple-flutter-template.firebasestorage.app',
     androidClientId:
         '762525351037-7mfrdt0ik62t17ut2q50os0oqkueljf8.apps.googleusercontent.com',
     iosClientId:
@@ -87,8 +87,8 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyAZztg4l_y_G2t64akrR-9kSWW5VV66gDI',
     appId: '1:762525351037:web:276dcf9b25fa9aca310514',
     messagingSenderId: '762525351037',
-    projectId: 'mb-flutter-template',
-    authDomain: 'mb-flutter-template.firebaseapp.com',
-    storageBucket: 'mb-flutter-template.firebasestorage.app',
+    projectId: 'simple-flutter-template',
+    authDomain: 'simple-flutter-template.firebaseapp.com',
+    storageBucket: 'simple-flutter-template.firebasestorage.app',
   );
 }

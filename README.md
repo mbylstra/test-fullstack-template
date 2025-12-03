@@ -1,4 +1,4 @@
-# Flutter Template 
+# simple-flutter-template 
 
 ## How To use this template
 
