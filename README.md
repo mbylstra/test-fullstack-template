@@ -1,12 +1,13 @@
-# simple-flutter-template 
+# simple-flutter-template
 
 ## How To use this template
 
 ### Set up the repo
 
 Create a new project on github
+
 ```
-git clone git@github.com:mbylstra/flutter-template.git your-project-name
+git clone git@github.com:mbylstra/simple-flutter-template.git your-project-name
 cd your-project-name
 git remote remove origin
 git remote add origin git@github.com:mbylstra/your-project-name.git
@@ -26,16 +27,20 @@ This is so we can merge/rebase changes to the template in the future
 ### Install packages
 
 (from root)
+
 ```
 flutter pub get
 cd widgetbook && flutter pub get
 ```
 
 ### Quick test
+
 Connect phone with cable
+
 ```
 make flutter-run
 ```
+
 Just check if it compiles and runs
 
 ### Set up Claude
@@ -86,4 +91,3 @@ Do this stuff using firebase mcp.
 - Run the app with `make flutter-run`
 - Sign in
 - Go to the notes screen. Try adding a note. Check in the firebase web console whether it's correctly adding the note to the correct firebase project. You might see "index is currently being built" in which case you'll need to wait a little while first.
-
