@@ -7,11 +7,10 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Default values (current template values)
-OLD_APP_NAME="Flutter Template"
-OLD_PACKAGE_NAME="flutter_template"
-OLD_ANDROID_PACKAGE="com.example.flutter_template"
-OLD_IOS_BUNDLE="com.example.flutterTemplate"
-OLD_FIREBASE_PROJECT="mb-flutter-template"
+OLD_APP_NAME="Simple Flutter Template"
+OLD_PACKAGE_NAME="simple_flutter_template"
+OLD_ANDROID_PACKAGE="com.example.simple_flutter_template"
+OLD_IOS_BUNDLE="com.example.simpleFlutterTemplate"
 
 echo -e "${GREEN}Flutter Template Customization Script${NC}"
 echo "========================================"
@@ -21,13 +20,6 @@ echo
 read -p "Enter app name (e.g., 'My Awesome App'): " NEW_APP_NAME
 if [ -z "$NEW_APP_NAME" ]; then
     echo -e "${RED}Error: App name cannot be empty${NC}"
-    exit 1
-fi
-
-# Prompt for new Firebase project name
-read -p "Enter Firebase project name (e.g., 'my-awesome-app'): " NEW_FIREBASE_PROJECT
-if [ -z "$NEW_FIREBASE_PROJECT" ]; then
-    echo -e "${RED}Error: Firebase project name cannot be empty${NC}"
     exit 1
 fi
 
@@ -53,7 +45,6 @@ echo "  App Name: $NEW_APP_NAME"
 echo "  Package Name: $NEW_PACKAGE_NAME"
 echo "  Android Package: $NEW_ANDROID_PACKAGE"
 echo "  iOS Bundle: $NEW_IOS_BUNDLE"
-echo "  Firebase Project: $NEW_FIREBASE_PROJECT"
 echo
 read -p "Proceed with these values? (y/n): " -n 1 -r
 echo
@@ -116,15 +107,11 @@ if [ -f "README.md" ]; then
     replace_in_file "README.md" "$OLD_APP_NAME" "$NEW_APP_NAME"
 fi
 
-echo "  - firebase.json"
-replace_in_file "firebase.json" "$OLD_FIREBASE_PROJECT" "$NEW_FIREBASE_PROJECT"
-
 # Update Android directory
 echo "  - android/"
 replace_in_directory "android" "$OLD_APP_NAME" "$NEW_APP_NAME"
 replace_in_directory "android" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 replace_in_directory "android" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
-replace_in_directory "android" "$OLD_FIREBASE_PROJECT" "$NEW_FIREBASE_PROJECT"
 
 # Move MainActivity.kt to new package directory structure
 OLD_ANDROID_PATH="android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | tr '.' '/')"
@@ -178,7 +165,6 @@ replace_in_directory "web" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 echo "  - lib/"
 replace_in_directory "lib" "$OLD_APP_NAME" "$NEW_APP_NAME"
 replace_in_directory "lib" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
-replace_in_directory "lib" "$OLD_FIREBASE_PROJECT" "$NEW_FIREBASE_PROJECT"
 
 # Update test directory
 echo "  - test/"
@@ -200,8 +186,7 @@ git commit -m "chore: Customize template for '$NEW_APP_NAME'
 
 - Update app name to '$NEW_APP_NAME'
 - Update package name to '$NEW_PACKAGE_NAME'
-- Update bundle IDs: Android ($NEW_ANDROID_PACKAGE), iOS ($NEW_IOS_BUNDLE)
-- Update Firebase project to '$NEW_FIREBASE_PROJECT'"
+- Update bundle IDs: Android ($NEW_ANDROID_PACKAGE), iOS ($NEW_IOS_BUNDLE)"
 
 echo
 echo -e "${GREEN}✓ Template customization complete!${NC}"
