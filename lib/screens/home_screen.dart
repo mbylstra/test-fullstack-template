@@ -38,8 +38,6 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _buildFeatureItem(Icons.apple, 'iOS Support'),
           _buildFeatureItem(Icons.android, 'Android Support'),
-          _buildFeatureItem(Icons.security, 'Firebase Authentication'),
-          _buildFeatureItem(Icons.storage, 'Firebase Database'),
           _buildFeatureItem(Icons.book, 'Widgetbook'),
         ],
       ),

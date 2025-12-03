@@ -21,10 +21,8 @@ import 'package:flutter/material.dart'
 import '../screens/colors_screen.dart' show ColorsScreen;
 import '../screens/home_screen.dart' show HomeScreen;
 import '../screens/icons_screen.dart' show IconsScreen;
-import '../screens/notes_screen.dart' show NotesScreen;
 import '../screens/profile_screen.dart' show ProfileScreen;
 import '../screens/settings_screen.dart' show SettingsScreen;
-import '../services/auth_service.dart' show AuthService;
 
 class Layout extends StatefulWidget {
   const Layout({super.key, required this.title});
@@ -40,14 +38,12 @@ class _LayoutState extends State<Layout> {
 
   static final List<Widget> _pages = <Widget>[
     const HomeScreen(),
-    const NotesScreen(),
     const IconsScreen(),
     const ColorsScreen(),
   ];
 
   static const List<String> _titles = <String>[
     'Home',
-    'Notes',
     'Icons',
     'Colors',
   ];
@@ -66,7 +62,7 @@ class _LayoutState extends State<Layout> {
         title: Text(_titles[_selectedIndex]),
         actions: [
           PopupMenuButton<String>(
-            onSelected: (value) async {
+            onSelected: (value) {
               if (value == 'settings') {
                 Navigator.push(
                   context,
@@ -79,8 +75,6 @@ class _LayoutState extends State<Layout> {
                   MaterialPageRoute(
                       builder: (context) => const ProfileScreen()),
                 );
-              } else if (value == 'signout') {
-                await AuthService().signOut();
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -92,10 +86,6 @@ class _LayoutState extends State<Layout> {
                 value: 'profile',
                 child: Text('Profile'),
               ),
-              const PopupMenuItem<String>(
-                value: 'signout',
-                child: Text('Sign Out'),
-              ),
             ],
           ),
         ],
@@ -104,7 +94,6 @@ class _LayoutState extends State<Layout> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.note), label: 'Notes'),
           BottomNavigationBarItem(icon: Icon(Icons.apps), label: 'Icons'),
           BottomNavigationBarItem(icon: Icon(Icons.palette), label: 'Colors'),
         ],
