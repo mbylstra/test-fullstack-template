@@ -2,6 +2,7 @@
 
 ## Flutter/Dart Development
 
+- ALWAYS run `make flutter-analyze` after making any code changes
 - Never manually edit pubspec.yaml to add dependencies
 - Always use `dart pub add` or `flutter pub add` to install packages
 
