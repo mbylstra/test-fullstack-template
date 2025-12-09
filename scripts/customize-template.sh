@@ -10,8 +10,11 @@ NC='\033[0m' # No Color
 OLD_APP_NAME="Simple Flutter Template"
 OLD_PACKAGE_NAME="simple_flutter_template"
 OLD_KEBAB_NAME="simple-flutter-template"
+OLD_CAMEL_CASE="simpleFlutterTemplate"
 OLD_ANDROID_PACKAGE="com.example.simple_flutter_template"
 OLD_IOS_BUNDLE="com.example.simpleFlutterTemplate"
+# Fix pre-existing duplication bug in template
+OLD_DOUBLED_PACKAGE="simple_flutter_template"
 
 echo -e "${GREEN}Flutter Template Customization Script${NC}"
 echo "========================================"
@@ -37,11 +40,12 @@ NEW_PACKAGE_NAME=$(echo "$NEW_APP_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '_
 # Derive kebab-case name (lowercase, spaces to hyphens)
 NEW_KEBAB_NAME=$(echo "$NEW_APP_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr '_' '-')
 
+# Derive camelCase (for bundle IDs)
+NEW_CAMEL_CASE=$(echo "$NEW_PACKAGE_NAME" | perl -pe 's/(_)([a-z])/uc($2)/ge; s/^([a-z])/lc($1)/e')
+
 # Derive Android and iOS bundle identifiers
 NEW_ANDROID_PACKAGE="${ORG_DOMAIN}.${NEW_PACKAGE_NAME}"
-# iOS uses camelCase for the last segment
-IOS_SUFFIX=$(echo "$NEW_PACKAGE_NAME" | perl -pe 's/(_)([a-z])/uc($2)/ge; s/^([a-z])/lc($1)/e')
-NEW_IOS_BUNDLE="${ORG_DOMAIN}.${IOS_SUFFIX}"
+NEW_IOS_BUNDLE="${ORG_DOMAIN}.${NEW_CAMEL_CASE}"
 
 echo
 echo -e "${YELLOW}Confirmation:${NC}"
