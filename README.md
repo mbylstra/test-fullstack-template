@@ -1,4 +1,4 @@
-# simple-flutter-template
+# tododoo
 
 ## How To use this template
 
@@ -7,7 +7,7 @@
 Create a new project on github
 
 ```
-git clone git@github.com:mbylstra/simple-flutter-template.git your-project-name
+git clone git@github.com:mbylstra/tododoo.git your-project-name
 cd your-project-name
 git remote remove origin
 git remote add origin git@github.com:mbylstra/your-project-name.git

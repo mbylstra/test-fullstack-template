@@ -1,4 +1,4 @@
-package com.example.simple_flutter_template
+package com.example.tododoo
 
 import io.flutter.embedding.android.FlutterActivity
 

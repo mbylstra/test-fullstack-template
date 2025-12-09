@@ -1,6 +1,6 @@
 {
-    "name": "simple_flutter_template",
-    "short_name": "simple_flutter_template",
+    "name": "tododoo",
+    "short_name": "tododoo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
