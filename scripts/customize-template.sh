@@ -9,6 +9,7 @@ NC='\033[0m' # No Color
 # Default values (current template values)
 OLD_APP_NAME="Simple Flutter Template"
 OLD_PACKAGE_NAME="simple_flutter_template"
+OLD_KEBAB_NAME="simple-flutter-template"
 OLD_ANDROID_PACKAGE="com.example.simple_flutter_template"
 OLD_IOS_BUNDLE="com.example.simpleFlutterTemplate"
 
@@ -33,6 +34,9 @@ fi
 # Derive package name from app name (lowercase, spaces to underscores)
 NEW_PACKAGE_NAME=$(echo "$NEW_APP_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr '-' '_')
 
+# Derive kebab-case name (lowercase, spaces to hyphens)
+NEW_KEBAB_NAME=$(echo "$NEW_APP_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr '_' '-')
+
 # Derive Android and iOS bundle identifiers
 NEW_ANDROID_PACKAGE="${ORG_DOMAIN}.${NEW_PACKAGE_NAME}"
 # iOS uses camelCase for the last segment
@@ -43,6 +47,7 @@ echo
 echo -e "${YELLOW}Confirmation:${NC}"
 echo "  App Name: $NEW_APP_NAME"
 echo "  Package Name: $NEW_PACKAGE_NAME"
+echo "  Kebab Name: $NEW_KEBAB_NAME"
 echo "  Android Package: $NEW_ANDROID_PACKAGE"
 echo "  iOS Bundle: $NEW_IOS_BUNDLE"
 echo
@@ -105,12 +110,14 @@ replace_in_file "pubspec.yaml" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 if [ -f "README.md" ]; then
     echo "  - README.md"
     replace_in_file "README.md" "$OLD_APP_NAME" "$NEW_APP_NAME"
+    replace_in_file "README.md" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 fi
 
 # Update Android directory
 echo "  - android/"
 replace_in_directory "android" "$OLD_APP_NAME" "$NEW_APP_NAME"
 replace_in_directory "android" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "android" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 replace_in_directory "android" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
 
 # Move MainActivity.kt to new package directory structure
@@ -139,41 +146,53 @@ fi
 echo "  - ios/"
 replace_in_directory "ios" "$OLD_APP_NAME" "$NEW_APP_NAME"
 replace_in_directory "ios" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "ios" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 replace_in_directory "ios" "$OLD_IOS_BUNDLE" "$NEW_IOS_BUNDLE"
 
 # Update macOS directory
 echo "  - macos/"
 replace_in_directory "macos" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "macos" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 replace_in_directory "macos" "$OLD_IOS_BUNDLE" "$NEW_IOS_BUNDLE"
 replace_in_directory "macos" "$OLD_PACKAGE_NAME.app" "$NEW_PACKAGE_NAME.app"
 
 # Update Linux directory
 echo "  - linux/"
 replace_in_directory "linux" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "linux" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 replace_in_directory "linux" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
 
 # Update Windows directory
 echo "  - windows/"
 replace_in_directory "windows" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "windows" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 replace_in_directory "windows" "$OLD_PACKAGE_NAME.exe" "$NEW_PACKAGE_NAME.exe"
 
 # Update Web directory
 echo "  - web/"
 replace_in_directory "web" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "web" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 
 # Update lib directory
 echo "  - lib/"
 replace_in_directory "lib" "$OLD_APP_NAME" "$NEW_APP_NAME"
+replace_in_directory "lib" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 replace_in_directory "lib" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
 
 # Update test directory
 echo "  - test/"
+replace_in_directory "test" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 replace_in_directory "test" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
 
 # Update widgetbook directory
 echo "  - widgetbook/"
 replace_in_directory "widgetbook" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
+replace_in_directory "widgetbook" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 replace_in_directory "widgetbook" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
+
+# Update scripts directory
+echo "  - scripts/"
+replace_in_directory "scripts" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 
 echo
 echo -e "${GREEN}Committing changes...${NC}"
