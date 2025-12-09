@@ -13,8 +13,6 @@ OLD_KEBAB_NAME="simple-flutter-template"
 OLD_CAMEL_CASE="simpleFlutterTemplate"
 OLD_ANDROID_PACKAGE="com.example.simple_flutter_template"
 OLD_IOS_BUNDLE="com.example.simpleFlutterTemplate"
-# Fix pre-existing duplication bug in template
-OLD_DOUBLED_PACKAGE="simple_flutter_template"
 
 echo -e "${GREEN}Flutter Template Customization Script${NC}"
 echo "========================================"
@@ -151,12 +149,14 @@ echo "  - ios/"
 replace_in_directory "ios" "$OLD_APP_NAME" "$NEW_APP_NAME"
 replace_in_directory "ios" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 replace_in_directory "ios" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
+replace_in_directory "ios" "$OLD_CAMEL_CASE" "$NEW_CAMEL_CASE"
 replace_in_directory "ios" "$OLD_IOS_BUNDLE" "$NEW_IOS_BUNDLE"
 
 # Update macOS directory
 echo "  - macos/"
 replace_in_directory "macos" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 replace_in_directory "macos" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
+replace_in_directory "macos" "$OLD_CAMEL_CASE" "$NEW_CAMEL_CASE"
 replace_in_directory "macos" "$OLD_IOS_BUNDLE" "$NEW_IOS_BUNDLE"
 replace_in_directory "macos" "$OLD_PACKAGE_NAME.app" "$NEW_PACKAGE_NAME.app"
 
