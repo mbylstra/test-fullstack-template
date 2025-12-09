@@ -1,10 +1,11 @@
-.PHONY: flutter-run-web flutter-run flutter-analyze format run-widgetbook-web adb-wsl rebase-from-latest-template merge-latest-template update-dependencies track-template-repo customize-template help
+.PHONY: flutter-run-web flutter-run-chrome flutter-run flutter-analyze format run-widgetbook-web adb-wsl rebase-from-latest-template merge-latest-template update-dependencies track-template-repo customize-template help
 
 .DEFAULT_GOAL := help
 
 help:
 	@echo "Available commands:"
 	@echo "  make flutter-run-web   - Run Flutter in web mode on port 8080"
+	@echo "  make flutter-run-chrome - Run Flutter in Chrome browser on port 8080"
 	@echo "  make flutter-run       - Run Flutter"
 	@echo "  make flutter-analyze   - Run Flutter analyzer"
 	@echo "  make format            - Format Dart code"
@@ -18,6 +19,9 @@ help:
 
 flutter-run-web:
 	flutter run -d web-server --web-port=8080
+
+flutter-run-chrome:
+	flutter run -d chrome --web-port=8080
 
 flutter-run:
 	flutter run
