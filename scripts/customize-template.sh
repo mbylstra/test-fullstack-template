@@ -190,10 +190,6 @@ replace_in_directory "widgetbook" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 replace_in_directory "widgetbook" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
 replace_in_directory "widgetbook" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
 
-# Update scripts directory
-echo "  - scripts/"
-replace_in_directory "scripts" "$OLD_KEBAB_NAME" "$NEW_KEBAB_NAME"
-
 echo
 echo -e "${GREEN}Committing changes...${NC}"
 
