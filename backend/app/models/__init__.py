@@ -6,5 +6,6 @@ class Base(DeclarativeBase):
 
 
 from .user import User
+from .note import Note
 
-__all__ = ['Base', 'User']
+__all__ = ['Base', 'User', 'Note']
