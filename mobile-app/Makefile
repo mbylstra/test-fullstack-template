@@ -15,7 +15,7 @@ help:
 	@echo "  make merge-latest-template - Merge latest template changes into current branch"
 	@echo "  make update-dependencies - Update all Dart dependencies"
 	@echo "  make track-template-repo - Set up git remote to track template repository"
-	@echo "  make customize-template - Customize template with your app name and Firebase project"
+	@echo "  make customize-template - Customize template with your app name"
 
 flutter-run-web:
 	flutter run -d web-server --web-port=8080
