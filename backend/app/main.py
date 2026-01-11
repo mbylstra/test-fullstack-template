@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router as api_router
 
 app = FastAPI(
-    title="Tododoo API",
-    description="REST API for Tododoo application",
+    title="Fllstck Tmplt API",
+    description="REST API for Fllstck Tmplt application",
     version="0.1.0",
     debug=True  # Enable debug mode to show stack traces in development
 )
@@ -31,7 +31,7 @@ app.include_router(api_router)
 @app.get("/")
 async def root():
     """Root endpoint - health check"""
-    return {"message": "Welcome to Tododoo API", "status": "healthy"}
+    return {"message": "Welcome to Fllstck Tmplt API", "status": "healthy"}
 
 
 @app.get("/health")

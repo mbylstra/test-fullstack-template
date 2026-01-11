@@ -3,7 +3,7 @@
 set -e  # Exit on error
 
 echo "=========================================="
-echo "Tododoo Backend Deployment"
+echo "Fllstck Tmplt Backend Deployment"
 echo "=========================================="
 echo ""
 

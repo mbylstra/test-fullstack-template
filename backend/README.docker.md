@@ -1,6 +1,6 @@
 # Docker Setup Guide
 
-This guide covers running the Tododoo backend with Docker.
+This guide covers running the Fllstck Tmplt backend with Docker.
 
 ## Overview
 
@@ -16,24 +16,27 @@ The backend includes Docker configuration for both development and production:
 ### Quick Start
 
 1. **Ensure you have a .env file** (copy from .env.example if needed):
-   ```bash
-   cp .env.example .env
-   ```
+
+    ```bash
+    cp .env.example .env
+    ```
 
 2. **Build and start all services**:
-   ```bash
-   make docker-up
-   ```
+
+    ```bash
+    make docker-up
+    ```
 
 3. **Run database migrations**:
-   ```bash
-   make docker-migrate
-   ```
+
+    ```bash
+    make docker-migrate
+    ```
 
 4. **View logs**:
-   ```bash
-   make docker-logs
-   ```
+    ```bash
+    make docker-logs
+    ```
 
 The API will be available at `http://localhost:8000`
 
@@ -49,11 +52,13 @@ The API will be available at `http://localhost:8000`
 ### Database Access
 
 Connect to PostgreSQL:
+
 ```bash
 make db-shell
 ```
 
 Or from outside Docker:
+
 ```bash
 psql -h localhost -U todouser -d tododoo
 ```
@@ -64,27 +69,30 @@ psql -h localhost -U todouser -d tododoo
 
 1. **Set environment variables**:
    Create a `.env` file with production values:
-   ```bash
-   DB_USER=todouser
-   DB_PASSWORD=<strong-password>
-   DB_NAME=tododoo
-   SECRET_KEY=<strong-secret-key>
-   ACCESS_TOKEN_EXPIRE_MINUTES=30
-   ```
+
+    ```bash
+    DB_USER=todouser
+    DB_PASSWORD=<strong-password>
+    DB_NAME=tododoo
+    SECRET_KEY=<strong-secret-key>
+    ACCESS_TOKEN_EXPIRE_MINUTES=30
+    ```
 
 2. **Deploy**:
-   ```bash
-   docker compose -f docker-compose.prod.yml up -d
-   ```
+
+    ```bash
+    docker compose -f docker-compose.prod.yml up -d
+    ```
 
 3. **Run migrations**:
-   ```bash
-   docker compose -f docker-compose.prod.yml exec backend uv run alembic upgrade head
-   ```
+    ```bash
+    docker compose -f docker-compose.prod.yml exec backend uv run alembic upgrade head
+    ```
 
 ### Production Features
 
 The production Dockerfile includes:
+
 - Multi-stage build for smaller image size
 - Non-root user for security
 - 4 Uvicorn workers for better performance
@@ -94,6 +102,7 @@ The production Dockerfile includes:
 ## Architecture
 
 ### Development Stack
+
 ```
 ┌─────────────────────────────────────────┐
 │  Docker Compose Network                 │
@@ -117,8 +126,8 @@ The production Dockerfile includes:
 - **PostgreSQL container**: PostgreSQL 16 Alpine
 - **Network**: Shared bridge network for inter-container communication
 - **Volumes**:
-  - Code mounted for hot reload in dev
-  - PostgreSQL data persisted in named volume
+    - Code mounted for hot reload in dev
+    - PostgreSQL data persisted in named volume
 
 ### Environment Variables
 
@@ -127,37 +136,44 @@ The backend container automatically sets `DB_HOST=postgres` to connect to the da
 ## Troubleshooting
 
 ### Backend won't start
+
 - Check logs: `make docker-logs`
 - Ensure database is healthy: `docker compose ps`
 - Verify .env file exists and has correct values
 
 ### Database connection errors
+
 - Ensure PostgreSQL container is running: `docker compose ps postgres`
 - Check database health: `docker compose logs postgres`
 - Verify DB_HOST is set to `postgres` (not `localhost`)
 
 ### Port already in use
+
 - Stop conflicting services on ports 8000 or 5432
 - Or change ports in docker-compose.yml
 
 ### Migrations fail
+
 - Ensure database is running and healthy
 - Check if migrations were already applied: `make docker-shell` then `uv run alembic current`
 
 ## Common Tasks
 
 ### View all running containers
+
 ```bash
 docker compose ps
 ```
 
 ### Rebuild after dependency changes
+
 ```bash
 make docker-build
 make docker-restart
 ```
 
 ### Reset database completely
+
 ```bash
 make docker-down
 docker volume rm backend_postgres_data
@@ -166,6 +182,7 @@ make docker-migrate
 ```
 
 ### Access Python REPL in container
+
 ```bash
 make docker-shell
 uv run python

@@ -1,4 +1,4 @@
-"""Basic sanity check tests for the Tododoo API."""
+"""Basic sanity check tests for the Fllstck Tmplt API."""
 
 from fastapi.testclient import TestClient
 
@@ -26,5 +26,5 @@ def test_health_check_endpoint():
 
 def test_app_metadata():
     """Test that the app has correct metadata."""
-    assert app.title == "Tododoo API"
+    assert app.title == "Fllstck Tmplt API"
     assert app.version == "0.1.0"

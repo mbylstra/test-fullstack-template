@@ -37,7 +37,7 @@ function TopNav({ generateBreakUpTodos }: TopNavProps) {
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 <div className="flex items-center gap-8">
                     <Link to="/" className="font-bold text-xl">
-                        Tododoo
+                        Fllstck Tmplt
                     </Link>
                     <div className="flex items-center gap-6">
                         <Link

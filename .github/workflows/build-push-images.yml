@@ -5,10 +5,10 @@ on:
     branches:
       - main
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
     paths:
-      - 'backend/**'
-      - '.github/workflows/build-push-images.yml'
+      - "backend/**"
+      - ".github/workflows/build-push-images.yml"
   workflow_dispatch:
 
 env:
@@ -56,9 +56,9 @@ jobs:
             # Tag with git SHA
             type=sha
           labels: |
-            org.opencontainers.image.title=Tododoo Backend
-            org.opencontainers.image.description=FastAPI backend for Tododoo application
-            org.opencontainers.image.vendor=Tododoo
+            org.opencontainers.image.title=Fllstck Tmplt Backend
+            org.opencontainers.image.description=FastAPI backend for Fllstck Tmplt application
+            org.opencontainers.image.vendor=Fllstck Tmplt
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
