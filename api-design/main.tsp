@@ -722,6 +722,74 @@ model UpdateFunRequest {
 }
 
 /**
+ * A note item
+ */
+model Note {
+  /**
+   * Unique identifier for the note
+   */
+  id: string;
+
+  /**
+   * The note title
+   */
+  title: string;
+
+  /**
+   * The note content
+   */
+  content: string;
+
+  /**
+   * ID of the user who owns this note
+   */
+  @encodedName("application/json", "user_id")
+  userId: string;
+
+  /**
+   * When the note was created
+   */
+  @encodedName("application/json", "date_created")
+  dateCreated: utcDateTime;
+
+  /**
+   * When the note was last updated
+   */
+  @encodedName("application/json", "date_updated")
+  dateUpdated: utcDateTime;
+}
+
+/**
+ * Request body for creating a new note
+ */
+model CreateNoteRequest {
+  /**
+   * The note title
+   */
+  title: string;
+
+  /**
+   * The note content
+   */
+  content: string;
+}
+
+/**
+ * Request body for updating a note
+ */
+model UpdateNoteRequest {
+  /**
+   * The note title
+   */
+  title?: string;
+
+  /**
+   * The note content
+   */
+  content?: string;
+}
+
+/**
  * Error response
  */
 model ErrorResponse {
@@ -1206,6 +1274,91 @@ interface Funs {
         @statusCode statusCode: 500;
         @body error: ErrorResponse;
       };
+}
+
+@route("/api/note")
+@tag("Note")
+interface Note {
+  /**
+   * List all notes for the authenticated user
+   */
+  @get
+  list(): {
+    @statusCode statusCode: 200;
+    @body notes: Note[];
+  } | {
+    @statusCode statusCode: 500;
+    @body error: ErrorResponse;
+  };
+
+  /**
+   * Create a new note
+   */
+  @post
+  create(@body note: CreateNoteRequest): {
+    @statusCode statusCode: 201;
+    @body note: Note;
+  } | {
+    @statusCode statusCode: 400;
+    @body error: ErrorResponse;
+  } | {
+    @statusCode statusCode: 500;
+    @body error: ErrorResponse;
+  };
+
+  /**
+   * Get a specific note by ID
+   */
+  @get
+  @route("/{id}")
+  get(@path id: string): {
+    @statusCode statusCode: 200;
+    @body note: Note;
+  } | {
+    @statusCode statusCode: 404;
+    @body error: ErrorResponse;
+  } | {
+    @statusCode statusCode: 500;
+    @body error: ErrorResponse;
+  };
+
+  /**
+   * Update a note
+   */
+  @patch(#{ implicitOptionality: true })
+  @route("/{id}")
+  update(@path id: string, @body note: UpdateNoteRequest):
+    | {
+        @statusCode statusCode: 200;
+        @body note: Note;
+      }
+    | {
+        @statusCode statusCode: 400;
+        @body error: ErrorResponse;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: ErrorResponse;
+      }
+    | {
+        @statusCode statusCode: 500;
+        @body error: ErrorResponse;
+      };
+
+  /**
+   * Delete a note
+   */
+  @delete
+  @route("/{id}")
+  delete(@path id: string): {
+    @statusCode statusCode: 204;
+  } | {
+    @statusCode statusCode: 404;
+    @body error: ErrorResponse;
+  } | {
+    @statusCode statusCode: 500;
+    @body error: ErrorResponse;
+  };
 }
 
 @route("/api/weighted-random-todos")
