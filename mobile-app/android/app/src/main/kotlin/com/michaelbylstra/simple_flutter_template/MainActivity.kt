@@ -1,4 +1,4 @@
-package com.example.tododoo
+package com.example.fllstck-tmplt
 
 import io.flutter.embedding.android.FlutterActivity
 
