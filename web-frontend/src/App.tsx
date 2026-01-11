@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { Toaster } from '@/components/shadcn/sonner';
 import { TooltipProvider } from '@/components/shadcn/tooltip';
 import TopNav from '@/components/TopNav';
+import Home from '@/pages/Home';
 import Notes from '@/pages/Notes';
 import Login from '@/pages/Login';
 import { useBackendHealth } from '@/hooks/useBackendHealth';
@@ -87,8 +88,9 @@ function AppContent() {
         <BrowserRouter>
             <div className="h-screen flex flex-col overflow-hidden">
                 <TopNav />
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 overflow-auto">
                     <Routes>
+                        <Route path="/" element={<Home />} />
                         <Route path="/notes" element={<Notes />} />
                     </Routes>
                 </div>
