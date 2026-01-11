@@ -1,6 +1,6 @@
 {
-  "name": "fllstck_tmplt",
-  "short_name": "fllstck_tmplt",
+  "name": "cool_app",
+  "short_name": "cool_app",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",

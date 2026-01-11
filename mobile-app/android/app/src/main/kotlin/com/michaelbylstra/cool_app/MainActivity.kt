@@ -1,4 +1,4 @@
-package com.example.fllstck_tmplt
+package com.example.cool_app
 
 import io.flutter.embedding.android.FlutterActivity
 
