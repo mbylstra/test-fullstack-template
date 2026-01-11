@@ -60,7 +60,7 @@ make db-shell
 Or from outside Docker:
 
 ```bash
-psql -h localhost -U todouser -d fllstck-tmplt
+psql -h localhost -U fllstck-tmplt-user -d fllstck-tmplt
 ```
 
 ## Production Deployment
@@ -71,7 +71,7 @@ psql -h localhost -U todouser -d fllstck-tmplt
    Create a `.env` file with production values:
 
     ```bash
-    DB_USER=todouser
+    DB_USER=fllstck-tmplt-user
     DB_PASSWORD=<strong-password>
     DB_NAME=fllstck-tmplt
     SECRET_KEY=<strong-secret-key>

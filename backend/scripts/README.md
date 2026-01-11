@@ -132,7 +132,7 @@ Database Migration to Production
 ⚠️  WARNING: This REPLACES all production data with local data!
 
 Configuration:
-  Local DB:  todouser@localhost:5432/fllstck-tmplt
+  Local DB:  fllstck-tmplt-user@localhost:5432/fllstck-tmplt
   Server:    root@157.230.xx.xx
   Directory: ~/fllstck-tmplt/backend
 
@@ -245,7 +245,7 @@ sudo apt-get install docker.io
 This is a warning, not an error. The migration may have succeeded even if the health check fails. Manually verify by visiting:
 
 ```
-https://todo-backend.michaelbylstra.com/health
+https://fllstck-tmplt--backend.michaelbylstra.com/health
 ```
 
 ### Best Practices
@@ -317,7 +317,7 @@ If you need more control, you can perform the migration manually:
 
 ```bash
 # 1. Dump local database (using Docker)
-docker exec fllstck-tmplt-postgres pg_dump -U todouser fllstck-tmplt \
+docker exec fllstck-tmplt-postgres pg_dump -U fllstck-tmplt-user fllstck-tmplt \
   --clean --if-exists --no-owner --no-privileges > local_dump.sql
 
 # 2. Backup production (on server)

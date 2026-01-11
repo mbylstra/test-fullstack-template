@@ -38,8 +38,8 @@ fi
 if [ -f "${BACKEND_DIR}/.env.local" ]; then
     source "${BACKEND_DIR}/.env.local"
 fi
-LOCAL_DB_USER="${DB_USER:-todouser}"
-LOCAL_DB_PASSWORD="${DB_PASSWORD:-todopass}"
+LOCAL_DB_USER="${DB_USER:-fllstck-tmplt-user}"
+LOCAL_DB_PASSWORD="${DB_PASSWORD:-fllstck-tmplt-pass}"
 LOCAL_DB_NAME="${DB_NAME:-fllstck-tmplt}"
 LOCAL_DB_HOST="${DB_HOST:-localhost}"
 LOCAL_DB_PORT="${DB_PORT:-5432}"
@@ -226,7 +226,7 @@ verify_local() {
 
     echo -e "${BLUE}Checking database connection...${NC}"
     cd "$BACKEND_DIR"
-    if docker compose exec -T postgres psql -U "$LOCAL_DB_USER" -d "$LOCAL_DB_NAME" -c "SELECT COUNT(*) FROM todos;" > /dev/null 2>&1; then
+    if docker compose exec -T postgres psql -U "$LOCAL_DB_USER" -d "$LOCAL_DB_NAME" -c "SELECT COUNT(*) FROM fllstck-tmplt-s;" > /dev/null 2>&1; then
         print_success "Local database is accessible"
     else
         print_warning "Could not verify local database"

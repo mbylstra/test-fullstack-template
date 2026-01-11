@@ -38,8 +38,8 @@ fi
 if [ -f "${BACKEND_DIR}/.env.local" ]; then
     source "${BACKEND_DIR}/.env.local"
 fi
-LOCAL_DB_USER="${DB_USER:-todouser}"
-LOCAL_DB_PASSWORD="${DB_PASSWORD:-todopass}"
+LOCAL_DB_USER="${DB_USER:-fllstck-tmplt-user}"
+LOCAL_DB_PASSWORD="${DB_PASSWORD:-fllstck-tmplt-pass}"
 LOCAL_DB_NAME="${DB_NAME:-fllstck-tmplt}"
 LOCAL_DB_HOST="${DB_HOST:-localhost}"
 LOCAL_DB_PORT="${DB_PORT:-5432}"
@@ -208,7 +208,7 @@ verify_production() {
     print_header "Verifying Production"
 
     echo -e "${BLUE}Testing production API health endpoint...${NC}"
-    if curl -sf https://todo-backend.michaelbylstra.com/health > /dev/null; then
+    if curl -sf https://fllstck-tmplt--backend.michaelbylstra.com/health > /dev/null; then
         print_success "Production API is responding"
     else
         print_warning "Could not verify production API health"

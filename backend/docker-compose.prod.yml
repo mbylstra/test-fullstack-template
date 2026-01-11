@@ -30,8 +30,8 @@ services:
       DB_PORT: 5432
       SECRET_KEY: ${SECRET_KEY}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
-      API_DOMAIN: ${API_DOMAIN:-todo-backend.michaelbylstra.com}
-      CORS_ORIGINS: ${CORS_ORIGINS:-https://todo.michaelbylstra.com}
+      API_DOMAIN: ${API_DOMAIN:-fllstck-tmplt-backend.michaelbylstra.com}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://fllstck-tmplt.michaelbylstra.com}
     depends_on:
       postgres:
         condition: service_healthy
@@ -43,7 +43,7 @@ services:
       # Enable Traefik
       - "traefik.enable=true"
       # Router configuration
-      - "traefik.http.routers.fllstck-tmplt-backend.rule=Host(`todo-backend.michaelbylstra.com`)"
+      - "traefik.http.routers.fllstck-tmplt-backend.rule=Host(`fllstck-tmplt-backend.michaelbylstra.com`)"
       - "traefik.http.routers.fllstck-tmplt-backend.entrypoints=websecure"
       - "traefik.http.routers.fllstck-tmplt-backend.tls.certresolver=letsencrypt"
       # Service configuration

@@ -97,7 +97,7 @@ Update with production values:
 
 ```env
 # Database Configuration
-DB_USER=todouser
+DB_USER=fllstck-tmplt-user
 DB_PASSWORD=<strong-password>
 DB_NAME=fllstck-tmplt
 DB_HOST=postgres
@@ -108,8 +108,8 @@ SECRET_KEY=<generate-with-command-below>
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 # Production Deployment (Traefik)
-API_DOMAIN=todo-backend.michaelbylstra.com
-CORS_ORIGINS=https://todo-frontend.michaelbylstra.com,https://fllstck-tmplt.netlify.app
+API_DOMAIN=fllstck-tmplt-backend.michaelbylstra.com
+CORS_ORIGINS=https://fllstck-tmplt-frontend.michaelbylstra.com,https://fllstck-tmplt.netlify.app
 ```
 
 **Generate SECRET_KEY:**
@@ -155,7 +155,7 @@ docker ps
 docker compose -f docker-compose.prod.yml logs -f
 
 # Test the API
-curl https://todo-backend.michaelbylstra.com/health
+curl https://fllstck-tmplt-backend.michaelbylstra.com/health
 ```
 
 Expected response:
