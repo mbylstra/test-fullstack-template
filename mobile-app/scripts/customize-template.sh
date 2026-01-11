@@ -9,7 +9,7 @@ NC='\033[0m' # No Color
 # Default values (current template values)
 OLD_APP_NAME="Full Stack Template"
 OLD_PACKAGE_NAME="fllstck_tmplt"
-OLD_KEBAB_NAME="fllstck-tmplt"
+OLD_KEBAB_NAME="fllstck_tmplt"
 OLD_CAMEL_CASE="fllstckTmplt"
 OLD_ANDROID_PACKAGE="com.example.fllstck_tmplt"
 OLD_IOS_BUNDLE="com.example.fllstckTmplt"

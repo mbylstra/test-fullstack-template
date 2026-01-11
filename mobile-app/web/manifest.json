@@ -1,6 +1,6 @@
 {
-  "name": "fllstck-tmplt",
-  "short_name": "fllstck-tmplt",
+  "name": "fllstck_tmplt",
+  "short_name": "fllstck_tmplt",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",
