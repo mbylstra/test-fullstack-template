@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: tododoo-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-todouser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-todopass}
+      POSTGRES_DB: ${DB_NAME:-tododoo}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USER:-todouser} -d ${DB_NAME:-tododoo}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tododoo-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tododoo-backend
+    ports:
+      - "8000:8000"
+    environment:
+      DB_USER: ${DB_USER:-todouser}
+      DB_PASSWORD: ${DB_PASSWORD:-todopass}
+      DB_NAME: ${DB_NAME:-tododoo}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-this-in-production}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
+    volumes:
+      - ./:/app
+      - /app/.venv
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - tododoo-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  tododoo-network:
+    driver: bridge

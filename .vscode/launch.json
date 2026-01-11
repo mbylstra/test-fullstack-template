@@ -1,0 +1,54 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FastAPI: Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "app.main:app",
+                "--reload",
+                "--host", "0.0.0.0",
+                "--port", "8000"
+            ],
+            "cwd": "${workspaceFolder}/backend",
+            "env": {
+                "DATABASE_URL": "postgresql://tododoo:tododoo@localhost:5432/tododoo",
+                "SECRET_KEY": "dev-secret-key-change-in-production"
+            },
+            "justMyCode": false,
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "FastAPI: Debug (Current File)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}/backend",
+            "env": {
+                "DATABASE_URL": "postgresql://tododoo:tododoo@localhost:5432/tododoo",
+                "SECRET_KEY": "dev-secret-key-change-in-production"
+            },
+            "justMyCode": false,
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Pytest: Debug Current Test",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "${file}",
+                "-v"
+            ],
+            "cwd": "${workspaceFolder}/backend",
+            "env": {
+                "DATABASE_URL": "postgresql://tododoo:tododoo@localhost:5432/tododoo",
+                "SECRET_KEY": "dev-secret-key-change-in-production"
+            },
+            "justMyCode": false,
+            "console": "integratedTerminal"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+.claude
+.envrc
+.envrc.example
+.git
+.mcp.json
+CLAUDE.md
+Makefile
+mobile-app
+README.md
+scripts

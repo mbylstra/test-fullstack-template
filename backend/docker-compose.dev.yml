@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: tododoo-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-todouser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-todopass}
+      POSTGRES_DB: ${DB_NAME:-tododoo}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USER:-todouser} -d ${DB_NAME:-tododoo}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tododoo-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  tododoo-network:
+    driver: bridge

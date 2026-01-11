@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": "."
+    },
+    {
+      "name": "Backend",
+      "path": "./backend"
+    },
+    {
+      "name": "Web Frontend",
+      "path": "./web-frontend"
+    },
+    {
+      "path": "../cloud-vm-hosting"
+    }
+  ]
+}

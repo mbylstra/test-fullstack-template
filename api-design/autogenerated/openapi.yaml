@@ -1,0 +1,1631 @@
+openapi: 3.0.0
+info:
+  title: TodoDoo API
+  version: 0.0.0
+tags:
+  - name: Todos
+  - name: Habits
+  - name: Funs
+  - name: Authentication
+paths:
+  /api/auth/login:
+    post:
+      operationId: Auth_login
+      description: Login with email and password
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      security:
+        - {}
+  /api/auth/logout:
+    post:
+      operationId: Auth_logout
+      description: Logout user by clearing refresh token cookie
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Authentication
+      security:
+        - {}
+  /api/auth/me:
+    get:
+      operationId: Auth_getCurrentUser
+      description: Get current authenticated user
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Authentication
+  /api/auth/refresh:
+    post:
+      operationId: Auth_refreshToken
+      description: Refresh access token using refresh token from httpOnly cookie
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Authentication
+      security:
+        - {}
+  /api/auth/register:
+    post:
+      operationId: Auth_register
+      description: Register a new user
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+      security:
+        - {}
+  /api/funs:
+    get:
+      operationId: Funs_list
+      description: List all funs for the authenticated user
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fun'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Funs
+    post:
+      operationId: Funs_create
+      description: Create a new fun
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fun'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Funs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFunRequest'
+  /api/funs/{id}:
+    get:
+      operationId: Funs_get
+      description: Get a specific fun by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fun'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Funs
+    patch:
+      operationId: Funs_update
+      description: Update a fun
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fun'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Funs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFunRequest'
+    delete:
+      operationId: Funs_delete
+      description: Delete a fun
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Funs
+  /api/funs/{id}/reorder:
+    post:
+      operationId: Funs_reorder
+      description: Reorder a fun
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fun'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Funs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReorderTodoRequest'
+  /api/habits:
+    get:
+      operationId: Habits_list
+      description: List all habits for the authenticated user
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Habit'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Habits
+    post:
+      operationId: Habits_create
+      description: Create a new habit
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Habit'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Habits
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHabitRequest'
+  /api/habits/{id}:
+    get:
+      operationId: Habits_get
+      description: Get a specific habit by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Habit'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Habits
+    patch:
+      operationId: Habits_update
+      description: Update a habit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Habit'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Habits
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHabitRequest'
+    delete:
+      operationId: Habits_delete
+      description: Delete a habit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Habits
+  /api/habits/{id}/log:
+    post:
+      operationId: Habits_logHabit
+      description: Log a habit completion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Habits
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogHabitRequest'
+  /api/habits/{id}/log/{date}:
+    delete:
+      operationId: Habits_deleteHabitLog
+      description: Delete a habit log entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Habits
+  /api/todos:
+    get:
+      operationId: Todos_list
+      description: List all todos for the authenticated user
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+    post:
+      operationId: Todos_create
+      description: Create a new todo
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoRequest'
+  /api/todos/generate-break-up-todos:
+    post:
+      operationId: Todos_generateBreakUpTodos
+      description: Generate break-up todos across all todos
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+  /api/todos/{id}:
+    get:
+      operationId: Todos_get
+      description: Get a specific todo by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+    patch:
+      operationId: Todos_update
+      description: Update a todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTodoRequest'
+    delete:
+      operationId: Todos_delete
+      description: Delete a todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+  /api/todos/{id}/reorder:
+    post:
+      operationId: Todos_reorder
+      description: Reorder a todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReorderTodoRequest'
+  /api/todos/{id}/start-timer:
+    post:
+      operationId: Todos_startTimer
+      description: Start a timer for a todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+  /api/todos/{id}/stop-timer:
+    post:
+      operationId: Todos_stopTimer
+      description: Stop a timer for a todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+  /api/todos/{id}/time-elapsed-override:
+    post:
+      operationId: Todos_overrideElapsedTime
+      description: Override elapsed time for a todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OverrideElapsedTimeRequest'
+  /api/weighted-random-funs:
+    get:
+      operationId: WeightedRandomFuns_list
+      description: Get weighted random funs for the authenticated user
+      parameters:
+        - name: 'n'
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+          explode: false
+        - name: excludeIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fun'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Funs
+  /api/weighted-random-todos:
+    get:
+      operationId: WeightedRandomTodos_list
+      description: Get weighted random todos for the authenticated user
+      parameters:
+        - name: 'n'
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+          explode: false
+        - name: maxTimeEstimate
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/TimeEstimate'
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Todos
+security:
+  - BearerAuth: []
+components:
+  schemas:
+    Annoyingness:
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 4
+      description: Annoyingness level (0-4)
+    CreateFunRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          description: The fun title
+        position:
+          allOf:
+            - $ref: '#/components/schemas/TodoPosition'
+          description: Where to insert the fun (defaults to top)
+      description: Request body for creating a new fun
+    CreateHabitRequest:
+      type: object
+      required:
+        - task
+        - frequency_kind
+      properties:
+        task:
+          type: string
+          description: The habit description
+        details:
+          type: object
+          description: Additional details stored as JSON
+        status:
+          allOf:
+            - $ref: '#/components/schemas/TodoStatus'
+          description: Current status of the habit (defaults to 'todo')
+        position:
+          allOf:
+            - $ref: '#/components/schemas/TodoPosition'
+          description: Where to insert the habit (defaults to top)
+        importance:
+          allOf:
+            - $ref: '#/components/schemas/Importance'
+          description: Importance level (0-5)
+        time_estimate:
+          allOf:
+            - $ref: '#/components/schemas/TimeEstimate'
+          description: Estimated time to complete
+        annoyingness:
+          allOf:
+            - $ref: '#/components/schemas/Annoyingness'
+          description: Annoyingness level (0-4)
+        committed:
+          type: boolean
+          description: Whether the habit is committed (defaults to false)
+        atomic:
+          type: boolean
+          description: Whether the habit is atomic (defaults to false)
+        infinitely_divisible:
+          type: boolean
+          description: Whether the habit is infinitely divisible (defaults to false)
+        frequency_kind:
+          allOf:
+            - $ref: '#/components/schemas/FrequencyKind'
+          description: |-
+            Frequency kind for recurring habits
+            Constraints:
+            - If 'specific-days-per-week', daysOfWeek must be provided
+            - If 'multiple-days-per-week', numTimesPerWeek must be provided
+            - If 'specific-day-of-month', dayOfMonth must be provided
+            - If 'multiple-days-per-month', numTimesPerMonth must be provided
+        days_of_week:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: |-
+            Days of the week (0-6, where 0=Monday, 6=Sunday)
+            Required when frequencyKind is 'specific-days-per-week'
+        num_times_per_week:
+          type: integer
+          format: int32
+          description: |-
+            Number of times per week
+            Required when frequencyKind is 'multiple-days-per-week'
+        num_times_per_month:
+          type: integer
+          format: int32
+          description: |-
+            Number of times per month
+            Required when frequencyKind is 'multiple-days-per-month'
+        day_of_month:
+          type: integer
+          format: int32
+          description: |-
+            Day of the month (1-31)
+            Required when frequencyKind is 'specific-day-of-month'
+      description: Request body for creating a new habit
+    CreateTodoRequest:
+      type: object
+      required:
+        - task
+      properties:
+        task:
+          type: string
+          description: The task description
+        details:
+          type: object
+          description: Additional details stored as JSON
+        status:
+          allOf:
+            - $ref: '#/components/schemas/TodoStatus'
+          description: Current status of the todo (defaults to 'todo')
+        position:
+          allOf:
+            - $ref: '#/components/schemas/TodoPosition'
+          description: Where to insert the todo (defaults to top)
+        importance:
+          allOf:
+            - $ref: '#/components/schemas/Importance'
+          description: Importance level (0-5)
+        time_estimate:
+          allOf:
+            - $ref: '#/components/schemas/TimeEstimate'
+          description: Estimated time to complete
+        annoyingness:
+          allOf:
+            - $ref: '#/components/schemas/Annoyingness'
+          description: Annoyingness level (0-4)
+        committed:
+          type: boolean
+          description: Whether the todo is committed (defaults to false)
+        atomic:
+          type: boolean
+          description: Whether the todo is atomic (defaults to false)
+        infinitely_divisible:
+          type: boolean
+          description: Whether the todo is infinitely divisible (defaults to false)
+      description: Request body for creating a new todo
+    ErrorResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+      description: Error response
+    FrequencyKind:
+      type: string
+      enum:
+        - specific-days-per-week
+        - multiple-days-per-week
+        - specific-day-of-month
+        - multiple-days-per-month
+      description: Frequency kind for recurring todos
+    Fun:
+      type: object
+      required:
+        - id
+        - title
+        - user_id
+        - order
+        - date_created
+        - date_updated
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the fun
+        title:
+          type: string
+          description: The fun title
+        user_id:
+          type: string
+          description: ID of the user who owns this fun
+        order:
+          type: string
+          description: Order/position of the fun in the list
+        date_created:
+          type: string
+          format: date-time
+          description: When the fun was created
+        date_updated:
+          type: string
+          format: date-time
+          description: When the fun was last updated
+      description: A fun item
+    Habit:
+      type: object
+      required:
+        - id
+        - task
+        - status
+        - date_created
+        - date_updated
+        - user_id
+        - order
+        - annoyingness
+        - committed
+        - elapsedTimeSeconds
+        - atomic
+        - infinitely_divisible
+        - frequency_kind
+        - done_this_week
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the habit
+        task:
+          type: string
+          description: The habit description
+        details:
+          type: object
+          description: Additional details stored as JSON
+        status:
+          allOf:
+            - $ref: '#/components/schemas/TodoStatus'
+          description: Current status of the habit
+        date_created:
+          type: string
+          format: date-time
+          description: When the habit was created
+        date_updated:
+          type: string
+          format: date-time
+          description: When the habit was last updated
+        user_id:
+          type: string
+          description: ID of the user who owns this habit
+        order:
+          type: string
+          description: Order/position of the habit in the list
+        priority:
+          type: integer
+          format: int32
+          description: Integer priority position (0-based index in the ordered list)
+        desirability:
+          type: number
+          format: float
+          description: Calculated desirability score for weighted random selection
+        importance:
+          allOf:
+            - $ref: '#/components/schemas/Importance'
+          description: Importance level (0-5)
+        time_estimate:
+          allOf:
+            - $ref: '#/components/schemas/TimeEstimate'
+          description: Estimated time to complete
+        annoyingness:
+          allOf:
+            - $ref: '#/components/schemas/Annoyingness'
+          description: Annoyingness level (0-4)
+        committed:
+          type: boolean
+          description: Whether the habit is committed
+        elapsedTimeSeconds:
+          type: integer
+          format: int32
+          description: Elapsed time in seconds for timer
+        atomic:
+          type: boolean
+          description: Whether the habit is atomic (cannot be broken down)
+        infinitely_divisible:
+          type: boolean
+          description: Whether the habit is infinitely divisible
+        frequency_kind:
+          allOf:
+            - $ref: '#/components/schemas/FrequencyKind'
+          description: |-
+            Frequency kind for recurring habits
+            Constraints:
+            - If 'specific-days-per-week', daysOfWeek must be provided
+            - If 'multiple-days-per-week', numTimesPerWeek must be provided
+            - If 'specific-day-of-month', dayOfMonth must be provided
+            - If 'multiple-days-per-month', numTimesPerMonth must be provided
+        days_of_week:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: |-
+            Days of the week (0-6, where 0=Monday, 6=Sunday)
+            Required when frequencyKind is 'specific-days-per-week'
+        num_times_per_week:
+          type: integer
+          format: int32
+          description: |-
+            Number of times per week
+            Required when frequencyKind is 'multiple-days-per-week'
+        num_times_per_month:
+          type: integer
+          format: int32
+          description: |-
+            Number of times per month
+            Required when frequencyKind is 'multiple-days-per-month'
+        day_of_month:
+          type: integer
+          format: int32
+          description: |-
+            Day of the month (1-31)
+            Required when frequencyKind is 'specific-day-of-month'
+        done_this_week:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: Days of the week when habit was completed this week (0-6, where 0=Monday, 6=Sunday)
+      description: A habit item
+    Importance:
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 5
+      description: Importance level (0-5)
+    LogHabitRequest:
+      type: object
+      required:
+        - when
+      properties:
+        when:
+          type: string
+          format: date
+          description: The date when the habit was completed (YYYY-MM-DD format)
+      description: Request body for logging a habit completion
+    OverrideElapsedTimeRequest:
+      type: object
+      required:
+        - hours
+        - minutes
+      properties:
+        hours:
+          type: integer
+          format: int32
+          description: Hours component of elapsed time
+        minutes:
+          type: integer
+          format: int32
+          description: Minutes component of elapsed time
+      description: Request body for overriding elapsed time
+    PositionAfter:
+      type: object
+      required:
+        - type
+        - id
+      properties:
+        type:
+          type: string
+          enum:
+            - after
+        id:
+          type: string
+          description: ID of the todo to insert after
+      description: Insert after a specific todo
+    PositionBottom:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - bottom
+      description: Insert at the bottom of the list
+    PositionTop:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - top
+      description: Insert at the top of the list
+    ReorderTodoRequest:
+      type: object
+      required:
+        - position
+      properties:
+        position:
+          allOf:
+            - $ref: '#/components/schemas/TodoPosition'
+          description: New position for the todo
+      description: Request body for reordering a todo
+    TimeEstimate:
+      type: string
+      enum:
+        - 1-min
+        - 5-mins
+        - 15-mins
+        - 30-mins
+        - 1-hour
+        - 2-hours
+        - half-day
+        - one-day
+        - project
+      description: Time estimate for completing a todo
+    Todo:
+      type: object
+      required:
+        - id
+        - task
+        - status
+        - date_created
+        - date_updated
+        - user_id
+        - order
+        - annoyingness
+        - committed
+        - elapsedTimeSeconds
+        - atomic
+        - infinitely_divisible
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the todo
+        task:
+          type: string
+          description: The task description
+        details:
+          type: object
+          description: Additional details stored as JSON
+        status:
+          allOf:
+            - $ref: '#/components/schemas/TodoStatus'
+          description: Current status of the todo
+        date_created:
+          type: string
+          format: date-time
+          description: When the todo was created
+        date_updated:
+          type: string
+          format: date-time
+          description: When the todo was last updated
+        user_id:
+          type: string
+          description: ID of the user who owns this todo
+        order:
+          type: string
+          description: Order/position of the todo in the list
+        priority:
+          type: integer
+          format: int32
+          description: Integer priority position (0-based index in the ordered list)
+        desirability:
+          type: number
+          format: float
+          description: Calculated desirability score for weighted random selection
+        importance:
+          allOf:
+            - $ref: '#/components/schemas/Importance'
+          description: Importance level (0-5)
+        time_estimate:
+          allOf:
+            - $ref: '#/components/schemas/TimeEstimate'
+          description: Estimated time to complete
+        annoyingness:
+          allOf:
+            - $ref: '#/components/schemas/Annoyingness'
+          description: Annoyingness level (0-4)
+        committed:
+          type: boolean
+          description: Whether the todo is committed
+        elapsedTimeSeconds:
+          type: integer
+          format: int32
+          description: Elapsed time in seconds for timer
+        atomic:
+          type: boolean
+          description: Whether the todo is atomic (cannot be broken down)
+        infinitely_divisible:
+          type: boolean
+          description: Whether the todo is infinitely divisible
+      description: A todo item
+    TodoPosition:
+      anyOf:
+        - $ref: '#/components/schemas/PositionTop'
+        - $ref: '#/components/schemas/PositionBottom'
+        - $ref: '#/components/schemas/PositionAfter'
+      description: Position for inserting a new todo
+    TodoStatus:
+      type: string
+      enum:
+        - todo
+        - complete
+        - archived
+        - waiting
+      description: Status of a todo item
+    Token:
+      type: object
+      required:
+        - access_token
+        - token_type
+      properties:
+        access_token:
+          type: string
+          description: JWT access token
+        token_type:
+          type: string
+          description: Token type (always 'bearer')
+      description: JWT token response
+    UpdateFunRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The fun title
+      description: Request body for updating a fun
+    UpdateHabitRequest:
+      type: object
+      properties:
+        task:
+          type: string
+          description: The habit description
+        details:
+          type: object
+          description: Additional details stored as JSON
+        status:
+          allOf:
+            - $ref: '#/components/schemas/TodoStatus'
+          description: Current status of the habit
+        importance:
+          allOf:
+            - $ref: '#/components/schemas/Importance'
+          description: Importance level (0-5)
+        time_estimate:
+          allOf:
+            - $ref: '#/components/schemas/TimeEstimate'
+          description: Estimated time to complete
+        annoyingness:
+          allOf:
+            - $ref: '#/components/schemas/Annoyingness'
+          description: Annoyingness level (0-4)
+        committed:
+          type: boolean
+          description: Whether the habit is committed
+        atomic:
+          type: boolean
+          description: Whether the habit is atomic
+        infinitely_divisible:
+          type: boolean
+          description: Whether the habit is infinitely divisible
+        frequency_kind:
+          allOf:
+            - $ref: '#/components/schemas/FrequencyKind'
+          description: |-
+            Frequency kind for recurring habits
+            Constraints:
+            - If 'specific-days-per-week', daysOfWeek must be provided
+            - If 'multiple-days-per-week', numTimesPerWeek must be provided
+            - If 'specific-day-of-month', dayOfMonth must be provided
+            - If 'multiple-days-per-month', numTimesPerMonth must be provided
+        days_of_week:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: |-
+            Days of the week (0-6, where 0=Monday, 6=Sunday)
+            Required when frequencyKind is 'specific-days-per-week'
+        num_times_per_week:
+          type: integer
+          format: int32
+          description: |-
+            Number of times per week
+            Required when frequencyKind is 'multiple-days-per-week'
+        num_times_per_month:
+          type: integer
+          format: int32
+          description: |-
+            Number of times per month
+            Required when frequencyKind is 'multiple-days-per-month'
+        day_of_month:
+          type: integer
+          format: int32
+          description: |-
+            Day of the month (1-31)
+            Required when frequencyKind is 'specific-day-of-month'
+      description: Request body for updating a habit
+    UpdateTodoRequest:
+      type: object
+      properties:
+        task:
+          type: string
+          description: The task description
+        details:
+          type: object
+          description: Additional details stored as JSON
+        status:
+          allOf:
+            - $ref: '#/components/schemas/TodoStatus'
+          description: Current status of the todo
+        importance:
+          allOf:
+            - $ref: '#/components/schemas/Importance'
+          description: Importance level (0-5)
+        time_estimate:
+          allOf:
+            - $ref: '#/components/schemas/TimeEstimate'
+          description: Estimated time to complete
+        annoyingness:
+          allOf:
+            - $ref: '#/components/schemas/Annoyingness'
+          description: Annoyingness level (0-4)
+        committed:
+          type: boolean
+          description: Whether the todo is committed
+        atomic:
+          type: boolean
+          description: Whether the todo is atomic
+        infinitely_divisible:
+          type: boolean
+          description: Whether the todo is infinitely divisible
+      description: Request body for updating a todo
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - is_active
+        - date_created
+        - date_updated
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the user
+        email:
+          type: string
+          description: User's email address
+        is_active:
+          type: boolean
+          description: Whether the user account is active
+        date_created:
+          type: string
+          format: date-time
+          description: When the user was created
+        date_updated:
+          type: string
+          format: date-time
+          description: When the user was last updated
+      description: User model
+    UserLoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: User's email address
+        password:
+          type: string
+          description: User's password
+      description: Request body for user login
+    UserRegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: User's email address
+        password:
+          type: string
+          description: User's password
+      description: Request body for user registration
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
+servers:
+  - url: http://localhost:8000
+    description: Development server
+    variables: {}
