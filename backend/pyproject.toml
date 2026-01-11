@@ -1,5 +1,5 @@
 [project]
-name = "tododoo-backend"
+name = "fllstck-tmplt-backend"
 version = "0.1.0"
 description = "FastAPI backend for Fllstck Tmplt application"
 requires-python = ">=3.12"

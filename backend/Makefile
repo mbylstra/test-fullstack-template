@@ -131,7 +131,7 @@ db-reset:
 	docker compose -f docker-compose.dev.yml down -v
 
 db-shell:
-	docker compose -f docker-compose.dev.yml exec postgres psql -U $${DB_USER:-todouser} -d $${DB_NAME:-tododoo}
+	docker compose -f docker-compose.dev.yml exec postgres psql -U $${DB_USER:-todouser} -d $${DB_NAME:-fllstck-tmplt}
 
 db-dump:
 	@mkdir -p db-dumps
@@ -140,7 +140,7 @@ db-dump:
 	echo "Dumping local database to $${DUMP_FILE}..."; \
 	docker compose -f docker-compose.dev.yml exec -T postgres pg_dump \
 		-U $${DB_USER:-todouser} \
-		-d $${DB_NAME:-tododoo} \
+		-d $${DB_NAME:-fllstck-tmplt} \
 		--clean \
 		--if-exists \
 		--no-owner \

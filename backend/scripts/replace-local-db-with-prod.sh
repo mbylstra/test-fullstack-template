@@ -40,7 +40,7 @@ if [ -f "${BACKEND_DIR}/.env.local" ]; then
 fi
 LOCAL_DB_USER="${DB_USER:-todouser}"
 LOCAL_DB_PASSWORD="${DB_PASSWORD:-todopass}"
-LOCAL_DB_NAME="${DB_NAME:-tododoo}"
+LOCAL_DB_NAME="${DB_NAME:-fllstck-tmplt}"
 LOCAL_DB_HOST="${DB_HOST:-localhost}"
 LOCAL_DB_PORT="${DB_PORT:-5432}"
 
@@ -50,7 +50,7 @@ LOCAL_MAIN_USER_PASSWORD="${LOCAL_MAIN_USER_PASSWORD:-}"
 
 # Production server configuration
 PROD_SERVER="${PROD_SERVER:-}"
-PROD_DIR="${PROD_DIR:-~/tododoo/backend}"
+PROD_DIR="${PROD_DIR:-~/fllstck-tmplt/backend}"
 PROD_COMPOSE_FILE="docker-compose.prod.yml"
 
 # ============================================================================
@@ -87,7 +87,7 @@ check_prerequisites() {
     print_success "Docker is available"
 
     # Check if local database is running
-    if ! docker ps | grep -q tododoo-postgres; then
+    if ! docker ps | grep -q fllstck-tmplt-postgres; then
         print_error "Local database container is not running"
         echo "Please start it with: make db-up"
         exit 1

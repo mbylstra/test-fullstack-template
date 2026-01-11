@@ -39,8 +39,8 @@ Set these environment variables before running the script:
 # Required: SSH address of production server
 export PROD_SERVER="root@<droplet-ip>"
 
-# Optional: Custom production directory (default: ~/tododoo/backend)
-export PROD_DIR="~/tododoo/backend"
+# Optional: Custom production directory (default: ~/fllstck-tmplt/backend)
+export PROD_DIR="~/fllstck-tmplt/backend"
 ```
 
 You can also add these to a `.env.local` file in the backend directory.
@@ -89,7 +89,7 @@ export PROD_SERVER="root@157.230.xx.xx"
 
 3. **Backs Up Production Database**
     - Creates timestamped backup on production server
-    - Stored at: `~/tododoo/backend/prod_backup_<timestamp>.sql`
+    - Stored at: `~/fllstck-tmplt/backend/prod_backup_<timestamp>.sql`
 
 4. **Copies Dump to Server**
     - Uses `scp` to securely transfer dump file
@@ -109,7 +109,7 @@ If something goes wrong, you can restore from the backup:
 
 ```bash
 ssh root@<droplet-ip>
-cd ~/tododoo/backend
+cd ~/fllstck-tmplt/backend
 
 # Restore from backup
 docker compose -f docker-compose.prod.yml exec -T postgres \
@@ -132,12 +132,12 @@ Database Migration to Production
 ⚠️  WARNING: This REPLACES all production data with local data!
 
 Configuration:
-  Local DB:  todouser@localhost:5432/tododoo
+  Local DB:  todouser@localhost:5432/fllstck-tmplt
   Server:    root@157.230.xx.xx
-  Directory: ~/tododoo/backend
+  Directory: ~/fllstck-tmplt/backend
 
 Are you sure you want to continue? (type 'yes' to proceed): yes
-Type the database name 'tododoo' to confirm: tododoo
+Type the database name 'fllstck-tmplt' to confirm: fllstck-tmplt
 
 ===================================================
 Checking Prerequisites
@@ -152,7 +152,7 @@ Checking Prerequisites
 Dumping Local Database
 ===================================================
 
-⚠ Dumping database: tododoo
+⚠ Dumping database: fllstck-tmplt
 ✓ Local database dumped: local_dump_20241122_143022.sql (2.3M)
 
 ===================================================
@@ -161,7 +161,7 @@ Backing Up Production Database
 
 ⚠ Creating production database backup on server...
 ✓ Production database backed up: prod_backup_20241122_143022.sql
-⚠ Backup is stored on the server at: ~/tododoo/backend/prod_backup_20241122_143022.sql
+⚠ Backup is stored on the server at: ~/fllstck-tmplt/backend/prod_backup_20241122_143022.sql
 
 ===================================================
 Copying Dump to Production Server
@@ -196,10 +196,10 @@ Migration Complete!
 
 ✓ Local database successfully migrated to production
 ⚠ Production backup saved as: prod_backup_20241122_143022.sql
-⚠ The backup is stored on the server at: ~/tododoo/backend/prod_backup_20241122_143022.sql
+⚠ The backup is stored on the server at: ~/fllstck-tmplt/backend/prod_backup_20241122_143022.sql
 
 To rollback, run on the server:
-  cd ~/tododoo/backend
+  cd ~/fllstck-tmplt/backend
   docker compose -f docker-compose.prod.yml exec -T postgres \
     psql -U ${DB_USER} -d ${DB_NAME} < prod_backup_20241122_143022.sql
 ```
@@ -275,7 +275,7 @@ uv run python scripts/reset-user-password.py user@example.com newpassword123
 
 ```bash
 ssh root@<droplet-ip>
-cd /root/tododoo/backend
+cd /root/fllstck-tmplt/backend
 docker compose -f docker-compose.prod.yml exec backend \
   uv run python scripts/reset-user-password.py user@example.com newpassword123
 ```
@@ -293,7 +293,7 @@ If you migrated your local database to production, all password hashes changed. 
 ```bash
 # SSH to server
 ssh root@<droplet-ip>
-cd /root/tododoo/backend
+cd /root/fllstck-tmplt/backend
 
 # Reset password for your account
 docker compose -f docker-compose.prod.yml exec backend \
@@ -317,17 +317,17 @@ If you need more control, you can perform the migration manually:
 
 ```bash
 # 1. Dump local database (using Docker)
-docker exec tododoo-postgres pg_dump -U todouser tododoo \
+docker exec fllstck-tmplt-postgres pg_dump -U todouser fllstck-tmplt \
   --clean --if-exists --no-owner --no-privileges > local_dump.sql
 
 # 2. Backup production (on server)
 ssh root@<droplet-ip>
-cd ~/tododoo/backend
+cd ~/fllstck-tmplt/backend
 docker compose -f docker-compose.prod.yml exec -T postgres \
   pg_dump -U ${DB_USER} ${DB_NAME} > backup.sql
 
 # 3. Copy dump to server
-scp local_dump.sql root@<droplet-ip>:~/tododoo/backend/
+scp local_dump.sql root@<droplet-ip>:~/fllstck-tmplt/backend/
 
 # 4. Restore on production (on server)
 docker compose -f docker-compose.prod.yml exec -T postgres \

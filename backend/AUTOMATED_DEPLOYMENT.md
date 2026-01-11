@@ -5,6 +5,7 @@ This guide explains how to set up automated deployment to your Digital Ocean dro
 ## Overview
 
 When you push to the `main` branch:
+
 1. GitHub Actions builds a Docker image
 2. Image is pushed to GitHub Container Registry (GHCR)
 3. Deployment job SSHs into your droplet
@@ -47,18 +48,20 @@ chmod 600 ~/.ssh/authorized_keys
 #### 1.3 Add Secrets to GitHub Repository
 
 Go to your GitHub repository:
+
 - Navigate to **Settings** → **Secrets and variables** → **Actions**
 - Click **New repository secret**
 
 Add these three secrets:
 
-| Secret Name | Value | Description |
-|-------------|-------|-------------|
-| `DROPLET_HOST` | Your droplet IP address | e.g., `134.209.123.45` |
-| `DROPLET_USER` | SSH user | Usually `root` |
-| `DROPLET_SSH_KEY` | Private key content | Content of `~/.ssh/github_actions_deploy` |
+| Secret Name       | Value                   | Description                               |
+| ----------------- | ----------------------- | ----------------------------------------- |
+| `DROPLET_HOST`    | Your droplet IP address | e.g., `134.209.123.45`                    |
+| `DROPLET_USER`    | SSH user                | Usually `root`                            |
+| `DROPLET_SSH_KEY` | Private key content     | Content of `~/.ssh/github_actions_deploy` |
 
 **To get the private key content:**
+
 ```bash
 cat ~/.ssh/github_actions_deploy
 ```
@@ -79,8 +82,8 @@ ssh root@<your-droplet-ip>
 
 ```bash
 cd ~
-git clone https://github.com/mbylstra/tododoo.git
-cd tododoo/backend
+git clone https://github.com/mbylstra/fllstck-tmplt.git
+cd fllstck-tmplt/backend
 ```
 
 #### 2.3 Create Environment File
@@ -91,11 +94,12 @@ nano .env
 ```
 
 Update with production values:
+
 ```env
 # Database Configuration
 DB_USER=todouser
 DB_PASSWORD=<strong-password>
-DB_NAME=tododoo
+DB_NAME=fllstck-tmplt
 DB_HOST=postgres
 DB_PORT=5432
 
@@ -105,10 +109,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 # Production Deployment (Traefik)
 API_DOMAIN=todo-backend.michaelbylstra.com
-CORS_ORIGINS=https://todo-frontend.michaelbylstra.com,https://tododoo.netlify.app
+CORS_ORIGINS=https://todo-frontend.michaelbylstra.com,https://fllstck-tmplt.netlify.app
 ```
 
 **Generate SECRET_KEY:**
+
 ```bash
 python3 -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
@@ -130,11 +135,12 @@ echo "YOUR_GITHUB_PAT" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password
 #### 2.5 Run Initial Deployment
 
 ```bash
-cd ~/tododoo/backend
+cd ~/fllstck-tmplt/backend
 ./deploy.sh
 ```
 
 This will:
+
 - Pull the Docker image from GHCR
 - Start the database and backend services
 - Run database migrations
@@ -153,8 +159,9 @@ curl https://todo-backend.michaelbylstra.com/health
 ```
 
 Expected response:
+
 ```json
-{"status":"ok"}
+{ "status": "ok" }
 ```
 
 ## Using Automated Deployment
@@ -171,6 +178,7 @@ git push origin main
 ```
 
 GitHub Actions will automatically:
+
 1. Build the Docker image
 2. Push to GHCR
 3. Deploy to your droplet
@@ -192,7 +200,7 @@ GitHub Actions will automatically:
 ssh root@<your-droplet-ip>
 
 # View backend logs
-cd ~/tododoo/backend
+cd ~/fllstck-tmplt/backend
 docker compose -f docker-compose.prod.yml logs -f backend
 
 # View all logs
@@ -208,7 +216,7 @@ If you need to deploy manually without pushing to GitHub:
 ssh root@<your-droplet-ip>
 
 # Navigate to backend directory
-cd ~/tododoo/backend
+cd ~/fllstck-tmplt/backend
 
 # Run deployment script
 ./deploy.sh
@@ -221,6 +229,7 @@ cd ~/tododoo/backend
 **Cause:** SSH key not properly configured
 
 **Solution:**
+
 1. Verify the public key is in `~/.ssh/authorized_keys` on the droplet
 2. Check the private key is correctly added to `DROPLET_SSH_KEY` secret
 3. Ensure the key format is correct (should be OpenSSH format)
@@ -231,6 +240,7 @@ cd ~/tododoo/backend
 
 **Solution:**
 The deployment uses the automatic `GITHUB_TOKEN` which should have permissions. If it fails:
+
 1. Go to repo Settings → Actions → General
 2. Scroll to "Workflow permissions"
 3. Select "Read and write permissions"
@@ -241,10 +251,11 @@ The deployment uses the automatic `GITHUB_TOKEN` which should have permissions. 
 **Cause:** Database schema conflicts
 
 **Solution:**
+
 ```bash
 # SSH into droplet
 ssh root@<your-droplet-ip>
-cd ~/tododoo/backend
+cd ~/fllstck-tmplt/backend
 
 # Check migration status
 docker compose -f docker-compose.prod.yml exec backend uv run alembic current
@@ -261,11 +272,13 @@ docker compose -f docker-compose.prod.yml exec backend uv run alembic upgrade he
 **Cause:** Image not built or not pushed to GHCR
 
 **Solution:**
+
 1. Check GitHub Actions completed successfully
-2. Verify image exists at: https://github.com/mbylstra/tododoo/pkgs/container/tododoo%2Fbackend
+2. Verify image exists at: https://github.com/mbylstra/fllstck-tmplt/pkgs/container/fllstck-tmplt%2Fbackend
 3. Ensure image is public or droplet has GHCR authentication
 
 To make GHCR package public:
+
 1. Go to the package page on GitHub
 2. Click **Package settings**
 3. Scroll to **Danger Zone**
@@ -276,6 +289,7 @@ To make GHCR package public:
 **Cause:** Various issues (env vars, database connection, etc.)
 
 **Solution:**
+
 ```bash
 # Check container status
 docker ps -a
@@ -299,22 +313,23 @@ Located at `.github/workflows/build-push-images.yml`
 **Jobs:**
 
 1. **build-and-push**: Builds Docker image and pushes to GHCR
-   - Triggers on push to `main` or when `backend/**` files change
-   - Uses Docker Buildx for multi-platform builds
-   - Caches layers for faster builds
-   - Tags with `latest` and git SHA
+    - Triggers on push to `main` or when `backend/**` files change
+    - Uses Docker Buildx for multi-platform builds
+    - Caches layers for faster builds
+    - Tags with `latest` and git SHA
 
 2. **deploy**: Deploys to droplet (only on `main` branch)
-   - Waits for build-and-push to complete
-   - SSHs into droplet using stored secrets
-   - Pulls latest image
-   - Restarts services
-   - Runs database migrations
-   - Cleans up old images
+    - Waits for build-and-push to complete
+    - SSHs into droplet using stored secrets
+    - Pulls latest image
+    - Restarts services
+    - Runs database migrations
+    - Cleans up old images
 
 ### Docker Compose Configuration
 
 **Production:** `docker-compose.prod.yml`
+
 - Uses image from GHCR (not building locally)
 - Connected to `traefik-network` for HTTPS
 - Postgres on internal network only
@@ -338,15 +353,15 @@ If a deployment breaks production:
 ```bash
 # SSH into droplet
 ssh root@<your-droplet-ip>
-cd ~/tododoo/backend
+cd ~/fllstck-tmplt/backend
 
 # Pull a specific version (use git SHA from previous working deployment)
-docker pull ghcr.io/mbylstra/tododoo/backend:sha-abc123
+docker pull ghcr.io/mbylstra/fllstck-tmplt/backend:sha-abc123
 
 # Update docker-compose to use specific tag
 nano docker-compose.prod.yml
-# Change: ghcr.io/mbylstra/tododoo/backend:latest
-# To: ghcr.io/mbylstra/tododoo/backend:sha-abc123
+# Change: ghcr.io/mbylstra/fllstck-tmplt/backend:latest
+# To: ghcr.io/mbylstra/fllstck-tmplt/backend:sha-abc123
 
 # Restart
 docker compose -f docker-compose.prod.yml up -d
@@ -368,6 +383,7 @@ git push origin main
 ## Next Steps
 
 Consider adding:
+
 - **Staging environment**: Deploy to staging before production
 - **Health checks**: Add pre-deployment and post-deployment health checks
 - **Slack notifications**: Get notified when deployments complete

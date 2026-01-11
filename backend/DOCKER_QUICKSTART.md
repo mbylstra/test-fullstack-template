@@ -3,6 +3,7 @@
 ## Quick Commands
 
 ### Development (with hot reload)
+
 ```bash
 # Start everything
 make docker-up
@@ -45,15 +46,17 @@ make docker-restart
 ## What's Running?
 
 Check service status:
+
 ```bash
 docker compose ps
 ```
 
 Expected output:
+
 ```
 NAME               STATUS                PORTS
-tododoo-backend    Up (healthy)          0.0.0.0:8000->8000/tcp
-tododoo-postgres   Up (healthy)          0.0.0.0:5432->5432/tcp
+fllstck-tmplt-backend    Up (healthy)          0.0.0.0:8000->8000/tcp
+fllstck-tmplt-postgres   Up (healthy)          0.0.0.0:5432->5432/tcp
 ```
 
 ## Development Workflow
@@ -67,12 +70,14 @@ tododoo-postgres   Up (healthy)          0.0.0.0:5432->5432/tcp
 ## Troubleshooting
 
 **Port 8000 already in use?**
+
 ```bash
 # Stop local dev server if running
 # Or change port in docker-compose.yml
 ```
 
 **Database connection errors?**
+
 ```bash
 # Ensure postgres is healthy
 docker compose ps postgres
@@ -82,6 +87,7 @@ docker compose logs postgres
 ```
 
 **Backend won't start?**
+
 ```bash
 # View logs
 make docker-logs
@@ -94,6 +100,7 @@ make docker-up
 ## Production
 
 For production deployment:
+
 ```bash
 docker compose -f docker-compose.prod.yml up -d
 docker compose -f docker-compose.prod.yml exec backend uv run alembic upgrade head

@@ -60,7 +60,7 @@ make db-shell
 Or from outside Docker:
 
 ```bash
-psql -h localhost -U todouser -d tododoo
+psql -h localhost -U todouser -d fllstck-tmplt
 ```
 
 ## Production Deployment
@@ -73,7 +73,7 @@ psql -h localhost -U todouser -d tododoo
     ```bash
     DB_USER=todouser
     DB_PASSWORD=<strong-password>
-    DB_NAME=tododoo
+    DB_NAME=fllstck-tmplt
     SECRET_KEY=<strong-secret-key>
     ACCESS_TOKEN_EXPIRE_MINUTES=30
     ```

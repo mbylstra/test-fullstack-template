@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: tododoo-postgres-prod
+    container_name: fllstck-tmplt-postgres-prod
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -15,12 +15,12 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - tododoo-network
+      - fllstck-tmplt-network
     restart: always
 
   backend:
-    image: ghcr.io/mbylstra/tododoo/backend:latest
-    container_name: tododoo-backend-prod
+    image: ghcr.io/mbylstra/fllstck-tmplt/backend:latest
+    container_name: fllstck-tmplt-backend-prod
     pull_policy: always
     environment:
       DB_USER: ${DB_USER}
@@ -36,21 +36,21 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - tododoo-network
+      - fllstck-tmplt-network
       - traefik-network
     restart: always
     labels:
       # Enable Traefik
       - "traefik.enable=true"
       # Router configuration
-      - "traefik.http.routers.tododoo-backend.rule=Host(`todo-backend.michaelbylstra.com`)"
-      - "traefik.http.routers.tododoo-backend.entrypoints=websecure"
-      - "traefik.http.routers.tododoo-backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.fllstck-tmplt-backend.rule=Host(`todo-backend.michaelbylstra.com`)"
+      - "traefik.http.routers.fllstck-tmplt-backend.entrypoints=websecure"
+      - "traefik.http.routers.fllstck-tmplt-backend.tls.certresolver=letsencrypt"
       # Service configuration
-      - "traefik.http.services.tododoo-backend.loadbalancer.server.port=8000"
+      - "traefik.http.services.fllstck-tmplt-backend.loadbalancer.server.port=8000"
       # Health check
-      - "traefik.http.services.tododoo-backend.loadbalancer.healthcheck.path=/health"
-      - "traefik.http.services.tododoo-backend.loadbalancer.healthcheck.interval=30s"
+      - "traefik.http.services.fllstck-tmplt-backend.loadbalancer.healthcheck.path=/health"
+      - "traefik.http.services.fllstck-tmplt-backend.loadbalancer.healthcheck.interval=30s"
       # Network (specify which network Traefik should use)
       - "traefik.docker.network=traefik-network"
 
@@ -59,7 +59,7 @@ volumes:
     driver: local
 
 networks:
-  tododoo-network:
+  fllstck-tmplt-network:
     driver: bridge
   traefik-network:
     external: true
