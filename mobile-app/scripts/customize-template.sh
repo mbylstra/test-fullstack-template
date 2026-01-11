@@ -18,19 +18,20 @@ echo -e "${GREEN}Flutter Template Customization Script${NC}"
 echo "========================================"
 echo
 
-# Prompt for new app name
-read -p "Enter app name (e.g., 'My Awesome App'): " NEW_APP_NAME
-if [ -z "$NEW_APP_NAME" ]; then
-    echo -e "${RED}Error: App name cannot be empty${NC}"
-    exit 1
+# Get app name from argument or prompt
+if [ -n "$1" ]; then
+    NEW_APP_NAME="$1"
+else
+    read -p "Enter app name (e.g., 'My Awesome App'): " NEW_APP_NAME
+    if [ -z "$NEW_APP_NAME" ]; then
+        echo -e "${RED}Error: App name cannot be empty${NC}"
+        exit 1
+    fi
 fi
 
 # Prompt for organization/domain for bundle ID
-read -p "Enter organization domain (e.g., 'com.mycompany'): " ORG_DOMAIN
-if [ -z "$ORG_DOMAIN" ]; then
-    echo -e "${RED}Error: Organization domain cannot be empty${NC}"
-    exit 1
-fi
+read -p "Enter organization domain [com.michaelbylstra]: " ORG_DOMAIN
+ORG_DOMAIN=${ORG_DOMAIN:-com.michaelbylstra}
 
 # Derive package name from app name (lowercase, spaces to underscores)
 NEW_PACKAGE_NAME=$(echo "$NEW_APP_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr '-' '_')
