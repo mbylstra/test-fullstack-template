@@ -41,24 +41,6 @@ function TopNav({ generateBreakUpTodos }: TopNavProps) {
                     </Link>
                     <div className="flex items-center gap-6">
                         <Link
-                            to="/"
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                            Todos
-                        </Link>
-                        <Link
-                            to="/habits"
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                            Habits
-                        </Link>
-                        <Link
-                            to="/fun"
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                            Fun
-                        </Link>
-                        <Link
                             to="/notes"
                             className="text-muted-foreground hover:text-foreground transition-colors"
                         >
@@ -78,17 +60,6 @@ function TopNav({ generateBreakUpTodos }: TopNavProps) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                                onClick={handleGenerateBreakUpTodos}
-                                disabled={isGenerating}
-                            >
-                                {isGenerating ? (
-                                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                ) : (
-                                    <Split className="h-4 w-4 mr-2" />
-                                )}
-                                Generate breakup todos
-                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={logout}>
                                 <LogOut className="h-4 w-4 mr-2" />
                                 Sign Out
