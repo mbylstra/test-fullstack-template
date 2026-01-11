@@ -1,36 +1,18 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/shadcn/button';
-import { LogOut, MoreVertical, Loader2, Split } from 'lucide-react';
+import { LogOut, MoreVertical } from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/shadcn/dropdown-menu';
-import { toast } from 'sonner';
 
-interface TopNavProps {
-    generateBreakUpTodos: () => Promise<void>;
-}
+interface TopNavProps {}
 
-function TopNav({ generateBreakUpTodos }: TopNavProps) {
+function TopNav({}: TopNavProps) {
     const { currentUser, logout } = useAuth();
-    const [isGenerating, setIsGenerating] = useState(false);
-
-    const handleGenerateBreakUpTodos = async () => {
-        setIsGenerating(true);
-        try {
-            await generateBreakUpTodos();
-            toast.success('Break-up todos generated successfully');
-        } catch (error) {
-            console.error('Failed to generate break-up todos:', error);
-            toast.error('Failed to generate break-up todos');
-        } finally {
-            setIsGenerating(false);
-        }
-    };
 
     return (
         <nav className="border-b bg-background sticky top-0 z-50">

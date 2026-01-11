@@ -3,20 +3,13 @@ import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { Toaster } from '@/components/shadcn/sonner';
 import { TooltipProvider } from '@/components/shadcn/tooltip';
 import TopNav from '@/components/TopNav';
-import Todos from '@/pages/Todos';
-import Habits from '@/pages/Habits';
-import Fun from '@/pages/Fun';
 import Notes from '@/pages/Notes';
 import Login from '@/pages/Login';
 import { useBackendHealth } from '@/hooks/useBackendHealth';
-import { useTodos } from '@/hooks/useTodos';
-import { useHabits } from '@/hooks/useHabits';
 
 function AppContent() {
     const { currentUser, loading } = useAuth();
     const { isHealthy, isChecking, error } = useBackendHealth();
-    const todosHook = useTodos();
-    const habitsHook = useHabits();
 
     // Check backend health first
     if (isChecking) {
@@ -93,20 +86,9 @@ function AppContent() {
     return (
         <BrowserRouter>
             <div className="h-screen flex flex-col overflow-hidden">
-                <TopNav generateBreakUpTodos={todosHook.generateBreakUpTodos} />
+                <TopNav />
                 <div className="flex-1 overflow-hidden">
                     <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <Todos
-                                    todosHook={todosHook}
-                                    habitsHook={habitsHook}
-                                />
-                            }
-                        />
-                        <Route path="/habits" element={<Habits />} />
-                        <Route path="/fun" element={<Fun />} />
                         <Route path="/notes" element={<Notes />} />
                     </Routes>
                 </div>
