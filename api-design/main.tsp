@@ -3,10 +3,10 @@ import "@typespec/openapi3";
 
 using TypeSpec.Http;
 
-@service(#{ title: "TodoDoo API" })
+@service(#{ title: "Fllstck Tmplt API" })
 @server("http://localhost:8000", "Development server")
 @useAuth(BearerAuth)
-namespace TodoDooAPI;
+namespace FllstckTmpltAPI;
 
 /**
  * Importance level (0-5)
