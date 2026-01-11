@@ -1278,7 +1278,7 @@ interface Funs {
 
 @route("/api/note")
 @tag("Note")
-interface Note {
+interface NoteAPI {
   /**
    * List all notes for the authenticated user
    */

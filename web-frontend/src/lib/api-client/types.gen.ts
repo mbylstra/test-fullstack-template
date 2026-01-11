@@ -101,6 +101,20 @@ export type CreateHabitRequest = {
 };
 
 /**
+ * Request body for creating a new note
+ */
+export type CreateNoteRequest = {
+    /**
+     * The note title
+     */
+    title: string;
+    /**
+     * The note content
+     */
+    content: string;
+};
+
+/**
  * Request body for creating a new todo
  */
 export type CreateTodoRequest = {
@@ -319,6 +333,36 @@ export type LogHabitRequest = {
      * The date when the habit was completed (YYYY-MM-DD format)
      */
     when: string;
+};
+
+/**
+ * A note item
+ */
+export type Note = {
+    /**
+     * Unique identifier for the note
+     */
+    id: string;
+    /**
+     * The note title
+     */
+    title: string;
+    /**
+     * The note content
+     */
+    content: string;
+    /**
+     * ID of the user who owns this note
+     */
+    user_id: string;
+    /**
+     * When the note was created
+     */
+    date_created: string;
+    /**
+     * When the note was last updated
+     */
+    date_updated: string;
 };
 
 /**
@@ -556,6 +600,20 @@ export type UpdateHabitRequest = {
      * Required when frequencyKind is 'specific-day-of-month'
      */
     day_of_month?: number;
+};
+
+/**
+ * Request body for updating a note
+ */
+export type UpdateNoteRequest = {
+    /**
+     * The note title
+     */
+    title?: string;
+    /**
+     * The note content
+     */
+    content?: string;
 };
 
 /**
@@ -1192,6 +1250,157 @@ export type HabitsDeleteHabitLogResponses = {
 };
 
 export type HabitsDeleteHabitLogResponse = HabitsDeleteHabitLogResponses[keyof HabitsDeleteHabitLogResponses];
+
+export type NoteApiListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/note';
+};
+
+export type NoteApiListErrors = {
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+};
+
+export type NoteApiListError = NoteApiListErrors[keyof NoteApiListErrors];
+
+export type NoteApiListResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Array<Note>;
+};
+
+export type NoteApiListResponse = NoteApiListResponses[keyof NoteApiListResponses];
+
+export type NoteApiCreateData = {
+    body: CreateNoteRequest;
+    path?: never;
+    query?: never;
+    url: '/api/note';
+};
+
+export type NoteApiCreateErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+};
+
+export type NoteApiCreateError = NoteApiCreateErrors[keyof NoteApiCreateErrors];
+
+export type NoteApiCreateResponses = {
+    /**
+     * The request has succeeded and a new resource has been created as a result.
+     */
+    201: Note;
+};
+
+export type NoteApiCreateResponse = NoteApiCreateResponses[keyof NoteApiCreateResponses];
+
+export type NoteApiDeleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/note/{id}';
+};
+
+export type NoteApiDeleteErrors = {
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+};
+
+export type NoteApiDeleteError = NoteApiDeleteErrors[keyof NoteApiDeleteErrors];
+
+export type NoteApiDeleteResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type NoteApiDeleteResponse = NoteApiDeleteResponses[keyof NoteApiDeleteResponses];
+
+export type NoteApiGetData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/note/{id}';
+};
+
+export type NoteApiGetErrors = {
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+};
+
+export type NoteApiGetError = NoteApiGetErrors[keyof NoteApiGetErrors];
+
+export type NoteApiGetResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Note;
+};
+
+export type NoteApiGetResponse = NoteApiGetResponses[keyof NoteApiGetResponses];
+
+export type NoteApiUpdateData = {
+    body: UpdateNoteRequest;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/note/{id}';
+};
+
+export type NoteApiUpdateErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ErrorResponse;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ErrorResponse;
+    /**
+     * Server error
+     */
+    500: ErrorResponse;
+};
+
+export type NoteApiUpdateError = NoteApiUpdateErrors[keyof NoteApiUpdateErrors];
+
+export type NoteApiUpdateResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Note;
+};
+
+export type NoteApiUpdateResponse = NoteApiUpdateResponses[keyof NoteApiUpdateResponses];
 
 export type TodosListData = {
     body?: never;

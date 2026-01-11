@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AuthGetCurrentUserData, AuthGetCurrentUserErrors, AuthGetCurrentUserResponses, AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutErrors, AuthLogoutResponses, AuthRefreshTokenData, AuthRefreshTokenErrors, AuthRefreshTokenResponses, AuthRegisterData, AuthRegisterErrors, AuthRegisterResponses, FunsCreateData, FunsCreateErrors, FunsCreateResponses, FunsDeleteData, FunsDeleteErrors, FunsDeleteResponses, FunsGetData, FunsGetErrors, FunsGetResponses, FunsListData, FunsListErrors, FunsListResponses, FunsReorderData, FunsReorderErrors, FunsReorderResponses, FunsUpdateData, FunsUpdateErrors, FunsUpdateResponses, HabitsCreateData, HabitsCreateErrors, HabitsCreateResponses, HabitsDeleteData, HabitsDeleteErrors, HabitsDeleteHabitLogData, HabitsDeleteHabitLogErrors, HabitsDeleteHabitLogResponses, HabitsDeleteResponses, HabitsGetData, HabitsGetErrors, HabitsGetResponses, HabitsListData, HabitsListErrors, HabitsListResponses, HabitsLogHabitData, HabitsLogHabitErrors, HabitsLogHabitResponses, HabitsUpdateData, HabitsUpdateErrors, HabitsUpdateResponses, TodosCreateData, TodosCreateErrors, TodosCreateResponses, TodosDeleteData, TodosDeleteErrors, TodosDeleteResponses, TodosGenerateBreakUpTodosData, TodosGenerateBreakUpTodosErrors, TodosGenerateBreakUpTodosResponses, TodosGetData, TodosGetErrors, TodosGetResponses, TodosListData, TodosListErrors, TodosListResponses, TodosOverrideElapsedTimeData, TodosOverrideElapsedTimeErrors, TodosOverrideElapsedTimeResponses, TodosReorderData, TodosReorderErrors, TodosReorderResponses, TodosStartTimerData, TodosStartTimerErrors, TodosStartTimerResponses, TodosStopTimerData, TodosStopTimerErrors, TodosStopTimerResponses, TodosUpdateData, TodosUpdateErrors, TodosUpdateResponses, WeightedRandomFunsListData, WeightedRandomFunsListErrors, WeightedRandomFunsListResponses, WeightedRandomTodosListData, WeightedRandomTodosListErrors, WeightedRandomTodosListResponses } from './types.gen';
+import type { AuthGetCurrentUserData, AuthGetCurrentUserErrors, AuthGetCurrentUserResponses, AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutErrors, AuthLogoutResponses, AuthRefreshTokenData, AuthRefreshTokenErrors, AuthRefreshTokenResponses, AuthRegisterData, AuthRegisterErrors, AuthRegisterResponses, FunsCreateData, FunsCreateErrors, FunsCreateResponses, FunsDeleteData, FunsDeleteErrors, FunsDeleteResponses, FunsGetData, FunsGetErrors, FunsGetResponses, FunsListData, FunsListErrors, FunsListResponses, FunsReorderData, FunsReorderErrors, FunsReorderResponses, FunsUpdateData, FunsUpdateErrors, FunsUpdateResponses, HabitsCreateData, HabitsCreateErrors, HabitsCreateResponses, HabitsDeleteData, HabitsDeleteErrors, HabitsDeleteHabitLogData, HabitsDeleteHabitLogErrors, HabitsDeleteHabitLogResponses, HabitsDeleteResponses, HabitsGetData, HabitsGetErrors, HabitsGetResponses, HabitsListData, HabitsListErrors, HabitsListResponses, HabitsLogHabitData, HabitsLogHabitErrors, HabitsLogHabitResponses, HabitsUpdateData, HabitsUpdateErrors, HabitsUpdateResponses, NoteApiCreateData, NoteApiCreateErrors, NoteApiCreateResponses, NoteApiDeleteData, NoteApiDeleteErrors, NoteApiDeleteResponses, NoteApiGetData, NoteApiGetErrors, NoteApiGetResponses, NoteApiListData, NoteApiListErrors, NoteApiListResponses, NoteApiUpdateData, NoteApiUpdateErrors, NoteApiUpdateResponses, TodosCreateData, TodosCreateErrors, TodosCreateResponses, TodosDeleteData, TodosDeleteErrors, TodosDeleteResponses, TodosGenerateBreakUpTodosData, TodosGenerateBreakUpTodosErrors, TodosGenerateBreakUpTodosResponses, TodosGetData, TodosGetErrors, TodosGetResponses, TodosListData, TodosListErrors, TodosListResponses, TodosOverrideElapsedTimeData, TodosOverrideElapsedTimeErrors, TodosOverrideElapsedTimeResponses, TodosReorderData, TodosReorderErrors, TodosReorderResponses, TodosStartTimerData, TodosStartTimerErrors, TodosStartTimerResponses, TodosStopTimerData, TodosStopTimerErrors, TodosStopTimerResponses, TodosUpdateData, TodosUpdateErrors, TodosUpdateResponses, WeightedRandomFunsListData, WeightedRandomFunsListErrors, WeightedRandomFunsListResponses, WeightedRandomTodosListData, WeightedRandomTodosListErrors, WeightedRandomTodosListResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -200,6 +200,59 @@ export const habitsDeleteHabitLog = <ThrowOnError extends boolean = false>(optio
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/habits/{id}/log/{date}',
     ...options
+});
+
+/**
+ * List all notes for the authenticated user
+ */
+export const noteApiList = <ThrowOnError extends boolean = false>(options?: Options<NoteApiListData, ThrowOnError>) => (options?.client ?? client).get<NoteApiListResponses, NoteApiListErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/note',
+    ...options
+});
+
+/**
+ * Create a new note
+ */
+export const noteApiCreate = <ThrowOnError extends boolean = false>(options: Options<NoteApiCreateData, ThrowOnError>) => (options.client ?? client).post<NoteApiCreateResponses, NoteApiCreateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/note',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Delete a note
+ */
+export const noteApiDelete = <ThrowOnError extends boolean = false>(options: Options<NoteApiDeleteData, ThrowOnError>) => (options.client ?? client).delete<NoteApiDeleteResponses, NoteApiDeleteErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/note/{id}',
+    ...options
+});
+
+/**
+ * Get a specific note by ID
+ */
+export const noteApiGet = <ThrowOnError extends boolean = false>(options: Options<NoteApiGetData, ThrowOnError>) => (options.client ?? client).get<NoteApiGetResponses, NoteApiGetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/note/{id}',
+    ...options
+});
+
+/**
+ * Update a note
+ */
+export const noteApiUpdate = <ThrowOnError extends boolean = false>(options: Options<NoteApiUpdateData, ThrowOnError>) => (options.client ?? client).patch<NoteApiUpdateResponses, NoteApiUpdateErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/note/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
 
 /**

@@ -6,6 +6,7 @@ tags:
   - name: Todos
   - name: Habits
   - name: Funs
+  - name: Note
   - name: Authentication
 paths:
   /api/auth/login:
@@ -14,24 +15,24 @@ paths:
       description: Login with email and password
       parameters: []
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Token"
-        "401":
+                $ref: '#/components/schemas/Token'
+        '401':
           description: Access is unauthorized.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Authentication
       requestBody:
@@ -39,7 +40,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserLoginRequest"
+              $ref: '#/components/schemas/UserLoginRequest'
       security:
         - {}
   /api/auth/logout:
@@ -48,14 +49,14 @@ paths:
       description: Logout user by clearing refresh token cookie
       parameters: []
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
-        "401":
+        '401':
           description: Access is unauthorized.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Authentication
       security:
@@ -66,24 +67,24 @@ paths:
       description: Get current authenticated user
       parameters: []
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "401":
+                $ref: '#/components/schemas/User'
+        '401':
           description: Access is unauthorized.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Authentication
   /api/auth/refresh:
@@ -92,24 +93,24 @@ paths:
       description: Refresh access token using refresh token from httpOnly cookie
       parameters: []
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Token"
-        "401":
+                $ref: '#/components/schemas/Token'
+        '401':
           description: Access is unauthorized.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Authentication
       security:
@@ -120,24 +121,24 @@ paths:
       description: Register a new user
       parameters: []
       responses:
-        "201":
+        '201':
           description: The request has succeeded and a new resource has been created as a result.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "400":
+                $ref: '#/components/schemas/User'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Authentication
       requestBody:
@@ -145,7 +146,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserRegisterRequest"
+              $ref: '#/components/schemas/UserRegisterRequest'
       security:
         - {}
   /api/funs:
@@ -154,20 +155,20 @@ paths:
       description: List all funs for the authenticated user
       parameters: []
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Fun"
-        "500":
+                  $ref: '#/components/schemas/Fun'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Funs
     post:
@@ -175,24 +176,24 @@ paths:
       description: Create a new fun
       parameters: []
       responses:
-        "201":
+        '201':
           description: The request has succeeded and a new resource has been created as a result.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Fun"
-        "400":
+                $ref: '#/components/schemas/Fun'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Funs
       requestBody:
@@ -200,7 +201,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateFunRequest"
+              $ref: '#/components/schemas/CreateFunRequest'
   /api/funs/{id}:
     get:
       operationId: Funs_get
@@ -212,24 +213,24 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Fun"
-        "404":
+                $ref: '#/components/schemas/Fun'
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Funs
     patch:
@@ -242,30 +243,30 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Fun"
-        "400":
+                $ref: '#/components/schemas/Fun'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Funs
       requestBody:
@@ -273,7 +274,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateFunRequest"
+              $ref: '#/components/schemas/UpdateFunRequest'
     delete:
       operationId: Funs_delete
       description: Delete a fun
@@ -284,20 +285,20 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: "There is no content to send for this request, but the headers may be useful. "
-        "404":
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Funs
   /api/funs/{id}/reorder:
@@ -311,30 +312,30 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Fun"
-        "400":
+                $ref: '#/components/schemas/Fun'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Funs
       requestBody:
@@ -342,27 +343,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ReorderTodoRequest"
+              $ref: '#/components/schemas/ReorderTodoRequest'
   /api/habits:
     get:
       operationId: Habits_list
       description: List all habits for the authenticated user
       parameters: []
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Habit"
-        "500":
+                  $ref: '#/components/schemas/Habit'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Habits
     post:
@@ -370,24 +371,24 @@ paths:
       description: Create a new habit
       parameters: []
       responses:
-        "201":
+        '201':
           description: The request has succeeded and a new resource has been created as a result.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Habit"
-        "400":
+                $ref: '#/components/schemas/Habit'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Habits
       requestBody:
@@ -395,7 +396,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateHabitRequest"
+              $ref: '#/components/schemas/CreateHabitRequest'
   /api/habits/{id}:
     get:
       operationId: Habits_get
@@ -407,24 +408,24 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Habit"
-        "404":
+                $ref: '#/components/schemas/Habit'
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Habits
     patch:
@@ -437,30 +438,30 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Habit"
-        "400":
+                $ref: '#/components/schemas/Habit'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Habits
       requestBody:
@@ -468,7 +469,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateHabitRequest"
+              $ref: '#/components/schemas/UpdateHabitRequest'
     delete:
       operationId: Habits_delete
       description: Delete a habit
@@ -479,20 +480,20 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: "There is no content to send for this request, but the headers may be useful. "
-        "404":
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Habits
   /api/habits/{id}/log:
@@ -506,20 +507,20 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
-        "404":
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Habits
       requestBody:
@@ -527,7 +528,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LogHabitRequest"
+              $ref: '#/components/schemas/LogHabitRequest'
   /api/habits/{id}/log/{date}:
     delete:
       operationId: Habits_deleteHabitLog
@@ -545,42 +546,194 @@ paths:
             type: string
             format: date
       responses:
-        "204":
-          description: "There is no content to send for this request, but the headers may be useful. "
-        "404":
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Habits
-  /api/todos:
+  /api/note:
     get:
-      operationId: Todos_list
-      description: List all todos for the authenticated user
+      operationId: NoteAPI_list
+      description: List all notes for the authenticated user
       parameters: []
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Todo"
-        "500":
+                  $ref: '#/components/schemas/Note'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Note
+    post:
+      operationId: NoteAPI_create
+      description: Create a new note
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNoteRequest'
+  /api/note/{id}:
+    get:
+      operationId: NoteAPI_get
+      description: Get a specific note by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Note
+    patch:
+      operationId: NoteAPI_update
+      description: Update a note
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNoteRequest'
+    delete:
+      operationId: NoteAPI_delete
+      description: Delete a note
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Note
+  /api/todos:
+    get:
+      operationId: Todos_list
+      description: List all todos for the authenticated user
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
     post:
@@ -588,24 +741,24 @@ paths:
       description: Create a new todo
       parameters: []
       responses:
-        "201":
+        '201':
           description: The request has succeeded and a new resource has been created as a result.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Todo"
-        "400":
+                $ref: '#/components/schemas/Todo'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
       requestBody:
@@ -613,27 +766,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateTodoRequest"
+              $ref: '#/components/schemas/CreateTodoRequest'
   /api/todos/generate-break-up-todos:
     post:
       operationId: Todos_generateBreakUpTodos
       description: Generate break-up todos across all todos
       parameters: []
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Todo"
-        "500":
+                  $ref: '#/components/schemas/Todo'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
   /api/todos/{id}:
@@ -647,24 +800,24 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Todo"
-        "404":
+                $ref: '#/components/schemas/Todo'
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
     patch:
@@ -677,30 +830,30 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Todo"
-        "400":
+                $ref: '#/components/schemas/Todo'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
       requestBody:
@@ -708,7 +861,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateTodoRequest"
+              $ref: '#/components/schemas/UpdateTodoRequest'
     delete:
       operationId: Todos_delete
       description: Delete a todo
@@ -719,20 +872,20 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: "There is no content to send for this request, but the headers may be useful. "
-        "404":
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
   /api/todos/{id}/reorder:
@@ -746,30 +899,30 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Todo"
-        "400":
+                $ref: '#/components/schemas/Todo'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
       requestBody:
@@ -777,7 +930,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ReorderTodoRequest"
+              $ref: '#/components/schemas/ReorderTodoRequest'
   /api/todos/{id}/start-timer:
     post:
       operationId: Todos_startTimer
@@ -789,20 +942,20 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
-        "404":
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
   /api/todos/{id}/stop-timer:
@@ -816,20 +969,20 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
-        "404":
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
   /api/todos/{id}/time-elapsed-override:
@@ -843,20 +996,20 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
-        "404":
+        '404':
           description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
       requestBody:
@@ -864,13 +1017,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OverrideElapsedTimeRequest"
+              $ref: '#/components/schemas/OverrideElapsedTimeRequest'
   /api/weighted-random-funs:
     get:
       operationId: WeightedRandomFuns_list
       description: Get weighted random funs for the authenticated user
       parameters:
-        - name: "n"
+        - name: 'n'
           in: query
           required: true
           schema:
@@ -886,26 +1039,26 @@ paths:
               type: string
           explode: false
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Fun"
-        "400":
+                  $ref: '#/components/schemas/Fun'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Funs
   /api/weighted-random-todos:
@@ -913,7 +1066,7 @@ paths:
       operationId: WeightedRandomTodos_list
       description: Get weighted random todos for the authenticated user
       parameters:
-        - name: "n"
+        - name: 'n'
           in: query
           required: true
           schema:
@@ -924,29 +1077,29 @@ paths:
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/TimeEstimate"
+            $ref: '#/components/schemas/TimeEstimate'
           explode: false
       responses:
-        "200":
+        '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Todo"
-        "400":
+                  $ref: '#/components/schemas/Todo'
+        '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Todos
 security:
@@ -969,7 +1122,7 @@ components:
           description: The fun title
         position:
           allOf:
-            - $ref: "#/components/schemas/TodoPosition"
+            - $ref: '#/components/schemas/TodoPosition'
           description: Where to insert the fun (defaults to top)
       description: Request body for creating a new fun
     CreateHabitRequest:
@@ -986,23 +1139,23 @@ components:
           description: Additional details stored as JSON
         status:
           allOf:
-            - $ref: "#/components/schemas/TodoStatus"
+            - $ref: '#/components/schemas/TodoStatus'
           description: Current status of the habit (defaults to 'todo')
         position:
           allOf:
-            - $ref: "#/components/schemas/TodoPosition"
+            - $ref: '#/components/schemas/TodoPosition'
           description: Where to insert the habit (defaults to top)
         importance:
           allOf:
-            - $ref: "#/components/schemas/Importance"
+            - $ref: '#/components/schemas/Importance'
           description: Importance level (0-5)
         time_estimate:
           allOf:
-            - $ref: "#/components/schemas/TimeEstimate"
+            - $ref: '#/components/schemas/TimeEstimate'
           description: Estimated time to complete
         annoyingness:
           allOf:
-            - $ref: "#/components/schemas/Annoyingness"
+            - $ref: '#/components/schemas/Annoyingness'
           description: Annoyingness level (0-4)
         committed:
           type: boolean
@@ -1015,7 +1168,7 @@ components:
           description: Whether the habit is infinitely divisible (defaults to false)
         frequency_kind:
           allOf:
-            - $ref: "#/components/schemas/FrequencyKind"
+            - $ref: '#/components/schemas/FrequencyKind'
           description: |-
             Frequency kind for recurring habits
             Constraints:
@@ -1050,6 +1203,19 @@ components:
             Day of the month (1-31)
             Required when frequencyKind is 'specific-day-of-month'
       description: Request body for creating a new habit
+    CreateNoteRequest:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+          description: The note title
+        content:
+          type: string
+          description: The note content
+      description: Request body for creating a new note
     CreateTodoRequest:
       type: object
       required:
@@ -1063,23 +1229,23 @@ components:
           description: Additional details stored as JSON
         status:
           allOf:
-            - $ref: "#/components/schemas/TodoStatus"
+            - $ref: '#/components/schemas/TodoStatus'
           description: Current status of the todo (defaults to 'todo')
         position:
           allOf:
-            - $ref: "#/components/schemas/TodoPosition"
+            - $ref: '#/components/schemas/TodoPosition'
           description: Where to insert the todo (defaults to top)
         importance:
           allOf:
-            - $ref: "#/components/schemas/Importance"
+            - $ref: '#/components/schemas/Importance'
           description: Importance level (0-5)
         time_estimate:
           allOf:
-            - $ref: "#/components/schemas/TimeEstimate"
+            - $ref: '#/components/schemas/TimeEstimate'
           description: Estimated time to complete
         annoyingness:
           allOf:
-            - $ref: "#/components/schemas/Annoyingness"
+            - $ref: '#/components/schemas/Annoyingness'
           description: Annoyingness level (0-4)
         committed:
           type: boolean
@@ -1171,7 +1337,7 @@ components:
           description: Additional details stored as JSON
         status:
           allOf:
-            - $ref: "#/components/schemas/TodoStatus"
+            - $ref: '#/components/schemas/TodoStatus'
           description: Current status of the habit
         date_created:
           type: string
@@ -1197,15 +1363,15 @@ components:
           description: Calculated desirability score for weighted random selection
         importance:
           allOf:
-            - $ref: "#/components/schemas/Importance"
+            - $ref: '#/components/schemas/Importance'
           description: Importance level (0-5)
         time_estimate:
           allOf:
-            - $ref: "#/components/schemas/TimeEstimate"
+            - $ref: '#/components/schemas/TimeEstimate'
           description: Estimated time to complete
         annoyingness:
           allOf:
-            - $ref: "#/components/schemas/Annoyingness"
+            - $ref: '#/components/schemas/Annoyingness'
           description: Annoyingness level (0-4)
         committed:
           type: boolean
@@ -1222,7 +1388,7 @@ components:
           description: Whether the habit is infinitely divisible
         frequency_kind:
           allOf:
-            - $ref: "#/components/schemas/FrequencyKind"
+            - $ref: '#/components/schemas/FrequencyKind'
           description: |-
             Frequency kind for recurring habits
             Constraints:
@@ -1279,6 +1445,37 @@ components:
           format: date
           description: The date when the habit was completed (YYYY-MM-DD format)
       description: Request body for logging a habit completion
+    Note:
+      type: object
+      required:
+        - id
+        - title
+        - content
+        - user_id
+        - date_created
+        - date_updated
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the note
+        title:
+          type: string
+          description: The note title
+        content:
+          type: string
+          description: The note content
+        user_id:
+          type: string
+          description: ID of the user who owns this note
+        date_created:
+          type: string
+          format: date-time
+          description: When the note was created
+        date_updated:
+          type: string
+          format: date-time
+          description: When the note was last updated
+      description: A note item
     OverrideElapsedTimeRequest:
       type: object
       required:
@@ -1335,7 +1532,7 @@ components:
       properties:
         position:
           allOf:
-            - $ref: "#/components/schemas/TodoPosition"
+            - $ref: '#/components/schemas/TodoPosition'
           description: New position for the todo
       description: Request body for reordering a todo
     TimeEstimate:
@@ -1378,7 +1575,7 @@ components:
           description: Additional details stored as JSON
         status:
           allOf:
-            - $ref: "#/components/schemas/TodoStatus"
+            - $ref: '#/components/schemas/TodoStatus'
           description: Current status of the todo
         date_created:
           type: string
@@ -1404,15 +1601,15 @@ components:
           description: Calculated desirability score for weighted random selection
         importance:
           allOf:
-            - $ref: "#/components/schemas/Importance"
+            - $ref: '#/components/schemas/Importance'
           description: Importance level (0-5)
         time_estimate:
           allOf:
-            - $ref: "#/components/schemas/TimeEstimate"
+            - $ref: '#/components/schemas/TimeEstimate'
           description: Estimated time to complete
         annoyingness:
           allOf:
-            - $ref: "#/components/schemas/Annoyingness"
+            - $ref: '#/components/schemas/Annoyingness'
           description: Annoyingness level (0-4)
         committed:
           type: boolean
@@ -1430,9 +1627,9 @@ components:
       description: A todo item
     TodoPosition:
       anyOf:
-        - $ref: "#/components/schemas/PositionTop"
-        - $ref: "#/components/schemas/PositionBottom"
-        - $ref: "#/components/schemas/PositionAfter"
+        - $ref: '#/components/schemas/PositionTop'
+        - $ref: '#/components/schemas/PositionBottom'
+        - $ref: '#/components/schemas/PositionAfter'
       description: Position for inserting a new todo
     TodoStatus:
       type: string
@@ -1473,19 +1670,19 @@ components:
           description: Additional details stored as JSON
         status:
           allOf:
-            - $ref: "#/components/schemas/TodoStatus"
+            - $ref: '#/components/schemas/TodoStatus'
           description: Current status of the habit
         importance:
           allOf:
-            - $ref: "#/components/schemas/Importance"
+            - $ref: '#/components/schemas/Importance'
           description: Importance level (0-5)
         time_estimate:
           allOf:
-            - $ref: "#/components/schemas/TimeEstimate"
+            - $ref: '#/components/schemas/TimeEstimate'
           description: Estimated time to complete
         annoyingness:
           allOf:
-            - $ref: "#/components/schemas/Annoyingness"
+            - $ref: '#/components/schemas/Annoyingness'
           description: Annoyingness level (0-4)
         committed:
           type: boolean
@@ -1498,7 +1695,7 @@ components:
           description: Whether the habit is infinitely divisible
         frequency_kind:
           allOf:
-            - $ref: "#/components/schemas/FrequencyKind"
+            - $ref: '#/components/schemas/FrequencyKind'
           description: |-
             Frequency kind for recurring habits
             Constraints:
@@ -1533,6 +1730,16 @@ components:
             Day of the month (1-31)
             Required when frequencyKind is 'specific-day-of-month'
       description: Request body for updating a habit
+    UpdateNoteRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The note title
+        content:
+          type: string
+          description: The note content
+      description: Request body for updating a note
     UpdateTodoRequest:
       type: object
       properties:
@@ -1544,19 +1751,19 @@ components:
           description: Additional details stored as JSON
         status:
           allOf:
-            - $ref: "#/components/schemas/TodoStatus"
+            - $ref: '#/components/schemas/TodoStatus'
           description: Current status of the todo
         importance:
           allOf:
-            - $ref: "#/components/schemas/Importance"
+            - $ref: '#/components/schemas/Importance'
           description: Importance level (0-5)
         time_estimate:
           allOf:
-            - $ref: "#/components/schemas/TimeEstimate"
+            - $ref: '#/components/schemas/TimeEstimate'
           description: Estimated time to complete
         annoyingness:
           allOf:
-            - $ref: "#/components/schemas/Annoyingness"
+            - $ref: '#/components/schemas/Annoyingness'
           description: Annoyingness level (0-4)
         committed:
           type: boolean
