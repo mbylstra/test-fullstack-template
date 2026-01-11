@@ -7,12 +7,12 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Default values (current template values)
-OLD_APP_NAME="Simple Flutter Template"
-OLD_PACKAGE_NAME="simple_flutter_template"
-OLD_KEBAB_NAME="simple-flutter-template"
-OLD_CAMEL_CASE="simpleFlutterTemplate"
-OLD_ANDROID_PACKAGE="com.example.simple_flutter_template"
-OLD_IOS_BUNDLE="com.example.simpleFlutterTemplate"
+OLD_APP_NAME="Full Stack Template"
+OLD_PACKAGE_NAME="fllstck_tmplt"
+OLD_KEBAB_NAME="fllstck-tmplt"
+OLD_CAMEL_CASE="fllstckTmplt"
+OLD_ANDROID_PACKAGE="com.example.fllstck_tmplt"
+OLD_IOS_BUNDLE="com.example.fllstckTmplt"
 
 echo -e "${GREEN}Flutter Template Customization Script${NC}"
 echo "========================================"
