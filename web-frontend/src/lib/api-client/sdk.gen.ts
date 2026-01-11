@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AuthGetCurrentUserData, AuthGetCurrentUserErrors, AuthGetCurrentUserResponses, AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutErrors, AuthLogoutResponses, AuthRefreshTokenData, AuthRefreshTokenErrors, AuthRefreshTokenResponses, AuthRegisterData, AuthRegisterErrors, AuthRegisterResponses, FunsCreateData, FunsCreateErrors, FunsCreateResponses, FunsDeleteData, FunsDeleteErrors, FunsDeleteResponses, FunsGetData, FunsGetErrors, FunsGetResponses, FunsListData, FunsListErrors, FunsListResponses, FunsReorderData, FunsReorderErrors, FunsReorderResponses, FunsUpdateData, FunsUpdateErrors, FunsUpdateResponses, HabitsCreateData, HabitsCreateErrors, HabitsCreateResponses, HabitsDeleteData, HabitsDeleteErrors, HabitsDeleteHabitLogData, HabitsDeleteHabitLogErrors, HabitsDeleteHabitLogResponses, HabitsDeleteResponses, HabitsGetData, HabitsGetErrors, HabitsGetResponses, HabitsListData, HabitsListErrors, HabitsListResponses, HabitsLogHabitData, HabitsLogHabitErrors, HabitsLogHabitResponses, HabitsUpdateData, HabitsUpdateErrors, HabitsUpdateResponses, NoteApiCreateData, NoteApiCreateErrors, NoteApiCreateResponses, NoteApiDeleteData, NoteApiDeleteErrors, NoteApiDeleteResponses, NoteApiGetData, NoteApiGetErrors, NoteApiGetResponses, NoteApiListData, NoteApiListErrors, NoteApiListResponses, NoteApiUpdateData, NoteApiUpdateErrors, NoteApiUpdateResponses, TodosCreateData, TodosCreateErrors, TodosCreateResponses, TodosDeleteData, TodosDeleteErrors, TodosDeleteResponses, TodosGenerateBreakUpTodosData, TodosGenerateBreakUpTodosErrors, TodosGenerateBreakUpTodosResponses, TodosGetData, TodosGetErrors, TodosGetResponses, TodosListData, TodosListErrors, TodosListResponses, TodosOverrideElapsedTimeData, TodosOverrideElapsedTimeErrors, TodosOverrideElapsedTimeResponses, TodosReorderData, TodosReorderErrors, TodosReorderResponses, TodosStartTimerData, TodosStartTimerErrors, TodosStartTimerResponses, TodosStopTimerData, TodosStopTimerErrors, TodosStopTimerResponses, TodosUpdateData, TodosUpdateErrors, TodosUpdateResponses, WeightedRandomFunsListData, WeightedRandomFunsListErrors, WeightedRandomFunsListResponses, WeightedRandomTodosListData, WeightedRandomTodosListErrors, WeightedRandomTodosListResponses } from './types.gen';
+import type { AuthApiGetCurrentUserData, AuthApiGetCurrentUserErrors, AuthApiGetCurrentUserResponses, AuthApiLoginData, AuthApiLoginErrors, AuthApiLoginResponses, AuthApiLogoutData, AuthApiLogoutErrors, AuthApiLogoutResponses, AuthApiRefreshTokenData, AuthApiRefreshTokenErrors, AuthApiRefreshTokenResponses, AuthApiRegisterData, AuthApiRegisterErrors, AuthApiRegisterResponses, NoteApiCreateData, NoteApiCreateErrors, NoteApiCreateResponses, NoteApiDeleteData, NoteApiDeleteErrors, NoteApiDeleteResponses, NoteApiGetData, NoteApiGetErrors, NoteApiGetResponses, NoteApiListData, NoteApiListErrors, NoteApiListResponses, NoteApiUpdateData, NoteApiUpdateErrors, NoteApiUpdateResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -21,7 +21,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Login with email and password
  */
-export const authLogin = <ThrowOnError extends boolean = false>(options: Options<AuthLoginData, ThrowOnError>) => (options.client ?? client).post<AuthLoginResponses, AuthLoginErrors, ThrowOnError>({
+export const authApiLogin = <ThrowOnError extends boolean = false>(options: Options<AuthApiLoginData, ThrowOnError>) => (options.client ?? client).post<AuthApiLoginResponses, AuthApiLoginErrors, ThrowOnError>({
     url: '/api/auth/login',
     ...options,
     headers: {
@@ -33,12 +33,12 @@ export const authLogin = <ThrowOnError extends boolean = false>(options: Options
 /**
  * Logout user by clearing refresh token cookie
  */
-export const authLogout = <ThrowOnError extends boolean = false>(options?: Options<AuthLogoutData, ThrowOnError>) => (options?.client ?? client).post<AuthLogoutResponses, AuthLogoutErrors, ThrowOnError>({ url: '/api/auth/logout', ...options });
+export const authApiLogout = <ThrowOnError extends boolean = false>(options?: Options<AuthApiLogoutData, ThrowOnError>) => (options?.client ?? client).post<AuthApiLogoutResponses, AuthApiLogoutErrors, ThrowOnError>({ url: '/api/auth/logout', ...options });
 
 /**
  * Get current authenticated user
  */
-export const authGetCurrentUser = <ThrowOnError extends boolean = false>(options?: Options<AuthGetCurrentUserData, ThrowOnError>) => (options?.client ?? client).get<AuthGetCurrentUserResponses, AuthGetCurrentUserErrors, ThrowOnError>({
+export const authApiGetCurrentUser = <ThrowOnError extends boolean = false>(options?: Options<AuthApiGetCurrentUserData, ThrowOnError>) => (options?.client ?? client).get<AuthApiGetCurrentUserResponses, AuthApiGetCurrentUserErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/auth/me',
     ...options
@@ -47,159 +47,18 @@ export const authGetCurrentUser = <ThrowOnError extends boolean = false>(options
 /**
  * Refresh access token using refresh token from httpOnly cookie
  */
-export const authRefreshToken = <ThrowOnError extends boolean = false>(options?: Options<AuthRefreshTokenData, ThrowOnError>) => (options?.client ?? client).post<AuthRefreshTokenResponses, AuthRefreshTokenErrors, ThrowOnError>({ url: '/api/auth/refresh', ...options });
+export const authApiRefreshToken = <ThrowOnError extends boolean = false>(options?: Options<AuthApiRefreshTokenData, ThrowOnError>) => (options?.client ?? client).post<AuthApiRefreshTokenResponses, AuthApiRefreshTokenErrors, ThrowOnError>({ url: '/api/auth/refresh', ...options });
 
 /**
  * Register a new user
  */
-export const authRegister = <ThrowOnError extends boolean = false>(options: Options<AuthRegisterData, ThrowOnError>) => (options.client ?? client).post<AuthRegisterResponses, AuthRegisterErrors, ThrowOnError>({
+export const authApiRegister = <ThrowOnError extends boolean = false>(options: Options<AuthApiRegisterData, ThrowOnError>) => (options.client ?? client).post<AuthApiRegisterResponses, AuthApiRegisterErrors, ThrowOnError>({
     url: '/api/auth/register',
     ...options,
     headers: {
         'Content-Type': 'application/json',
         ...options.headers
     }
-});
-
-/**
- * List all funs for the authenticated user
- */
-export const funsList = <ThrowOnError extends boolean = false>(options?: Options<FunsListData, ThrowOnError>) => (options?.client ?? client).get<FunsListResponses, FunsListErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/funs',
-    ...options
-});
-
-/**
- * Create a new fun
- */
-export const funsCreate = <ThrowOnError extends boolean = false>(options: Options<FunsCreateData, ThrowOnError>) => (options.client ?? client).post<FunsCreateResponses, FunsCreateErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/funs',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Delete a fun
- */
-export const funsDelete = <ThrowOnError extends boolean = false>(options: Options<FunsDeleteData, ThrowOnError>) => (options.client ?? client).delete<FunsDeleteResponses, FunsDeleteErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/funs/{id}',
-    ...options
-});
-
-/**
- * Get a specific fun by ID
- */
-export const funsGet = <ThrowOnError extends boolean = false>(options: Options<FunsGetData, ThrowOnError>) => (options.client ?? client).get<FunsGetResponses, FunsGetErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/funs/{id}',
-    ...options
-});
-
-/**
- * Update a fun
- */
-export const funsUpdate = <ThrowOnError extends boolean = false>(options: Options<FunsUpdateData, ThrowOnError>) => (options.client ?? client).patch<FunsUpdateResponses, FunsUpdateErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/funs/{id}',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Reorder a fun
- */
-export const funsReorder = <ThrowOnError extends boolean = false>(options: Options<FunsReorderData, ThrowOnError>) => (options.client ?? client).post<FunsReorderResponses, FunsReorderErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/funs/{id}/reorder',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * List all habits for the authenticated user
- */
-export const habitsList = <ThrowOnError extends boolean = false>(options?: Options<HabitsListData, ThrowOnError>) => (options?.client ?? client).get<HabitsListResponses, HabitsListErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/habits',
-    ...options
-});
-
-/**
- * Create a new habit
- */
-export const habitsCreate = <ThrowOnError extends boolean = false>(options: Options<HabitsCreateData, ThrowOnError>) => (options.client ?? client).post<HabitsCreateResponses, HabitsCreateErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/habits',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Delete a habit
- */
-export const habitsDelete = <ThrowOnError extends boolean = false>(options: Options<HabitsDeleteData, ThrowOnError>) => (options.client ?? client).delete<HabitsDeleteResponses, HabitsDeleteErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/habits/{id}',
-    ...options
-});
-
-/**
- * Get a specific habit by ID
- */
-export const habitsGet = <ThrowOnError extends boolean = false>(options: Options<HabitsGetData, ThrowOnError>) => (options.client ?? client).get<HabitsGetResponses, HabitsGetErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/habits/{id}',
-    ...options
-});
-
-/**
- * Update a habit
- */
-export const habitsUpdate = <ThrowOnError extends boolean = false>(options: Options<HabitsUpdateData, ThrowOnError>) => (options.client ?? client).patch<HabitsUpdateResponses, HabitsUpdateErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/habits/{id}',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Log a habit completion
- */
-export const habitsLogHabit = <ThrowOnError extends boolean = false>(options: Options<HabitsLogHabitData, ThrowOnError>) => (options.client ?? client).post<HabitsLogHabitResponses, HabitsLogHabitErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/habits/{id}/log',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Delete a habit log entry
- */
-export const habitsDeleteHabitLog = <ThrowOnError extends boolean = false>(options: Options<HabitsDeleteHabitLogData, ThrowOnError>) => (options.client ?? client).delete<HabitsDeleteHabitLogResponses, HabitsDeleteHabitLogErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/habits/{id}/log/{date}',
-    ...options
 });
 
 /**
@@ -253,129 +112,4 @@ export const noteApiUpdate = <ThrowOnError extends boolean = false>(options: Opt
         'Content-Type': 'application/json',
         ...options.headers
     }
-});
-
-/**
- * List all todos for the authenticated user
- */
-export const todosList = <ThrowOnError extends boolean = false>(options?: Options<TodosListData, ThrowOnError>) => (options?.client ?? client).get<TodosListResponses, TodosListErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos',
-    ...options
-});
-
-/**
- * Create a new todo
- */
-export const todosCreate = <ThrowOnError extends boolean = false>(options: Options<TodosCreateData, ThrowOnError>) => (options.client ?? client).post<TodosCreateResponses, TodosCreateErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Generate break-up todos across all todos
- */
-export const todosGenerateBreakUpTodos = <ThrowOnError extends boolean = false>(options?: Options<TodosGenerateBreakUpTodosData, ThrowOnError>) => (options?.client ?? client).post<TodosGenerateBreakUpTodosResponses, TodosGenerateBreakUpTodosErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos/generate-break-up-todos',
-    ...options
-});
-
-/**
- * Delete a todo
- */
-export const todosDelete = <ThrowOnError extends boolean = false>(options: Options<TodosDeleteData, ThrowOnError>) => (options.client ?? client).delete<TodosDeleteResponses, TodosDeleteErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos/{id}',
-    ...options
-});
-
-/**
- * Get a specific todo by ID
- */
-export const todosGet = <ThrowOnError extends boolean = false>(options: Options<TodosGetData, ThrowOnError>) => (options.client ?? client).get<TodosGetResponses, TodosGetErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos/{id}',
-    ...options
-});
-
-/**
- * Update a todo
- */
-export const todosUpdate = <ThrowOnError extends boolean = false>(options: Options<TodosUpdateData, ThrowOnError>) => (options.client ?? client).patch<TodosUpdateResponses, TodosUpdateErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos/{id}',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Reorder a todo
- */
-export const todosReorder = <ThrowOnError extends boolean = false>(options: Options<TodosReorderData, ThrowOnError>) => (options.client ?? client).post<TodosReorderResponses, TodosReorderErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos/{id}/reorder',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Start a timer for a todo
- */
-export const todosStartTimer = <ThrowOnError extends boolean = false>(options: Options<TodosStartTimerData, ThrowOnError>) => (options.client ?? client).post<TodosStartTimerResponses, TodosStartTimerErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos/{id}/start-timer',
-    ...options
-});
-
-/**
- * Stop a timer for a todo
- */
-export const todosStopTimer = <ThrowOnError extends boolean = false>(options: Options<TodosStopTimerData, ThrowOnError>) => (options.client ?? client).post<TodosStopTimerResponses, TodosStopTimerErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos/{id}/stop-timer',
-    ...options
-});
-
-/**
- * Override elapsed time for a todo
- */
-export const todosOverrideElapsedTime = <ThrowOnError extends boolean = false>(options: Options<TodosOverrideElapsedTimeData, ThrowOnError>) => (options.client ?? client).post<TodosOverrideElapsedTimeResponses, TodosOverrideElapsedTimeErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/todos/{id}/time-elapsed-override',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Get weighted random funs for the authenticated user
- */
-export const weightedRandomFunsList = <ThrowOnError extends boolean = false>(options: Options<WeightedRandomFunsListData, ThrowOnError>) => (options.client ?? client).get<WeightedRandomFunsListResponses, WeightedRandomFunsListErrors, ThrowOnError>({
-    querySerializer: { parameters: { excludeIds: { array: { explode: false } } } },
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/weighted-random-funs',
-    ...options
-});
-
-/**
- * Get weighted random todos for the authenticated user
- */
-export const weightedRandomTodosList = <ThrowOnError extends boolean = false>(options: Options<WeightedRandomTodosListData, ThrowOnError>) => (options.client ?? client).get<WeightedRandomTodosListResponses, WeightedRandomTodosListErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/weighted-random-todos',
-    ...options
 });
