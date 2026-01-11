@@ -2,12 +2,12 @@ import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import {
-    authLogin,
-    authRegister,
-    authGetCurrentUser,
+    authApiLogin,
+    authApiRegister,
+    authApiGetCurrentUser,
     authTokenManager,
-    authLogout,
-    authRefreshToken,
+    authApiLogout,
+    authApiRefreshToken,
 } from '@/lib/api';
 import type { User } from '@/lib/api-client';
 
@@ -55,27 +55,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const refreshTime = Math.max(0, timeUntilExpiration - 120000);
 
             if (refreshTime > 0) {
-                refreshTimerRef.current = window.setTimeout(
-                    async () => {
-                        try {
-                            const response = await authRefreshToken();
-                            if (response.data?.access_token) {
-                                authTokenManager.setToken(
-                                    response.data.access_token
-                                );
-                                // Set up timer for the new token
-                                setupRefreshTimer(response.data.access_token);
-                            } else {
-                                // Refresh failed, logout user
-                                handleLogout();
-                            }
-                        } catch (error) {
-                            console.error('Token refresh failed:', error);
+                refreshTimerRef.current = window.setTimeout(async () => {
+                    try {
+                        const response = await authApiRefreshToken();
+                        if (response.data?.access_token) {
+                            authTokenManager.setToken(
+                                response.data.access_token
+                            );
+                            // Set up timer for the new token
+                            setupRefreshTimer(response.data.access_token);
+                        } else {
+                            // Refresh failed, logout user
                             handleLogout();
                         }
-                    },
-                    refreshTime
-                );
+                    } catch (error) {
+                        console.error('Token refresh failed:', error);
+                        handleLogout();
+                    }
+                }, refreshTime);
             }
         } catch (error) {
             console.error('Failed to set up refresh timer:', error);
@@ -93,7 +90,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const token = authTokenManager.getToken();
             if (token) {
                 try {
-                    const { data: user } = await authGetCurrentUser();
+                    const { data: user } = await authApiGetCurrentUser();
                     if (user) {
                         setCurrentUser(user);
                         // Set up refresh timer for the token
@@ -118,7 +115,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }, []);
 
     const signIn = async (email: string, password: string) => {
-        const response = await authLogin({
+        const response = await authApiLogin({
             body: { email, password },
         });
 
@@ -143,7 +140,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         if (response.data) {
             authTokenManager.setToken(response.data.access_token);
-            const { data: user } = await authGetCurrentUser();
+            const { data: user } = await authApiGetCurrentUser();
             if (user) {
                 setCurrentUser(user);
                 // Set up refresh timer for the new token
@@ -153,7 +150,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
 
     const signUp = async (email: string, password: string) => {
-        const response = await authRegister({
+        const response = await authApiRegister({
             body: { email, password },
         });
 
@@ -185,7 +182,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const logout = async () => {
         try {
             // Call logout endpoint to clear refresh token cookie
-            await authLogout();
+            await authApiLogout();
         } catch (error) {
             console.error('Logout endpoint call failed:', error);
             // Continue with client-side logout even if server call fails
