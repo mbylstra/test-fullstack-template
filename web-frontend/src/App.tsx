@@ -6,6 +6,7 @@ import TopNav from '@/components/TopNav';
 import Todos from '@/pages/Todos';
 import Habits from '@/pages/Habits';
 import Fun from '@/pages/Fun';
+import Notes from '@/pages/Notes';
 import Login from '@/pages/Login';
 import { useBackendHealth } from '@/hooks/useBackendHealth';
 import { useTodos } from '@/hooks/useTodos';
@@ -106,6 +107,7 @@ function AppContent() {
                         />
                         <Route path="/habits" element={<Habits />} />
                         <Route path="/fun" element={<Fun />} />
+                        <Route path="/notes" element={<Notes />} />
                     </Routes>
                 </div>
             </div>

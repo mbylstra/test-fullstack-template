@@ -58,6 +58,12 @@ function TopNav({ generateBreakUpTodos }: TopNavProps) {
                         >
                             Fun
                         </Link>
+                        <Link
+                            to="/notes"
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                            Notes
+                        </Link>
                     </div>
                 </div>
 
