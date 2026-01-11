@@ -1,12 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
 from sqlalchemy import String, DateTime, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-if TYPE_CHECKING:
-    from app.models.user import User
 
 from app.models import Base
 
