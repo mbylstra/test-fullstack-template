@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Get the mobile-app directory (parent of scripts)
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Change to project directory so relative paths work
+cd "$PROJECT_DIR" || exit 1
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
