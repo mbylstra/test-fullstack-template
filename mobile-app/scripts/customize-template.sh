@@ -29,9 +29,13 @@ else
     fi
 fi
 
-# Prompt for organization/domain for bundle ID
-read -p "Enter organization domain [com.michaelbylstra]: " ORG_DOMAIN
-ORG_DOMAIN=${ORG_DOMAIN:-com.michaelbylstra}
+# Prompt for organization/domain for bundle ID (skip if app name was provided as argument)
+if [ -n "$1" ]; then
+    ORG_DOMAIN="com.michaelbylstra"
+else
+    read -p "Enter organization domain [com.michaelbylstra]: " ORG_DOMAIN
+    ORG_DOMAIN=${ORG_DOMAIN:-com.michaelbylstra}
+fi
 
 # Derive package name from app name (lowercase, spaces to underscores)
 NEW_PACKAGE_NAME=$(echo "$NEW_APP_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr '-' '_')
