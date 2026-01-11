@@ -10,7 +10,7 @@ namespace FllstckTmpltAPI;
 
 @route("/api/auth")
 @tag("Authentication")
-interface Auth {
+interface AuthAPI {
   /**
    * Register a new user
    */
@@ -185,10 +185,13 @@ model ErrorResponse {
 model User {
   id: string;
   email: string;
+
   @encodedName("application/json", "is_active")
   isActive: boolean;
+
   @encodedName("application/json", "date_created")
   dateCreated: utcDateTime;
+
   @encodedName("application/json", "date_updated")
   dateUpdated: utcDateTime;
 }
@@ -206,6 +209,7 @@ model UserLoginRequest {
 model Token {
   @encodedName("application/json", "access_token")
   accessToken: string;
+
   @encodedName("application/json", "token_type")
   tokenType: string;
 }
@@ -214,10 +218,13 @@ model Note {
   id: string;
   title: string;
   content: string;
+
   @encodedName("application/json", "user_id")
   userId: string;
+
   @encodedName("application/json", "date_created")
   dateCreated: utcDateTime;
+
   @encodedName("application/json", "date_updated")
   dateUpdated: utcDateTime;
 }
