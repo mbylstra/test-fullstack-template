@@ -54,11 +54,15 @@ echo "  Kebab Name: $NEW_KEBAB_NAME"
 echo "  Android Package: $NEW_ANDROID_PACKAGE"
 echo "  iOS Bundle: $NEW_IOS_BUNDLE"
 echo
-read -p "Proceed with these values? (y/n): " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "${RED}Aborted${NC}"
-    exit 1
+
+# Skip confirmation if app name was provided as argument
+if [ -z "$1" ]; then
+    read -p "Proceed with these values? (y/n): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${RED}Aborted${NC}"
+        exit 1
+    fi
 fi
 
 echo
