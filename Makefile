@@ -33,6 +33,9 @@ dev-all:
 	@echo "Starting database and waiting for health check..."
 	@cd backend && docker compose -p fllstck-tmplt -f docker-compose.dev.yml up -d --wait
 	@echo ""
+	@echo "Running database migrations..."
+	@cd backend && $(MAKE) db-migrate
+	@echo ""
 	@echo "Starting backend and frontend..."
 	@echo "Backend will run on http://localhost:8000 (with hot reload)"
 	@echo "Frontend will run on http://localhost:5173"
@@ -56,6 +59,9 @@ dev-debug:
 	@echo ""
 	@echo "Starting database and waiting for health check..."
 	@cd backend && docker compose -p fllstck-tmplt -f docker-compose.dev.yml up -d --wait
+	@echo ""
+	@echo "Running database migrations..."
+	@cd backend && $(MAKE) db-migrate
 	@echo ""
 	@echo "Starting frontend (Vite dev server)..."
 	@trap 'echo "Stopping services..."; cd backend && $(MAKE) db-down; exit 0' INT; \

@@ -58,6 +58,7 @@ Run these commands from the project root:
 - All datetime fields use UTC timezone
 - All entity IDs are string-based UUIDs
 - API specification is defined in TypeSpec (`api-design/main.tsp`) - Pydantic models and frontend client are auto-generated
+- Database migrations run automatically when using `make dev-all` or `make dev-debug` (works out of the box)
 
 ### Common Commands
 
