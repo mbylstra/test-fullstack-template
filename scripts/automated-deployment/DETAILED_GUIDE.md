@@ -4,6 +4,8 @@
 
 This script automates the entire deployment setup process for your full-stack application.
 
+**Can be run from any directory** - The script automatically detects the project root using `${BASH_SOURCE[0]}` and finds all necessary directories (frontend, backend) relative to that.
+
 ### What It Does
 
 1. **Generates SSH Keys**: Creates a dedicated SSH key pair for GitHub Actions deployments
@@ -141,10 +143,18 @@ PROJECT_NAME="fllstck-tmplt"                # Project name
 
 ### Usage
 
-Run the script from the project root:
+Run the script from any directory:
 
 ```bash
-./scripts/setup-automated-deployment.sh
+# From project root
+./scripts/automated-deployment/setup-automated-deployment.sh
+
+# From scripts directory
+cd scripts/automated-deployment
+./setup-automated-deployment.sh
+
+# From anywhere (using absolute path)
+/path/to/project/scripts/automated-deployment/setup-automated-deployment.sh
 ```
 
 The script will:
