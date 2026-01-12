@@ -839,37 +839,99 @@ else
 fi
 
 # ============================================================================
-# STEP 8: RUN INITIAL DEPLOYMENT
+# STEP 8: TRIGGER GITHUB ACTIONS TO BUILD AND PUSH DOCKER IMAGES
 # ============================================================================
 
-log_section "Step 8: Run Initial Deployment"
+log_section "Step 8: Build and Push Docker Images"
 
-log_info "The next step is to trigger a deployment..."
-log_warning "This will be done automatically when you push to the main branch"
+log_info "Triggering GitHub Actions workflow to build Docker images..."
+log_info "This will build the backend Docker image and push it to GitHub Container Registry"
+echo ""
 
-read -p "Do you want to manually run the deployment script now? (y/N): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    log_info "Running deployment script on droplet..."
-
-    ssh -i "${SSH_KEY_PATH}" ${DROPLET_USER}@${DROPLET_HOST} bash <<EOF
-cd ${PROJECT_DIR_ON_DROPLET}/backend
-./deploy.sh
-EOF
-
-    log_success "Deployment complete"
-
-    # Test the API
-    log_info "Testing API endpoint..."
+# Trigger the workflow
+if gh workflow run build-push-images.yml --repo "${GITHUB_REPO}"; then
+    log_success "Workflow triggered successfully"
+    echo ""
+    log_info "Waiting for workflow to start..."
     sleep 5
-    if curl -s -f https://${API_DOMAIN}/health > /dev/null; then
-        log_success "API is responding at https://${API_DOMAIN}/health"
-    else
-        log_warning "API is not yet responding. It may take a few minutes for Traefik to provision SSL certificates."
+
+    # Get the latest workflow run
+    log_info "Monitoring workflow progress..."
+    log_info "View detailed logs at: https://github.com/${GITHUB_REPO}/actions"
+    echo ""
+
+    # Wait for the workflow to complete (with timeout)
+    log_info "Waiting for build to complete (this may take 5-10 minutes)..."
+    WAIT_COUNT=0
+    MAX_WAIT=60  # 10 minutes (60 * 10 seconds)
+
+    while [ $WAIT_COUNT -lt $MAX_WAIT ]; do
+        # Get the status of the most recent workflow run
+        WORKFLOW_STATUS=$(gh run list --repo "${GITHUB_REPO}" --workflow=build-push-images.yml --limit=1 --json status --jq '.[0].status')
+
+        if [ "$WORKFLOW_STATUS" = "completed" ]; then
+            # Check if it succeeded
+            WORKFLOW_CONCLUSION=$(gh run list --repo "${GITHUB_REPO}" --workflow=build-push-images.yml --limit=1 --json conclusion --jq '.[0].conclusion')
+            if [ "$WORKFLOW_CONCLUSION" = "success" ]; then
+                log_success "Docker image built and pushed successfully!"
+                break
+            else
+                log_error "Workflow failed with status: ${WORKFLOW_CONCLUSION}"
+                log_info "Check logs at: https://github.com/${GITHUB_REPO}/actions"
+                exit 1
+            fi
+        fi
+
+        echo -n "."
+        sleep 10
+        WAIT_COUNT=$((WAIT_COUNT + 1))
+    done
+
+    if [ $WAIT_COUNT -ge $MAX_WAIT ]; then
+        echo ""
+        log_warning "Workflow is still running after 10 minutes"
+        log_info "You can monitor it at: https://github.com/${GITHUB_REPO}/actions"
+        log_info "Continue with deployment once the build completes"
+        echo ""
+        read -p "Press Enter to continue anyway, or Ctrl+C to exit..."
     fi
 else
-    log_info "Skipped manual deployment"
-    log_info "Push to main branch to trigger automated deployment"
+    log_error "Failed to trigger workflow"
+    log_info "You can manually trigger it at: https://github.com/${GITHUB_REPO}/actions"
+    exit 1
+fi
+
+echo ""
+
+log_info "The GitHub Actions workflow will now deploy the application to your droplet"
+log_info "This includes pulling the Docker image and starting the services"
+
+# Test the API after giving it time to deploy
+log_info "Waiting for deployment to complete and API to become available..."
+log_info "This may take a few minutes for containers to start and SSL certificates to provision..."
+sleep 30
+
+# Try to reach the API with retries
+MAX_RETRIES=10
+RETRY_COUNT=0
+API_READY=false
+
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+    if curl -s -f https://${API_DOMAIN}/health > /dev/null 2>&1; then
+        log_success "API is responding at https://${API_DOMAIN}/health"
+        API_READY=true
+        break
+    fi
+    echo -n "."
+    sleep 10
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+done
+
+echo ""
+if [ "$API_READY" = false ]; then
+    log_warning "API is not yet responding"
+    log_info "This is normal - SSL certificate provisioning can take a few minutes"
+    log_info "Check status with: curl https://${API_DOMAIN}/health"
 fi
 
 # ============================================================================
@@ -911,30 +973,32 @@ log_success "5. Project initialized on droplet"
 log_info "   Location: ${PROJECT_DIR_ON_DROPLET}"
 log_info "   Environment file: ${PROJECT_DIR_ON_DROPLET}/backend/.env"
 echo ""
-log_success "6. Ready for automated deployments!"
+log_success "6. Docker image built and deployed via GitHub Actions"
+echo ""
+log_success "7. Ready for automated deployments!"
 echo ""
 echo "Next steps:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "1. Test your domains:"
+echo "1. Verify your application is running:"
 echo "   Backend:  https://${API_DOMAIN}/health"
 echo "   Frontend: https://${NETLIFY_CUSTOM_DOMAIN}"
 echo ""
 echo "2. Once domains are working, increase DNS TTL for better performance:"
 echo "   ./scripts/increase-dns-ttl.sh"
 echo ""
-echo "3. Make changes to your code"
-echo "4. Commit and push to main branch:"
-echo "   git add ."
-echo "   git commit -m 'Your changes'"
-echo "   git push origin main"
+echo "3. Future deployments are automatic!"
+echo "   - Make changes to your code"
+echo "   - Commit and push to main branch:"
+echo "     git add ."
+echo "     git commit -m 'Your changes'"
+echo "     git push origin main"
+echo "   - GitHub Actions will automatically build and deploy"
 echo ""
-echo "5. Watch deployment in GitHub Actions:"
-echo "   https://github.com/${GITHUB_REPO}/actions"
-echo ""
-echo "6. Monitor droplet logs:"
-echo "   ssh ${DROPLET_USER}@${DROPLET_HOST}"
-echo "   cd ${PROJECT_DIR_ON_DROPLET}/backend"
-echo "   docker compose -f docker-compose.prod.yml logs -f"
+echo "4. Monitor your deployments:"
+echo "   GitHub Actions: https://github.com/${GITHUB_REPO}/actions"
+echo "   Droplet logs:   ssh ${DROPLET_USER}@${DROPLET_HOST}"
+echo "                   cd ${PROJECT_DIR_ON_DROPLET}/backend"
+echo "                   docker compose -f docker-compose.prod.yml logs -f"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
