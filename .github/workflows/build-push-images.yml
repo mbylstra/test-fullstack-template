@@ -93,6 +93,8 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
+            set -e
+
             cd ~/projects/fllstck-tmplt/backend
 
             # Pull latest code
