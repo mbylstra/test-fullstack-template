@@ -775,8 +775,21 @@ fi
 
 log_info "Connecting to droplet and setting up project..."
 
-# Generate random database password
-DB_PASSWORD=$(openssl rand -base64 32)
+log_info "Checking for existing configuration on droplet..."
+
+# Check if .env already exists on the droplet (to preserve existing DB_PASSWORD)
+EXISTING_ENV_CHECK=$(ssh -i "${SSH_KEY_PATH}" ${DROPLET_USER}@${DROPLET_HOST} "test -f ~/projects/${PROJECT_NAME}/backend/.env && echo 'exists' || echo 'not_found'")
+
+if [ "$EXISTING_ENV_CHECK" = "exists" ]; then
+    log_info "Existing .env file found - preserving database configuration"
+    # Extract existing DB_PASSWORD from the droplet
+    EXISTING_DB_PASSWORD=$(ssh -i "${SSH_KEY_PATH}" ${DROPLET_USER}@${DROPLET_HOST} "grep '^DB_PASSWORD=' ~/projects/${PROJECT_NAME}/backend/.env | cut -d'=' -f2")
+    DB_PASSWORD="$EXISTING_DB_PASSWORD"
+else
+    # Generate random database password only if no existing config
+    log_info "No existing configuration found - generating new database password"
+    DB_PASSWORD=$(openssl rand -base64 32)
+fi
 
 # Generate SECRET_KEY (we'll do this on the droplet)
 log_info "Setting up project directory and configuration..."
@@ -800,11 +813,16 @@ fi
 
 cd ~/projects/${PROJECT_NAME}/backend
 
-# Generate SECRET_KEY
-echo "Generating SECRET_KEY..."
-SECRET_KEY=\$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
+# Only generate SECRET_KEY if it doesn't exist in .env
+if [ -f .env ] && grep -q '^SECRET_KEY=' .env; then
+    echo "Existing SECRET_KEY found - preserving"
+    SECRET_KEY=\$(grep '^SECRET_KEY=' .env | cut -d'=' -f2-)
+else
+    echo "Generating SECRET_KEY..."
+    SECRET_KEY=\$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
+fi
 
-# Create .env file
+# Create or update .env file
 echo "Creating .env file..."
 cat > .env <<ENVFILE
 # Database Configuration
