@@ -62,6 +62,7 @@ CORS_ORIGINS="https://${FRONTEND_DOMAIN},https://${PROJECT_NAME}.netlify.app"
 # Netlify Configuration
 NETLIFY_SITE_NAME="mb-${PROJECT_NAME}"  # Your Netlify site name with mb- prefix (e.g., mb-fllstck-tmplt.netlify.app)
 NETLIFY_CUSTOM_DOMAIN="${FRONTEND_SUBDOMAIN}.${DO_DOMAIN}"  # Custom domain
+NETLIFY_ACCESS_TOKEN="${NETLIFY_ACCESS_TOKEN:-}"  # Set via env var or prompt during setup
 
 # DNS TTL Configuration
 DNS_TTL_INITIAL=60  # Low TTL for initial testing (60 seconds = 1 minute)
@@ -172,6 +173,15 @@ else
         log_warning "Run: netlify login"
         SKIP_NETLIFY=true
     fi
+fi
+
+# Prompt for Netlify access token if not set (needed for API calls)
+if [ -z "$NETLIFY_ACCESS_TOKEN" ]; then
+    echo ""
+    log_info "Netlify Access Token is needed to add custom domain via API"
+    log_info "Get your token from: https://app.netlify.com/user/access-tokens"
+    read -p "Enter your Netlify Access Token (or press Enter to skip): " NETLIFY_ACCESS_TOKEN
+    echo ""
 fi
 
 # Check SSH access to droplet
@@ -382,10 +392,14 @@ else
         elif echo "$SITE_INFO" | grep -q "\"domain_aliases\".*\"${NETLIFY_CUSTOM_DOMAIN}\""; then
             log_success "Custom domain already configured as alias: ${NETLIFY_CUSTOM_DOMAIN}"
         else
-            # Add custom domain using updateSite API
-            log_info "Adding custom domain to site..."
+            # Add custom domain using Netlify API
+            log_info "Adding custom domain: ${NETLIFY_CUSTOM_DOMAIN}"
             set +e
-            DOMAIN_ADD_OUTPUT=$(netlify api updateSite --data "{\"site_id\": \"${FOUND_SITE_ID}\", \"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
+            DOMAIN_ADD_OUTPUT=$(curl -s -X PATCH \
+                "https://api.netlify.com/api/v1/sites/${FOUND_SITE_ID}" \
+                -H "Authorization: Bearer ${NETLIFY_ACCESS_TOKEN}" \
+                -H "Content-Type: application/json" \
+                -d "{\"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
             DOMAIN_ADD_EXIT_CODE=$?
             set -e
 
@@ -642,9 +656,13 @@ else
             # Now configure custom domain
             log_info "Adding custom domain: ${NETLIFY_CUSTOM_DOMAIN}"
 
-            # Add custom domain using updateSite API
+            # Add custom domain using Netlify API
             set +e
-            DOMAIN_ADD_OUTPUT=$(netlify api updateSite --data "{\"site_id\": \"${SITE_ID}\", \"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
+            DOMAIN_ADD_OUTPUT=$(curl -s -X PATCH \
+                "https://api.netlify.com/api/v1/sites/${SITE_ID}" \
+                -H "Authorization: Bearer ${NETLIFY_ACCESS_TOKEN}" \
+                -H "Content-Type: application/json" \
+                -d "{\"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
             DOMAIN_ADD_EXIT_CODE=$?
             set -e
 
