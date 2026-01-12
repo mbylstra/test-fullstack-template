@@ -433,7 +433,7 @@ else
             else
                 log_error "Deployment failed"
                 log_info "You may need to build the frontend first:"
-                log_info "  cd web-frontend"
+                log_info "  cd ${FRONTEND_DIR}"
                 log_info "  npm run build"
                 log_info "  netlify deploy --prod"
                 cd - > /dev/null
