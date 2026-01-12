@@ -161,13 +161,16 @@ if ! command -v netlify &> /dev/null; then
     log_warning "Install with: npm install -g netlify-cli"
     SKIP_NETLIFY=true
 else
-    if ! netlify status &> /dev/null; then
+    # Check authentication by looking for user info in status output
+    # netlify status returns non-zero when not in a linked directory, but that's OK
+    NETLIFY_STATUS_OUTPUT=$(netlify status 2>&1 || true)
+    if echo "$NETLIFY_STATUS_OUTPUT" | grep -q "Current Netlify User"; then
+        log_success "Netlify CLI is installed and authenticated"
+        SKIP_NETLIFY=false
+    else
         log_warning "Netlify CLI is not authenticated. Netlify setup will be skipped."
         log_warning "Run: netlify login"
         SKIP_NETLIFY=true
-    else
-        log_success "Netlify CLI is installed and authenticated"
-        SKIP_NETLIFY=false
     fi
 fi
 
