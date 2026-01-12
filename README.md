@@ -7,7 +7,7 @@
 Create a new project on github
 
 ```
-git clone git@github.com:mbylstra/fullstack-template.git {{your-project-name}}
+git clone git@github.com:mbylstra/fllstck-tmplt.git {{your-project-name}}
 cd your-project-name
 git remote remove origin
 git remote add origin git@github.com:mbylstra/{{your-project-name}}.git
@@ -57,6 +57,7 @@ This template includes complete automation for production deployment infrastruct
 **Location:** `scripts/automated-deployment/`
 
 **What gets automated:**
+
 - SSH keys and GitHub secrets
 - DNS configuration (backend + frontend)
 - Netlify site creation + custom domain + SSL
@@ -64,6 +65,7 @@ This template includes complete automation for production deployment infrastruct
 - Project initialization on droplet
 
 **Get started:**
+
 ```bash
 cd scripts/automated-deployment
 cat README.md  # Read the setup instructions
