@@ -39,13 +39,13 @@ DROPLET_SSH_PORT="22"
 GITHUB_REPO="mbylstra/fllstck-tmplt"
 GITHUB_USERNAME="mbylstra"
 
-# Digital Ocean DNS Configuration
-DO_DOMAIN="michaelbylstra.com"
-BACKEND_SUBDOMAIN="fllstck-tmplt-backend"
-FRONTEND_SUBDOMAIN="fllstck-tmplt-frontend"
-
 # Project Configuration
 PROJECT_NAME="fllstck-tmplt"
+
+# Digital Ocean DNS Configuration
+DO_DOMAIN="michaelbylstra.com"
+BACKEND_SUBDOMAIN="${PROJECT_NAME}-backend"
+FRONTEND_SUBDOMAIN="${PROJECT_NAME}"
 PROJECT_DIR_ON_DROPLET="~/projects/${PROJECT_NAME}"
 
 # Database Configuration
@@ -331,24 +331,54 @@ else
     # Check if site exists
     log_info "Checking for Netlify site: ${NETLIFY_SITE_NAME}"
 
-    # Try to get site info
-    if netlify api getSite --data "{\"site_id\": \"${NETLIFY_SITE_NAME}\"}" &> /dev/null; then
-        log_success "Found Netlify site: ${NETLIFY_SITE_NAME}"
+    # List all sites and check if one matches our site name
+    # Use 'set +e' temporarily to prevent script exit on command failure
+    set +e
+    SITE_LIST_OUTPUT=$(netlify api listSites 2>&1)
+    SITE_LIST_EXIT_CODE=$?
+    set -e
+
+    # Try to find a site with matching name and extract its ID
+    FOUND_SITE_ID=""
+    if [ $SITE_LIST_EXIT_CODE -eq 0 ]; then
+        # Look for a site with name matching NETLIFY_SITE_NAME
+        # The output is JSON array, so we need to parse it carefully
+        # Use jq if available, otherwise fall back to grep
+        if command -v jq &> /dev/null; then
+            FOUND_SITE_ID=$(echo "$SITE_LIST_OUTPUT" | jq -r ".[] | select(.name == \"${NETLIFY_SITE_NAME}\") | .id" | head -1)
+        else
+            # Fallback: use grep to find the site
+            # Match pattern: {..., "name":"site-name", ..., "id":"uuid", ...}
+            # We look for lines containing both name and extract id from the same object
+            FOUND_SITE_ID=$(echo "$SITE_LIST_OUTPUT" | grep -o "{[^}]*\"name\":\"${NETLIFY_SITE_NAME}\"[^}]*}" | grep -o "\"id\":\"[^\"]*\"" | head -1 | cut -d'"' -f4)
+        fi
+    fi
+
+    if [ -n "$FOUND_SITE_ID" ]; then
+        log_success "Found Netlify site: ${NETLIFY_SITE_NAME} (ID: ${FOUND_SITE_ID})"
 
         # Add custom domain to Netlify site
         log_info "Adding custom domain: ${NETLIFY_CUSTOM_DOMAIN}"
 
         # Check if domain already exists on site
-        EXISTING_DOMAIN=$(netlify api listSiteDomains --data "{\"site_id\": \"${NETLIFY_SITE_NAME}\"}" 2>/dev/null | grep -o "\"${NETLIFY_CUSTOM_DOMAIN}\"" || true)
+        EXISTING_DOMAIN=$(netlify api listSiteDomains --data "{\"site_id\": \"${FOUND_SITE_ID}\"}" 2>/dev/null | grep -o "\"${NETLIFY_CUSTOM_DOMAIN}\"" || true)
 
         if [ -n "$EXISTING_DOMAIN" ]; then
             log_warning "Custom domain already configured on Netlify"
         else
-            netlify api createSiteDomain --data "{\"site_id\": \"${NETLIFY_SITE_NAME}\", \"domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" &> /dev/null || {
-                log_warning "Could not add domain via API. Try manual configuration:"
+            # Capture output to show error details if it fails
+            DOMAIN_ADD_OUTPUT=$(netlify api createSiteDomain --data "{\"site_id\": \"${FOUND_SITE_ID}\", \"domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
+            if [ $? -eq 0 ]; then
+                log_success "Custom domain added to Netlify"
+            else
+                log_warning "Could not add domain via API"
+                echo ""
+                log_error "Error output:"
+                echo "$DOMAIN_ADD_OUTPUT"
+                echo ""
+                log_info "Try manual configuration:"
                 log_info "  netlify domains:add ${NETLIFY_CUSTOM_DOMAIN} --site ${NETLIFY_SITE_NAME}"
-            }
-            log_success "Custom domain added to Netlify"
+            fi
         fi
 
         # Configure DNS CNAME record if doctl is available
@@ -395,6 +425,11 @@ else
 
     else
         log_warning "Netlify site not found: ${NETLIFY_SITE_NAME}"
+        if [ $SITE_LIST_EXIT_CODE -ne 0 ]; then
+            log_info "Error listing sites:"
+            echo "$SITE_LIST_OUTPUT"
+            echo ""
+        fi
         log_info "Would you like to create it automatically?"
         echo ""
         log_info "This will:"
@@ -422,11 +457,41 @@ else
             cd "${FRONTEND_DIR}"
 
             # Create the site with the specified name
-            SITE_ID=$(netlify sites:create --name "${NETLIFY_SITE_NAME}" --json 2>/dev/null | grep -o '"site_id":"[^"]*"' | cut -d'"' -f4)
+            # Capture both stdout and stderr
+            # Use 'set +e' temporarily to prevent script exit on command failure
+            set +e
+            NETLIFY_OUTPUT=$(netlify sites:create --name "${NETLIFY_SITE_NAME}" 2>&1)
+            CREATE_EXIT_CODE=$?
+            set -e
+
+            # Parse Site ID from output (format: "Site ID: <uuid>") or from state file
+            if [ $CREATE_EXIT_CODE -eq 0 ]; then
+                # Try to get Site ID from the output
+                SITE_ID=$(echo "$NETLIFY_OUTPUT" | grep -i "Site ID:" | awk '{print $NF}')
+
+                # If not found in output, check .netlify/state.json
+                if [ -z "$SITE_ID" ] && [ -f ".netlify/state.json" ]; then
+                    if command -v jq &> /dev/null; then
+                        SITE_ID=$(jq -r '.siteId' .netlify/state.json 2>/dev/null)
+                    else
+                        SITE_ID=$(grep -o '"siteId":"[^"]*"' .netlify/state.json | cut -d'"' -f4)
+                    fi
+                fi
+            else
+                SITE_ID=""
+            fi
 
             if [ -z "$SITE_ID" ]; then
                 log_error "Failed to create Netlify site"
-                log_warning "The site name may already be taken"
+                echo ""
+                log_error "Netlify CLI output:"
+                echo "$NETLIFY_OUTPUT"
+                echo ""
+                log_info "Possible reasons:"
+                log_info "  - Site name '${NETLIFY_SITE_NAME}' may already be taken"
+                log_info "  - You may not have permission to create sites in this team"
+                log_info "  - Network or authentication issue"
+                log_info ""
                 log_info "Try manually creating at: https://app.netlify.com/start"
                 cd - > /dev/null
                 exit 1
@@ -468,11 +533,19 @@ else
             # Now configure custom domain
             log_info "Adding custom domain: ${NETLIFY_CUSTOM_DOMAIN}"
 
-            netlify api createSiteDomain --data "{\"site_id\": \"${NETLIFY_SITE_NAME}\", \"domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" &> /dev/null || {
+            # Capture output to show error details if it fails
+            DOMAIN_ADD_OUTPUT=$(netlify api createSiteDomain --data "{\"site_id\": \"${SITE_ID}\", \"domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
+            if [ $? -eq 0 ]; then
+                log_success "Custom domain added to Netlify"
+            else
                 log_warning "Could not add domain via API"
-                log_info "Add manually: netlify domains:add ${NETLIFY_CUSTOM_DOMAIN} --site ${NETLIFY_SITE_NAME}"
-            }
-            log_success "Custom domain added to Netlify"
+                echo ""
+                log_error "Error output:"
+                echo "$DOMAIN_ADD_OUTPUT"
+                echo ""
+                log_info "Try manual configuration:"
+                log_info "  netlify domains:add ${NETLIFY_CUSTOM_DOMAIN} --site ${NETLIFY_SITE_NAME}"
+            fi
 
             # Configure DNS CNAME record if doctl is available
             if [ "$SKIP_DNS" = false ]; then

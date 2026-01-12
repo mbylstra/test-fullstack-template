@@ -29,3 +29,5 @@ dist-ssr
 .playwright-mcp
 *storybook.log
 storybook-static
+# Local Netlify folder
+.netlify
