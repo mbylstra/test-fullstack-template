@@ -7,6 +7,8 @@
 # - Digital Ocean CLI (doctl) installed and authenticated
 # - SSH access to the droplet
 # - Docker installed on the droplet (already done)
+#
+# Can be run from any directory - automatically detects project root
 
 set -e  # Exit on error
 
@@ -106,6 +108,24 @@ log_section() {
 # ============================================================================
 
 log_section "Pre-flight Checks"
+
+# Verify project structure
+log_info "Detected project root: ${PROJECT_ROOT}"
+
+if [ ! -d "${FRONTEND_DIR}" ]; then
+    log_error "Frontend directory not found: ${FRONTEND_DIR}"
+    log_error "This script must be run from within the full-stack-template project"
+    log_error "Make sure you're running: /path/to/project/scripts/automated-deployment/setup-automated-deployment.sh"
+    exit 1
+fi
+
+if [ ! -d "${BACKEND_DIR}" ]; then
+    log_error "Backend directory not found: ${BACKEND_DIR}"
+    log_error "This script must be run from within the full-stack-template project"
+    exit 1
+fi
+
+log_success "Project structure verified (frontend and backend directories found)"
 
 # Check if gh is installed and authenticated
 if ! command -v gh &> /dev/null; then

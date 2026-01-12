@@ -219,9 +219,21 @@ This creates the `dist/` directory that gets deployed.
 
 ### Main Setup Script
 
+The script can be run from any directory:
+
 ```bash
+# From project root
 ./scripts/automated-deployment/setup-automated-deployment.sh
+
+# From scripts directory
+cd scripts/automated-deployment
+./setup-automated-deployment.sh
+
+# From anywhere (using absolute path)
+/path/to/project/scripts/automated-deployment/setup-automated-deployment.sh
 ```
+
+The script automatically detects the project root and finds all necessary directories.
 
 **What it does:**
 
