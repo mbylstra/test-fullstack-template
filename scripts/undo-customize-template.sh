@@ -10,6 +10,16 @@ echo -e "${GREEN}Template Undo Script${NC}"
 echo "=========================================="
 echo
 
+# Get the directory where this script is located (scripts/)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get the project root directory (parent of scripts)
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+# Path to customize script
+CUSTOMIZE_SCRIPT="$SCRIPT_DIR/customize-template.sh"
+
+# Change to root directory for git operations
+cd "$ROOT_DIR" || exit 1
+
 # Check if we're in a git repository
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo -e "${RED}Error: Not in a git repository${NC}"
@@ -48,28 +58,23 @@ echo
 echo -e "${GREEN}Undoing customization...${NC}"
 
 # Save any changes to scripts/customize-template.sh before resetting
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
-WRAPPER_SCRIPT="$ROOT_DIR/scripts/customize-template.sh"
-
-# Create a temporary directory to stash wrapper changes
-TEMP_WRAPPER=$(mktemp)
-if [ -f "$WRAPPER_SCRIPT" ]; then
-    cp "$WRAPPER_SCRIPT" "$TEMP_WRAPPER"
+TEMP_CUSTOMIZE=$(mktemp)
+if [ -f "$CUSTOMIZE_SCRIPT" ]; then
+    cp "$CUSTOMIZE_SCRIPT" "$TEMP_CUSTOMIZE"
 fi
 
 # Reset to the previous commit
 git reset --hard HEAD~1
 
-# Restore the wrapper script if there were changes
-if [ -f "$TEMP_WRAPPER" ]; then
+# Restore the customize script if there were changes
+if [ -f "$TEMP_CUSTOMIZE" ]; then
     # Check if file content differs from what we just reset to
-    if ! cmp -s "$TEMP_WRAPPER" "$WRAPPER_SCRIPT" 2>/dev/null; then
-        cp "$TEMP_WRAPPER" "$WRAPPER_SCRIPT"
-        git add "$WRAPPER_SCRIPT"
+    if ! cmp -s "$TEMP_CUSTOMIZE" "$CUSTOMIZE_SCRIPT" 2>/dev/null; then
+        cp "$TEMP_CUSTOMIZE" "$CUSTOMIZE_SCRIPT"
+        git add "$CUSTOMIZE_SCRIPT"
         echo "  - Restored changes to scripts/customize-template.sh"
     fi
-    rm "$TEMP_WRAPPER"
+    rm "$TEMP_CUSTOMIZE"
 fi
 
 echo
