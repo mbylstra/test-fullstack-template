@@ -57,7 +57,7 @@ DB_PORT="5432"
 # Backend Configuration
 API_DOMAIN="${BACKEND_SUBDOMAIN}.${DO_DOMAIN}"
 FRONTEND_DOMAIN="${FRONTEND_SUBDOMAIN}.${DO_DOMAIN}"
-CORS_ORIGINS="https://${FRONTEND_DOMAIN},https://${PROJECT_NAME}.netlify.app"
+CORS_ORIGINS="https://${FRONTEND_DOMAIN},https://${NETLIFY_SITE_NAME}.netlify.app"
 
 # Netlify Configuration
 NETLIFY_SITE_NAME="mb-${PROJECT_NAME}"  # Your Netlify site name with mb- prefix (e.g., mb-fllstck-tmplt.netlify.app)
