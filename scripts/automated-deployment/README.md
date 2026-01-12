@@ -18,15 +18,18 @@ This directory contains scripts to fully automate your deployment infrastructure
 
 ```bash
 # 1. Complete one-time setup (see below)
+
 # 2. Build your frontend
 cd web-frontend && npm run build && cd ..
 
-# 3. Run the automation script
+# 3. Run the automation script (from any directory)
 ./scripts/automated-deployment/setup-automated-deployment.sh
 
-# 4. Test domains, then increase TTL
+# 4. Test domains, then increase TTL (from any directory)
 ./scripts/automated-deployment/increase-dns-ttl.sh
 ```
+
+**Note:** Both scripts can be run from any directory - they automatically detect the project root.
 
 ---
 

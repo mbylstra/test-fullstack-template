@@ -11,6 +11,20 @@
 set -e  # Exit on error
 
 # ============================================================================
+# PATH DETECTION - Determine script and project root directories
+# ============================================================================
+
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Get the project root (two levels up from scripts/automated-deployment/)
+PROJECT_ROOT="$( cd "${SCRIPT_DIR}/../.." && pwd )"
+
+# Define key directories
+FRONTEND_DIR="${PROJECT_ROOT}/web-frontend"
+BACKEND_DIR="${PROJECT_ROOT}/backend"
+
+# ============================================================================
 # CONFIGURATION - Update these values for your setup
 # ============================================================================
 
@@ -373,10 +387,10 @@ else
             log_info "Creating Netlify site..."
 
             # Check if frontend directory exists
-            FRONTEND_DIR="../web-frontend"
             if [ ! -d "${FRONTEND_DIR}" ]; then
                 log_error "Frontend directory not found: ${FRONTEND_DIR}"
-                log_error "Please run this script from the scripts/ directory"
+                log_error "Make sure you're running this from the full-stack-template project"
+                log_error "Project root detected as: ${PROJECT_ROOT}"
                 exit 1
             fi
 
