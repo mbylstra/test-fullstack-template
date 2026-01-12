@@ -53,19 +53,19 @@ echo ""
 
 # Pull latest Docker image
 echo "Pulling latest Docker image..."
-docker compose -f docker-compose.prod.yml pull
+docker compose -p fllstck-tmplt-prod -f docker-compose.prod.yml pull
 echo "✓ Image pulled"
 echo ""
 
 # Stop and remove old containers
 echo "Stopping old containers..."
-docker compose -f docker-compose.prod.yml down
+docker compose -p fllstck-tmplt-prod -f docker-compose.prod.yml down --remove-orphans
 echo "✓ Containers stopped"
 echo ""
 
 # Start services
 echo "Starting services..."
-docker compose -f docker-compose.prod.yml up -d
+docker compose -p fllstck-tmplt-prod -f docker-compose.prod.yml up -d
 echo "✓ Services started"
 echo ""
 
@@ -75,7 +75,7 @@ sleep 5
 
 # Run database migrations
 echo "Running database migrations..."
-docker compose -f docker-compose.prod.yml exec -T backend uv run alembic upgrade head
+docker compose -p fllstck-tmplt-prod -f docker-compose.prod.yml exec -T backend uv run alembic upgrade head
 echo "✓ Migrations completed"
 echo ""
 
@@ -92,8 +92,8 @@ echo ""
 echo "Backend is running at: https://fllstck-tmplt-backend.michaelbylstra.com"
 echo ""
 echo "To view logs:"
-echo "  docker compose -f docker-compose.prod.yml logs -f"
+echo "  docker compose -p fllstck-tmplt-prod -f docker-compose.prod.yml logs -f"
 echo ""
 echo "To check status:"
-echo "  docker compose -f docker-compose.prod.yml ps"
+echo "  docker compose -p fllstck-tmplt-prod -f docker-compose.prod.yml ps"
 echo ""
