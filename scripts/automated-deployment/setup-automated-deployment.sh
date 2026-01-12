@@ -62,7 +62,7 @@ CORS_ORIGINS="https://${FRONTEND_DOMAIN},https://${PROJECT_NAME}.netlify.app"
 # Netlify Configuration
 NETLIFY_SITE_NAME="mb-${PROJECT_NAME}"  # Your Netlify site name with mb- prefix (e.g., mb-fllstck-tmplt.netlify.app)
 NETLIFY_CUSTOM_DOMAIN="${FRONTEND_SUBDOMAIN}.${DO_DOMAIN}"  # Custom domain
-NETLIFY_ACCESS_TOKEN="${NETLIFY_ACCESS_TOKEN:-}"  # Set via env var or prompt during setup
+NETLIFY_ACCESS_TOKEN=""  # Set via prompt during setup (get from https://app.netlify.com/user/access-tokens)
 
 # DNS TTL Configuration
 DNS_TTL_INITIAL=60  # Low TTL for initial testing (60 seconds = 1 minute)
