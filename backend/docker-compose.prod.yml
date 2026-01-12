@@ -56,10 +56,12 @@ services:
 
 volumes:
   postgres_data:
+    name: fllstck-tmplt-postgres-data
     driver: local
 
 networks:
   fllstck-tmplt-network:
+    name: fllstck-tmplt-network
     driver: bridge
   traefik-network:
     external: true
