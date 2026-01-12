@@ -3,6 +3,7 @@
 This directory contains scripts to fully automate your deployment infrastructure setup.
 
 **What gets automated:**
+
 - SSH keys → GitHub secrets → Droplet
 - DNS configuration (backend + frontend)
 - Netlify site creation + custom domain + SSL
@@ -38,11 +39,13 @@ Complete these steps once, then you can use the automation for all your projects
 #### GitHub CLI (Required)
 
 **macOS:**
+
 ```bash
 brew install gh
 ```
 
 **Linux:**
+
 ```bash
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
@@ -53,11 +56,13 @@ sudo apt install gh
 #### Digital Ocean CLI (Highly Recommended)
 
 **macOS:**
+
 ```bash
 brew install doctl
 ```
 
 **Linux:**
+
 ```bash
 cd ~
 wget https://github.com/digitalocean/doctl/releases/download/v1.98.1/doctl-1.98.1-linux-amd64.tar.gz
@@ -80,12 +85,14 @@ gh auth login
 ```
 
 Follow the prompts:
+
 1. Select "GitHub.com"
 2. Select "HTTPS" or "SSH"
 3. Authenticate via web browser
 4. Complete authentication
 
 Verify:
+
 ```bash
 gh auth status
 ```
@@ -97,6 +104,7 @@ doctl auth init
 ```
 
 You'll need to provide your Digital Ocean API token:
+
 1. Go to https://cloud.digitalocean.com/account/api/tokens
 2. Click "Generate New Token"
 3. Name it "CLI Access"
@@ -104,6 +112,7 @@ You'll need to provide your Digital Ocean API token:
 5. Copy the token and paste it when prompted
 
 Verify:
+
 ```bash
 doctl account get
 ```
@@ -115,11 +124,13 @@ netlify login
 ```
 
 This will:
+
 1. Open your browser
 2. Prompt you to authorize Netlify CLI
 3. Redirect back when complete
 
 Verify:
+
 ```bash
 netlify status
 ```
@@ -146,6 +157,7 @@ ssh root@flipper2.michaelbylstra.com
 ```
 
 If you can't connect:
+
 - Check firewall rules allow SSH (port 22)
 - Verify your IP isn't blocked
 - Ensure SSH service is running
@@ -181,6 +193,7 @@ NETLIFY_SITE_NAME="mb-fllstck-tmplt"        # Change this (use mb- prefix)
 ```
 
 **Naming Convention:**
+
 - **Backend subdomain**: `{project-name}-backend`
 - **Frontend subdomain**: `{project-name}-frontend`
 - **Netlify site**: `mb-{project-name}`
@@ -229,6 +242,7 @@ This creates the `dist/` directory that gets deployed.
 8. **Optional initial deployment** (can test backend immediately)
 
 **Interactive prompts:**
+
 - SSH key overwrite (if exists)
 - Update DNS records (if exist)
 - Create Netlify site (if doesn't exist)
@@ -258,8 +272,9 @@ curl https://{project-name}-backend.michaelbylstra.com/health
 ```
 
 Expected response:
+
 ```json
-{"status":"ok"}
+{ "status": "ok" }
 ```
 
 ### Test Frontend
@@ -353,11 +368,13 @@ netlify status  # Verify
 ### "Cannot connect to droplet via SSH"
 
 Check you can connect:
+
 ```bash
 ssh root@flipper2.michaelbylstra.com
 ```
 
 If not:
+
 - Verify firewall allows SSH (port 22)
 - Check your IP isn't blocked
 - Ensure SSH service is running
@@ -399,9 +416,11 @@ dig {project-name}-frontend.michaelbylstra.com
 ```
 
 Visit Netlify dashboard to see SSL status:
+
 - https://app.netlify.com/sites/mb-{project-name}/settings/domain
 
 Force renewal if needed:
+
 ```bash
 netlify api provisionSiteTLSCertificate --data '{"site_id": "mb-{project-name}"}'
 ```
