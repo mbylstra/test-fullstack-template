@@ -180,6 +180,17 @@ if ! ssh -o ConnectTimeout=5 -o BatchMode=yes ${DROPLET_USER}@${DROPLET_HOST} ex
     log_warning "You may need to enter a password during setup"
 fi
 
+# Check if droplet has SSH access to GitHub
+log_info "Checking if droplet has SSH access to GitHub..."
+if ssh -o ConnectTimeout=5 ${DROPLET_USER}@${DROPLET_HOST} "ssh -T git@github.com 2>&1 | grep -q 'successfully authenticated'" &> /dev/null; then
+    log_success "Droplet has SSH access to GitHub"
+else
+    log_warning "Droplet does not have SSH access to GitHub"
+    log_warning "You'll need to set up SSH keys on the droplet for GitHub access"
+    log_info "Instructions will be provided if needed during setup"
+    DROPLET_NEEDS_GITHUB_SSH=true
+fi
+
 log_success "Pre-flight checks complete"
 
 # ============================================================================
@@ -360,15 +371,25 @@ else
         # Add custom domain to Netlify site
         log_info "Adding custom domain: ${NETLIFY_CUSTOM_DOMAIN}"
 
-        # Check if domain already exists on site
-        EXISTING_DOMAIN=$(netlify api listSiteDomains --data "{\"site_id\": \"${FOUND_SITE_ID}\"}" 2>/dev/null | grep -o "\"${NETLIFY_CUSTOM_DOMAIN}\"" || true)
+        # Get current site info to check if domain is already set
+        set +e
+        SITE_INFO=$(netlify api getSite --data "{\"site_id\": \"${FOUND_SITE_ID}\"}" 2>&1)
+        set -e
 
-        if [ -n "$EXISTING_DOMAIN" ]; then
-            log_warning "Custom domain already configured on Netlify"
+        # Check if this domain is already configured
+        if echo "$SITE_INFO" | grep -q "\"custom_domain\":\"${NETLIFY_CUSTOM_DOMAIN}\""; then
+            log_success "Custom domain already configured: ${NETLIFY_CUSTOM_DOMAIN}"
+        elif echo "$SITE_INFO" | grep -q "\"domain_aliases\".*\"${NETLIFY_CUSTOM_DOMAIN}\""; then
+            log_success "Custom domain already configured as alias: ${NETLIFY_CUSTOM_DOMAIN}"
         else
-            # Capture output to show error details if it fails
-            DOMAIN_ADD_OUTPUT=$(netlify api createSiteDomain --data "{\"site_id\": \"${FOUND_SITE_ID}\", \"domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
-            if [ $? -eq 0 ]; then
+            # Add custom domain using updateSite API
+            log_info "Adding custom domain to site..."
+            set +e
+            DOMAIN_ADD_OUTPUT=$(netlify api updateSite --data "{\"site_id\": \"${FOUND_SITE_ID}\", \"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
+            DOMAIN_ADD_EXIT_CODE=$?
+            set -e
+
+            if [ $DOMAIN_ADD_EXIT_CODE -eq 0 ]; then
                 log_success "Custom domain added to Netlify"
             else
                 log_warning "Could not add domain via API"
@@ -376,35 +397,61 @@ else
                 log_error "Error output:"
                 echo "$DOMAIN_ADD_OUTPUT"
                 echo ""
-                log_info "Try manual configuration:"
-                log_info "  netlify domains:add ${NETLIFY_CUSTOM_DOMAIN} --site ${NETLIFY_SITE_NAME}"
+                log_info "Add the domain manually in Netlify UI:"
+                log_info "  https://app.netlify.com/sites/${NETLIFY_SITE_NAME}/settings/domain"
             fi
         fi
 
         # Configure DNS CNAME record if doctl is available
         if [ "$SKIP_DNS" = false ]; then
-            log_info "Creating CNAME record in Digital Ocean DNS..."
+            log_info "Configuring CNAME record in Digital Ocean DNS..."
 
-            # Check if CNAME already exists
-            EXISTING_CNAME=$(doctl compute domain records list ${DO_DOMAIN} --format Name,Type,Data --no-header | grep "^${FRONTEND_SUBDOMAIN} CNAME" || true)
+            # Check if CNAME already exists (with more flexible matching)
+            EXISTING_CNAME=$(doctl compute domain records list ${DO_DOMAIN} --format ID,Name,Type,Data --no-header | grep -E "^[0-9]+\s+${FRONTEND_SUBDOMAIN}\s+CNAME" || true)
 
             if [ -n "$EXISTING_CNAME" ]; then
-                log_warning "CNAME record already exists for ${FRONTEND_SUBDOMAIN}"
-                read -p "Do you want to update it? (y/N): " -n 1 -r
-                echo
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    RECORD_ID=$(doctl compute domain records list ${DO_DOMAIN} --format ID,Name,Type --no-header | grep "${FRONTEND_SUBDOMAIN} CNAME" | awk '{print $1}')
-                    doctl compute domain records update ${DO_DOMAIN} --record-id ${RECORD_ID} --record-data "${NETLIFY_SITE_NAME}.netlify.app."
+                # Extract the current target
+                CURRENT_TARGET=$(echo "$EXISTING_CNAME" | awk '{print $4}')
+                EXPECTED_TARGET="${NETLIFY_SITE_NAME}.netlify.app"
+
+                if [ "$CURRENT_TARGET" = "$EXPECTED_TARGET" ] || [ "$CURRENT_TARGET" = "${EXPECTED_TARGET}." ]; then
+                    log_success "CNAME record already correctly configured: ${FRONTEND_SUBDOMAIN} -> ${CURRENT_TARGET}"
+                else
+                    log_warning "CNAME record exists but points to wrong target: ${CURRENT_TARGET}"
+                    log_info "Updating to: ${EXPECTED_TARGET}"
+                    RECORD_ID=$(echo "$EXISTING_CNAME" | awk '{print $1}')
+                    doctl compute domain records update ${DO_DOMAIN} --record-id ${RECORD_ID} --record-data "${EXPECTED_TARGET}."
                     log_success "Updated CNAME record"
                 fi
             else
-                doctl compute domain records create ${DO_DOMAIN} \
-                    --record-type CNAME \
-                    --record-name ${FRONTEND_SUBDOMAIN} \
-                    --record-data "${NETLIFY_SITE_NAME}.netlify.app." \
-                    --record-ttl ${DNS_TTL_INITIAL}
-                log_success "Created CNAME record: ${FRONTEND_SUBDOMAIN} -> ${NETLIFY_SITE_NAME}.netlify.app (TTL: ${DNS_TTL_INITIAL}s)"
-                log_info "Note: Increase TTL to ${DNS_TTL_PRODUCTION}s once domain is working"
+                # Check if there's ANY record (not just CNAME) with this name
+                CONFLICTING_RECORD=$(doctl compute domain records list ${DO_DOMAIN} --format ID,Name,Type --no-header | grep -E "^[0-9]+\s+${FRONTEND_SUBDOMAIN}\s+" || true)
+
+                if [ -n "$CONFLICTING_RECORD" ]; then
+                    log_error "Conflicting DNS record exists for ${FRONTEND_SUBDOMAIN}:"
+                    echo "$CONFLICTING_RECORD"
+                    log_warning "CNAME records cannot coexist with other record types"
+                    log_info "Please delete the conflicting record first, then re-run the script"
+                    log_info "  doctl compute domain records delete ${DO_DOMAIN} <RECORD_ID>"
+                else
+                    # No conflicts, create the CNAME
+                    set +e
+                    CREATE_OUTPUT=$(doctl compute domain records create ${DO_DOMAIN} \
+                        --record-type CNAME \
+                        --record-name ${FRONTEND_SUBDOMAIN} \
+                        --record-data "${NETLIFY_SITE_NAME}.netlify.app." \
+                        --record-ttl ${DNS_TTL_INITIAL} 2>&1)
+                    CREATE_EXIT_CODE=$?
+                    set -e
+
+                    if [ $CREATE_EXIT_CODE -eq 0 ]; then
+                        log_success "Created CNAME record: ${FRONTEND_SUBDOMAIN} -> ${NETLIFY_SITE_NAME}.netlify.app (TTL: ${DNS_TTL_INITIAL}s)"
+                        log_info "Note: Increase TTL to ${DNS_TTL_PRODUCTION}s once domain is working"
+                    else
+                        log_error "Failed to create CNAME record"
+                        echo "$CREATE_OUTPUT"
+                    fi
+                fi
             fi
 
             log_info "DNS CNAME: ${NETLIFY_CUSTOM_DOMAIN} -> ${NETLIFY_SITE_NAME}.netlify.app"
@@ -422,6 +469,44 @@ else
         log_success "Netlify custom domain configuration complete"
         log_info "Frontend URL: https://${NETLIFY_CUSTOM_DOMAIN}"
         log_info "Netlify URL: https://${NETLIFY_SITE_NAME}.netlify.app"
+
+        # Check if GitHub continuous deployment is configured
+        echo ""
+        log_info "Checking GitHub continuous deployment configuration..."
+        set +e
+        SITE_DETAILS=$(netlify api getSite --data "{\"site_id\": \"${FOUND_SITE_ID}\"}" 2>&1)
+        set -e
+        if echo "$SITE_DETAILS" | grep -q '"build_settings".*"repo_url"'; then
+            log_success "GitHub continuous deployment is already configured"
+        else
+            log_warning "GitHub continuous deployment is NOT configured"
+            log_info "This site is currently set to 'Manual Deploys'"
+            echo ""
+            log_info "You need to set up GitHub continuous deployment manually"
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            log_info "MANUAL STEP REQUIRED:"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo ""
+            log_info "1. Open a NEW terminal window/tab (keep this script running)"
+            log_info "2. Navigate to the frontend directory:"
+            echo "   cd ${FRONTEND_DIR}"
+            log_info "3. Run the Netlify init command:"
+            echo "   netlify init --force --git-remote-name origin"
+            log_info "4. Follow the prompts that appear:"
+            echo "   - Authorize with GitHub through app.netlify.com"
+            echo "   - Build command: npm run build"
+            echo "   - Publish directory: dist"
+            echo "   - Branch to deploy: main"
+            log_info "5. Wait for the command to complete successfully"
+            log_info "6. Return to THIS terminal and press Enter to continue"
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo ""
+            read -p "Press Enter once you've completed the Netlify init command..."
+            echo ""
+            log_success "Continuing with script..."
+        fi
 
     else
         log_warning "Netlify site not found: ${NETLIFY_SITE_NAME}"
@@ -500,15 +585,11 @@ else
             log_success "Created Netlify site: ${NETLIFY_SITE_NAME}"
             log_info "Site ID: ${SITE_ID}"
 
-            # Link to repository for auto-deploys
-            log_info "Linking to GitHub repository for auto-deploys..."
-            log_warning "You'll need to authorize Netlify to access your GitHub repository"
-            log_info "This will open in your browser..."
-            sleep 2
-
+            # Link local directory to site for initial deploy
+            log_info "Linking local directory to Netlify site..."
             netlify link --id "${SITE_ID}" || {
-                log_warning "Could not link to GitHub automatically"
-                log_info "You can link manually at: https://app.netlify.com/sites/${NETLIFY_SITE_NAME}/settings/deploys"
+                log_warning "Could not link site"
+                log_info "You may need to link manually: netlify link --id ${SITE_ID}"
             }
 
             # Deploy the site
@@ -530,12 +611,44 @@ else
 
             cd - > /dev/null
 
+            # Set up GitHub continuous deployment
+            log_info "Setting up GitHub continuous deployment..."
+            log_warning "This will configure automatic deploys from your GitHub repository"
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            log_info "MANUAL STEP REQUIRED:"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo ""
+            log_info "1. Open a NEW terminal window/tab (keep this script running)"
+            log_info "2. Navigate to the frontend directory:"
+            echo "   cd ${FRONTEND_DIR}"
+            log_info "3. Run the Netlify init command:"
+            echo "   netlify init --force --git-remote-name origin"
+            log_info "4. Follow the prompts that appear:"
+            echo "   - Authorize with GitHub through app.netlify.com"
+            echo "   - Build command: npm run build"
+            echo "   - Publish directory: dist"
+            echo "   - Branch to deploy: main"
+            log_info "5. Wait for the command to complete successfully"
+            log_info "6. Return to THIS terminal and press Enter to continue"
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo ""
+            read -p "Press Enter once you've completed the Netlify init command..."
+            echo ""
+            log_success "GitHub continuous deployment should now be configured"
+            log_info "Netlify will automatically deploy when you push to main branch"
+
             # Now configure custom domain
             log_info "Adding custom domain: ${NETLIFY_CUSTOM_DOMAIN}"
 
-            # Capture output to show error details if it fails
-            DOMAIN_ADD_OUTPUT=$(netlify api createSiteDomain --data "{\"site_id\": \"${SITE_ID}\", \"domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
-            if [ $? -eq 0 ]; then
+            # Add custom domain using updateSite API
+            set +e
+            DOMAIN_ADD_OUTPUT=$(netlify api updateSite --data "{\"site_id\": \"${SITE_ID}\", \"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
+            DOMAIN_ADD_EXIT_CODE=$?
+            set -e
+
+            if [ $DOMAIN_ADD_EXIT_CODE -eq 0 ]; then
                 log_success "Custom domain added to Netlify"
             else
                 log_warning "Could not add domain via API"
@@ -543,26 +656,36 @@ else
                 log_error "Error output:"
                 echo "$DOMAIN_ADD_OUTPUT"
                 echo ""
-                log_info "Try manual configuration:"
-                log_info "  netlify domains:add ${NETLIFY_CUSTOM_DOMAIN} --site ${NETLIFY_SITE_NAME}"
+                log_info "Add the domain manually in Netlify UI:"
+                log_info "  https://app.netlify.com/sites/${NETLIFY_SITE_NAME}/settings/domain"
             fi
 
             # Configure DNS CNAME record if doctl is available
             if [ "$SKIP_DNS" = false ]; then
-                log_info "Creating CNAME record in Digital Ocean DNS..."
+                log_info "Configuring CNAME record in Digital Ocean DNS..."
 
-                EXISTING_CNAME=$(doctl compute domain records list ${DO_DOMAIN} --format Name,Type,Data --no-header | grep "^${FRONTEND_SUBDOMAIN} CNAME" || true)
+                # Check if CNAME already exists
+                EXISTING_CNAME=$(doctl compute domain records list ${DO_DOMAIN} --format ID,Name,Type,Data --no-header | grep -E "^[0-9]+\s+${FRONTEND_SUBDOMAIN}\s+CNAME" || true)
 
                 if [ -n "$EXISTING_CNAME" ]; then
-                    log_warning "CNAME record already exists for ${FRONTEND_SUBDOMAIN}"
+                    log_success "CNAME record already exists for ${FRONTEND_SUBDOMAIN}"
                 else
-                    doctl compute domain records create ${DO_DOMAIN} \
+                    set +e
+                    CREATE_OUTPUT=$(doctl compute domain records create ${DO_DOMAIN} \
                         --record-type CNAME \
                         --record-name ${FRONTEND_SUBDOMAIN} \
                         --record-data "${NETLIFY_SITE_NAME}.netlify.app." \
-                        --record-ttl ${DNS_TTL_INITIAL}
-                    log_success "Created CNAME record: ${FRONTEND_SUBDOMAIN} -> ${NETLIFY_SITE_NAME}.netlify.app (TTL: ${DNS_TTL_INITIAL}s)"
-                    log_info "Note: Increase TTL to ${DNS_TTL_PRODUCTION}s once domain is working"
+                        --record-ttl ${DNS_TTL_INITIAL} 2>&1)
+                    CREATE_EXIT_CODE=$?
+                    set -e
+
+                    if [ $CREATE_EXIT_CODE -eq 0 ]; then
+                        log_success "Created CNAME record: ${FRONTEND_SUBDOMAIN} -> ${NETLIFY_SITE_NAME}.netlify.app (TTL: ${DNS_TTL_INITIAL}s)"
+                        log_info "Note: Increase TTL to ${DNS_TTL_PRODUCTION}s once domain is working"
+                    else
+                        log_error "Failed to create CNAME record"
+                        echo "$CREATE_OUTPUT"
+                    fi
                 fi
             fi
 
@@ -583,6 +706,55 @@ fi
 
 log_section "Step 6: Setup Project on Droplet"
 
+# Check if we need to set up GitHub SSH access
+if [ "${DROPLET_NEEDS_GITHUB_SSH}" = true ]; then
+    log_warning "Droplet needs SSH access to GitHub to clone the repository"
+    echo ""
+    log_info "Setting up GitHub SSH key on droplet..."
+    echo ""
+    log_info "This will:"
+    log_info "  1. Generate an SSH key on the droplet"
+    log_info "  2. Display the public key for you to add to GitHub"
+    echo ""
+    read -p "Continue with GitHub SSH setup? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        # Generate SSH key on droplet and get the public key
+        DROPLET_GITHUB_SSH_KEY=$(ssh -i "${SSH_KEY_PATH}" ${DROPLET_USER}@${DROPLET_HOST} bash <<'EOF'
+if [ ! -f ~/.ssh/id_ed25519 ]; then
+    ssh-keygen -t ed25519 -C "droplet-github-access" -f ~/.ssh/id_ed25519 -N ""
+fi
+cat ~/.ssh/id_ed25519.pub
+EOF
+)
+        echo ""
+        log_info "Public key generated on droplet:"
+        echo ""
+        echo "${DROPLET_GITHUB_SSH_KEY}"
+        echo ""
+        log_info "Add this SSH key to your GitHub account:"
+        log_info "  1. Go to: https://github.com/settings/ssh/new"
+        log_info "  2. Title: ${DROPLET_HOST}"
+        log_info "  3. Paste the public key above"
+        log_info "  4. Click 'Add SSH key'"
+        echo ""
+        read -p "Press Enter once you've added the key to GitHub..."
+        echo ""
+
+        # Test GitHub SSH access
+        if ssh -i "${SSH_KEY_PATH}" ${DROPLET_USER}@${DROPLET_HOST} "ssh -T git@github.com 2>&1 | grep -q 'successfully authenticated'"; then
+            log_success "Droplet can now access GitHub via SSH"
+        else
+            log_error "GitHub SSH access test failed"
+            log_info "Please verify the key was added correctly and try again"
+            exit 1
+        fi
+    else
+        log_error "GitHub SSH access is required to clone the repository"
+        exit 1
+    fi
+fi
+
 log_info "Connecting to droplet and setting up project..."
 
 # Generate random database password
@@ -597,18 +769,18 @@ set -e
 # Create projects directory if it doesn't exist
 mkdir -p ~/projects
 
-# Check if project already exists
-if [ -d "${PROJECT_DIR_ON_DROPLET}" ]; then
+# Check if project already exists (expand tilde on remote)
+if [ -d ~/projects/${PROJECT_NAME} ]; then
     echo "Project directory already exists. Pulling latest changes..."
-    cd ${PROJECT_DIR_ON_DROPLET}
+    cd ~/projects/${PROJECT_NAME}
     git pull origin main
 else
     echo "Cloning repository..."
     cd ~/projects
-    git clone https://github.com/${GITHUB_REPO}.git ${PROJECT_NAME}
+    git clone git@github.com:${GITHUB_REPO}.git ${PROJECT_NAME}
 fi
 
-cd ${PROJECT_DIR_ON_DROPLET}/backend
+cd ~/projects/${PROJECT_NAME}/backend
 
 # Generate SECRET_KEY
 echo "Generating SECRET_KEY..."
@@ -680,7 +852,7 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     log_info "Running deployment script on droplet..."
 
-    ssh -i "${SSH_KEY_PATH}" ${DROPLET_USER}@${DROPLET_HOST} bash <<'EOF'
+    ssh -i "${SSH_KEY_PATH}" ${DROPLET_USER}@${DROPLET_HOST} bash <<EOF
 cd ${PROJECT_DIR_ON_DROPLET}/backend
 ./deploy.sh
 EOF
