@@ -21,9 +21,8 @@ export default function Home() {
             <div className="mb-12 text-center">
                 <h1 className="text-4xl font-bold mb-4">Full-Stack Template</h1>
                 <p className="text-gray-600 text-lg">
-                    A modern, production-ready template with TypeSpec API
-                    design, React frontend, Flutter mobile app, and FastAPI
-                    backend
+                    A product development template with TypeSpec API design,
+                    React frontend, Flutter mobile app, and Python backend
                 </p>
             </div>
 
