@@ -34,19 +34,20 @@ copy .envrc.example to .envrc and fill in the values
 
 start claude (shouldn't be any warnings)
 
-### Initialize the mobile app
-
 #### Install packages
 
 ```
 make install
 ```
 
+### Initialize the mobile app
+
 #### Quick test
 
 Connect phone (iphone or android) with cable
 
 ```
+cd mobile-app
 make flutter-run
 ```
 
