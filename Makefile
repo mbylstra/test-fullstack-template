@@ -1,10 +1,11 @@
 .DEFAULT_GOAL := help
-.PHONY: help dev-all dev-debug test typecheck customize-template rebase-from-latest-template merge-latest-template track-template-repo api-compile api-watch api-format api-generate
+.PHONY: help dev-all dev-debug test typecheck install customize-template rebase-from-latest-template merge-latest-template track-template-repo api-compile api-watch api-format api-generate
 
 help:
 	@echo "Root Level Commands:"
 	@echo "  make dev-all      - Start database, backend, and frontend together"
 	@echo "  make dev-debug    - Start database and frontend (use VSCode debugger for backend)"
+	@echo "  make install      - Install all dependencies (root, backend, frontend, mobile)"
 	@echo "  make test         - Run backend tests"
 	@echo "  make typecheck    - Typecheck TypeSpec, frontend, and backend"
 	@echo ""
@@ -121,6 +122,21 @@ api-generate:
 
 test:
 	cd backend && $(MAKE) test
+
+install:
+	@echo "Installing root dependencies (TypeSpec)..."
+	@pnpm install
+	@echo ""
+	@echo "Installing backend dependencies..."
+	@cd backend && $(MAKE) install
+	@echo ""
+	@echo "Installing frontend dependencies..."
+	@cd web-frontend && $(MAKE) install
+	@echo ""
+	@echo "Installing mobile dependencies..."
+	@cd mobile-app && $(MAKE) install
+	@echo ""
+	@echo "✓ All dependencies installed!"
 
 typecheck:
 	@echo "Typechecking TypeSpec..."

@@ -38,11 +38,8 @@ start claude (shouldn't be any warnings)
 
 #### Install packages
 
-(from root)
-
 ```
-flutter pub get
-cd widgetbook && flutter pub get
+make install
 ```
 
 #### Quick test

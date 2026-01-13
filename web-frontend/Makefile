@@ -1,9 +1,10 @@
 .DEFAULT_GOAL := help
-.PHONY: help dev typecheck prettier storybook api-generate
+.PHONY: help dev install typecheck prettier storybook api-generate
 
 help:
 	@echo "Web Frontend Commands:"
 	@echo "  make dev          - Start Vite dev server"
+	@echo "  make install      - Install dependencies"
 	@echo "  make typecheck    - Run TypeScript type checking"
 	@echo "  make prettier     - Format code with prettier"
 	@echo "  make storybook    - Start Storybook dev server"
@@ -13,6 +14,9 @@ help:
 
 dev:
 	pnpm vite
+
+install:
+	pnpm install
 
 typecheck:
 	pnpm tsc -b --noEmit
