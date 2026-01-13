@@ -20,6 +20,7 @@ OLD_PACKAGE_NAME="fllstck_tmplt"
 OLD_SNAKE_CASE_NAME="fllstck_tmplt"
 OLD_KEBAB_CASE_NAME="fllstck-tmplt"
 OLD_CAMEL_CASE_NAME="fllstckTmplt"
+OLD_PASCAL_CASE_NAME="FllstckTmplt"
 OLD_ANDROID_PACKAGE="com.example.fllstck_tmplt"
 OLD_IOS_BUNDLE="com.example.fllstckTmplt"
 
@@ -55,6 +56,9 @@ NEW_KEBAB_CASE_NAME=$(echo "$NEW_APP_NAME" | tr '[:upper:]' '[:lower:]' | tr ' '
 # Derive camelCase (for bundle IDs)
 NEW_CAMEL_CASE_NAME=$(echo "$NEW_SNAKE_CASE_NAME" | perl -pe 's/(_)([a-z])/uc($2)/ge; s/^([a-z])/lc($1)/e')
 
+# Derive PascalCase (capitalize first letter of camelCase)
+NEW_PASCAL_CASE_NAME=$(echo "$NEW_CAMEL_CASE_NAME" | perl -pe 's/^([a-z])/uc($1)/e')
+
 # Derive package name (same as snake_case)
 NEW_PACKAGE_NAME="$NEW_SNAKE_CASE_NAME"
 
@@ -67,7 +71,8 @@ echo -e "${YELLOW}Confirmation:${NC}"
 echo "  App Name: $NEW_APP_NAME"
 echo "  kebab-case Name: $NEW_KEBAB_CASE_NAME"
 echo "  snake_case Name: $NEW_SNAKE_CASE_NAME"
-echo "  kebab-case Name: $NEW_KEBAB_CASE_NAME"
+echo "  camelCase Name: $NEW_CAMEL_CASE_NAME"
+echo "  PascalCase Name: $NEW_PASCAL_CASE_NAME"
 echo "  Package Name: $NEW_PACKAGE_NAME"
 echo "  Android Package: $NEW_ANDROID_PACKAGE"
 echo "  iOS Bundle: $NEW_IOS_BUNDLE"
@@ -142,6 +147,7 @@ replace_everywhere() {
         replace_in_file "$file" "$OLD_SNAKE_CASE_NAME" "$NEW_SNAKE_CASE_NAME"
         replace_in_file "$file" "$OLD_KEBAB_CASE_NAME" "$NEW_KEBAB_CASE_NAME"
         replace_in_file "$file" "$OLD_CAMEL_CASE_NAME" "$NEW_CAMEL_CASE_NAME"
+        replace_in_file "$file" "$OLD_PASCAL_CASE_NAME" "$NEW_PASCAL_CASE_NAME"
         replace_in_file "$file" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
         replace_in_file "$file" "$OLD_IOS_BUNDLE" "$NEW_IOS_BUNDLE"
     done
