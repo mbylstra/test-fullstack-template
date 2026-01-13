@@ -15,8 +15,8 @@ echo -e "${GREEN}Stop Server Services Script${NC}"
 echo "============================="
 echo
 
-# Default to flipper2.michaelbylstra.com if SERVER_HOST not set
-SERVER_HOST=${SERVER_HOST:-"flipper2.michaelbylstra.com"}
+# Default to root@flipper2.michaelbylstra.com if SERVER_HOST not set
+SERVER_HOST=${SERVER_HOST:-"root@flipper2.michaelbylstra.com"}
 
 # Default project directory on server
 SERVER_PROJECT_DIR=${SERVER_PROJECT_DIR:-"~/projects/fllstck-tmplt"}
