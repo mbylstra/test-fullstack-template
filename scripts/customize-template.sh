@@ -15,7 +15,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Default values (current template values)
-OLD_APP_NAME="Full Stack Template"
+OLD_APP_NAME="Fllstck Tmplt"
 OLD_PACKAGE_NAME="fllstck_tmplt"
 OLD_SNAKE_CASE_NAME="fllstck_tmplt"
 OLD_KEBAB_CASE_NAME="fllstck-tmplt"
