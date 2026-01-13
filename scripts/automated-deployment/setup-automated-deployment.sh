@@ -63,6 +63,7 @@ CORS_ORIGINS="https://${FRONTEND_DOMAIN},https://${NETLIFY_SITE_NAME}.netlify.ap
 NETLIFY_SITE_NAME="mb-${PROJECT_NAME}"  # Your Netlify site name with mb- prefix (e.g., mb-fllstck-tmplt.netlify.app)
 NETLIFY_CUSTOM_DOMAIN="${FRONTEND_SUBDOMAIN}.${DO_DOMAIN}"  # Custom domain
 NETLIFY_ACCESS_TOKEN=""  # Set via prompt during setup (get from https://app.netlify.com/user/access-tokens)
+NETLIFY_ACCOUNT_SLUG="mbylstra"  # Your Netlify team slug (find at https://app.netlify.com/teams/YOUR-TEAM/settings)
 
 # DNS TTL Configuration
 DNS_TTL_INITIAL=60  # Low TTL for initial testing (60 seconds = 1 minute)
@@ -554,7 +555,7 @@ else
             # Create the site with the specified name
             # Use 'set +e' temporarily to prevent script exit on command failure
             set +e
-            netlify sites:create --name "${NETLIFY_SITE_NAME}"
+            netlify sites:create --name "${NETLIFY_SITE_NAME}" --account-slug "${NETLIFY_ACCOUNT_SLUG}"
             CREATE_EXIT_CODE=$?
             set -e
 
