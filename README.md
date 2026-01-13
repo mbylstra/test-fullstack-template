@@ -75,3 +75,12 @@ make merge-latest-template
 ```
 
 This might be a little or a huge amount of work depending on how behind it is.
+
+## How many projects will fit on the one VM?
+
+They seem to use roughly 150MB per project. So, if you have a 512MB Instance, you should be able to get away with three projects.
+
+Start and stop backends to save memory/CPU:
+
+`make stop-server-services`
+`make start-server-services`
