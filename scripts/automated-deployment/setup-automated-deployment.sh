@@ -355,7 +355,7 @@ else
     # List all sites and check if one matches our site name
     # Use 'set +e' temporarily to prevent script exit on command failure
     set +e
-    SITE_LIST_OUTPUT=$(netlify api listSites 2>&1)
+    SITE_LIST_OUTPUT=$(netlify api listSites)
     SITE_LIST_EXIT_CODE=$?
     set -e
 
@@ -383,7 +383,7 @@ else
 
         # Get current site info to check if domain is already set
         set +e
-        SITE_INFO=$(netlify api getSite --data "{\"site_id\": \"${FOUND_SITE_ID}\"}" 2>&1)
+        SITE_INFO=$(netlify api getSite --data "{\"site_id\": \"${FOUND_SITE_ID}\"}")
         set -e
 
         # Check if this domain is already configured
@@ -395,22 +395,19 @@ else
             # Add custom domain using Netlify API
             log_info "Adding custom domain: ${NETLIFY_CUSTOM_DOMAIN}"
             set +e
-            DOMAIN_ADD_OUTPUT=$(curl -s -X PATCH \
+            curl -X PATCH \
                 "https://api.netlify.com/api/v1/sites/${FOUND_SITE_ID}" \
                 -H "Authorization: Bearer ${NETLIFY_ACCESS_TOKEN}" \
                 -H "Content-Type: application/json" \
-                -d "{\"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
+                -d "{\"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}"
             DOMAIN_ADD_EXIT_CODE=$?
             set -e
+            echo ""
 
             if [ $DOMAIN_ADD_EXIT_CODE -eq 0 ]; then
                 log_success "Custom domain added to Netlify"
             else
                 log_warning "Could not add domain via API"
-                echo ""
-                log_error "Error output:"
-                echo "$DOMAIN_ADD_OUTPUT"
-                echo ""
                 log_info "Add the domain manually in Netlify UI:"
                 log_info "  https://app.netlify.com/sites/${NETLIFY_SITE_NAME}/settings/domain"
             fi
@@ -450,11 +447,11 @@ else
                 else
                     # No conflicts, create the CNAME
                     set +e
-                    CREATE_OUTPUT=$(doctl compute domain records create ${DO_DOMAIN} \
+                    doctl compute domain records create ${DO_DOMAIN} \
                         --record-type CNAME \
                         --record-name ${FRONTEND_SUBDOMAIN} \
                         --record-data "${NETLIFY_SITE_NAME}.netlify.app." \
-                        --record-ttl ${DNS_TTL_INITIAL} 2>&1)
+                        --record-ttl ${DNS_TTL_INITIAL}
                     CREATE_EXIT_CODE=$?
                     set -e
 
@@ -463,7 +460,6 @@ else
                         log_info "Note: Increase TTL to ${DNS_TTL_PRODUCTION}s once domain is working"
                     else
                         log_error "Failed to create CNAME record"
-                        echo "$CREATE_OUTPUT"
                     fi
                 fi
             fi
@@ -488,7 +484,7 @@ else
         echo ""
         log_info "Checking GitHub continuous deployment configuration..."
         set +e
-        SITE_DETAILS=$(netlify api getSite --data "{\"site_id\": \"${FOUND_SITE_ID}\"}" 2>&1)
+        SITE_DETAILS=$(netlify api getSite --data "{\"site_id\": \"${FOUND_SITE_ID}\"}")
         set -e
         if echo "$SITE_DETAILS" | grep -q '"build_settings".*"repo_url"'; then
             log_success "GitHub continuous deployment is already configured"
@@ -556,25 +552,23 @@ else
             cd "${FRONTEND_DIR}"
 
             # Create the site with the specified name
-            # Capture both stdout and stderr
             # Use 'set +e' temporarily to prevent script exit on command failure
             set +e
-            NETLIFY_OUTPUT=$(netlify sites:create --name "${NETLIFY_SITE_NAME}" 2>&1)
+            netlify sites:create --name "${NETLIFY_SITE_NAME}"
             CREATE_EXIT_CODE=$?
             set -e
 
-            # Parse Site ID from output (format: "Site ID: <uuid>") or from state file
+            # Parse Site ID from state file
             if [ $CREATE_EXIT_CODE -eq 0 ]; then
-                # Try to get Site ID from the output
-                SITE_ID=$(echo "$NETLIFY_OUTPUT" | grep -i "Site ID:" | awk '{print $NF}')
-
-                # If not found in output, check .netlify/state.json
-                if [ -z "$SITE_ID" ] && [ -f ".netlify/state.json" ]; then
+                # Check .netlify/state.json for Site ID
+                if [ -f ".netlify/state.json" ]; then
                     if command -v jq &> /dev/null; then
                         SITE_ID=$(jq -r '.siteId' .netlify/state.json 2>/dev/null)
                     else
                         SITE_ID=$(grep -o '"siteId":"[^"]*"' .netlify/state.json | cut -d'"' -f4)
                     fi
+                else
+                    SITE_ID=""
                 fi
             else
                 SITE_ID=""
@@ -582,9 +576,6 @@ else
 
             if [ -z "$SITE_ID" ]; then
                 log_error "Failed to create Netlify site"
-                echo ""
-                log_error "Netlify CLI output:"
-                echo "$NETLIFY_OUTPUT"
                 echo ""
                 log_info "Possible reasons:"
                 log_info "  - Site name '${NETLIFY_SITE_NAME}' may already be taken"
@@ -658,22 +649,19 @@ else
 
             # Add custom domain using Netlify API
             set +e
-            DOMAIN_ADD_OUTPUT=$(curl -s -X PATCH \
+            curl -X PATCH \
                 "https://api.netlify.com/api/v1/sites/${SITE_ID}" \
                 -H "Authorization: Bearer ${NETLIFY_ACCESS_TOKEN}" \
                 -H "Content-Type: application/json" \
-                -d "{\"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}" 2>&1)
+                -d "{\"custom_domain\": \"${NETLIFY_CUSTOM_DOMAIN}\"}"
             DOMAIN_ADD_EXIT_CODE=$?
             set -e
+            echo ""
 
             if [ $DOMAIN_ADD_EXIT_CODE -eq 0 ]; then
                 log_success "Custom domain added to Netlify"
             else
                 log_warning "Could not add domain via API"
-                echo ""
-                log_error "Error output:"
-                echo "$DOMAIN_ADD_OUTPUT"
-                echo ""
                 log_info "Add the domain manually in Netlify UI:"
                 log_info "  https://app.netlify.com/sites/${NETLIFY_SITE_NAME}/settings/domain"
             fi
@@ -689,11 +677,11 @@ else
                     log_success "CNAME record already exists for ${FRONTEND_SUBDOMAIN}"
                 else
                     set +e
-                    CREATE_OUTPUT=$(doctl compute domain records create ${DO_DOMAIN} \
+                    doctl compute domain records create ${DO_DOMAIN} \
                         --record-type CNAME \
                         --record-name ${FRONTEND_SUBDOMAIN} \
                         --record-data "${NETLIFY_SITE_NAME}.netlify.app." \
-                        --record-ttl ${DNS_TTL_INITIAL} 2>&1)
+                        --record-ttl ${DNS_TTL_INITIAL}
                     CREATE_EXIT_CODE=$?
                     set -e
 
@@ -702,7 +690,6 @@ else
                         log_info "Note: Increase TTL to ${DNS_TTL_PRODUCTION}s once domain is working"
                     else
                         log_error "Failed to create CNAME record"
-                        echo "$CREATE_OUTPUT"
                     fi
                 fi
             fi
