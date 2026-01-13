@@ -18,8 +18,11 @@ echo
 # Default to flipper2.michaelbylstra.com if SERVER_HOST not set
 SERVER_HOST=${SERVER_HOST:-"flipper2.michaelbylstra.com"}
 
-# Optional: Path to docker-compose file on server (defaults to ~/backend/docker-compose.prod.yml)
-SERVER_COMPOSE_PATH=${SERVER_COMPOSE_PATH:-"~/backend/docker-compose.prod.yml"}
+# Default project directory on server
+SERVER_PROJECT_DIR=${SERVER_PROJECT_DIR:-"~/projects/fllstck-tmplt"}
+
+# Optional: Path to docker-compose file on server
+SERVER_COMPOSE_PATH=${SERVER_COMPOSE_PATH:-"${SERVER_PROJECT_DIR}/backend/docker-compose.prod.yml"}
 
 echo -e "${YELLOW}Server:${NC} $SERVER_HOST"
 echo -e "${YELLOW}Compose file:${NC} $SERVER_COMPOSE_PATH"
@@ -43,7 +46,7 @@ ssh "$SERVER_HOST" << 'EOF'
     echo "Starting backend and database services..."
 
     # Navigate to backend directory
-    cd ~/backend || { echo "Error: ~/backend directory not found"; exit 1; }
+    cd ~/projects/fllstck-tmplt/backend || { echo "Error: ~/projects/fllstck-tmplt/backend directory not found"; exit 1; }
 
     # Pull latest images
     echo "Pulling latest images..."
@@ -64,7 +67,7 @@ if [ $? -eq 0 ]; then
     echo -e "${GREEN}✓ Services started successfully on server${NC}"
     echo
     echo -e "${YELLOW}To check logs, SSH into the server and run:${NC}"
-    echo "  cd ~/backend && docker compose -p fllstck-tmplt -f docker-compose.prod.yml logs -f"
+    echo "  cd ~/projects/fllstck-tmplt/backend && docker compose -p fllstck-tmplt -f docker-compose.prod.yml logs -f"
 else
     echo
     echo -e "${RED}✗ Failed to start services${NC}"
