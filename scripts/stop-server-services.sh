@@ -15,12 +15,8 @@ echo -e "${GREEN}Stop Server Services Script${NC}"
 echo "============================="
 echo
 
-# Check for required environment variables
-if [ -z "$SERVER_HOST" ]; then
-    echo -e "${RED}Error: SERVER_HOST environment variable not set${NC}"
-    echo "Please set SERVER_HOST to your server address (e.g., user@example.com)"
-    exit 1
-fi
+# Default to flipper2.michaelbylstra.com if SERVER_HOST not set
+SERVER_HOST=${SERVER_HOST:-"flipper2.michaelbylstra.com"}
 
 # Optional: Path to docker-compose file on server (defaults to ~/backend/docker-compose.prod.yml)
 SERVER_COMPOSE_PATH=${SERVER_COMPOSE_PATH:-"~/backend/docker-compose.prod.yml"}
