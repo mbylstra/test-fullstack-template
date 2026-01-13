@@ -51,29 +51,9 @@ cd mobile-app
 make flutter-run
 ```
 
----
+### Configure Production Deployment and Deploy to Prod
 
-### Configure Production Deployment
-
-#### Automated Deployment Setup
-
-This template includes complete automation for production deployment infrastructure.
-
-**Location:** `scripts/automated-deployment/`
-
-**What gets automated:**
-
-- SSH keys and GitHub secrets
-- DNS configuration (backend + frontend)
-- Netlify site creation + custom domain + SSL
-- Docker registry authentication
-- Project initialization on droplet
-
-**Get started:**
-
-```bash
-cd scripts/automated-deployment
-cat README.md  # Read the setup instructions
 ```
-
-See [`scripts/automated-deployment/README.md`](scripts/automated-deployment/README.md) for detailed instructions.
+cd scripts/automated-deployment
+./setup-automated-deployment.sh
+```
