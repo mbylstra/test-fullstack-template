@@ -8,6 +8,7 @@ IT IS THE YEAR 2026, Use 2026 in web searches, not 2024 or 2025!!!
 
 ## Development Best Practices
 
+- NEVER commit your changes to git!!!
 - ALWAYS check ide diagnostics mcp after making any changes to a file VERY IMPORTANT!
 - ALWAYS run `make typecheck` after you have finished completing any task the user asks you to do. VERY IMPORTANT!
 - ALWAYS avoid "any" type in Typescript, Python and Typespec code unless absolutely necessary. VERY IMPORTANT!
