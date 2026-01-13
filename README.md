@@ -1,8 +1,10 @@
 # Fullstack Template
 
-## How To use this template
+## Follow these steps
 
-### Set up the repo
+### Initialize the project
+
+#### Set up the repo
 
 Create a new project on github
 
@@ -14,17 +16,27 @@ git remote add origin git@github.com:mbylstra/{{your-project-name}}.git
 git push
 ```
 
-### Enable tracking of the template repo
+#### Enable tracking of the template repo
 
 This is so we can merge/rebase changes to the template in the future
 
 `make track-template-repo`
 
-### Replace project names
+#### Replace project names
 
 `make customize-template`
 
-### Install packages
+#### Set up .envrc
+
+copy .envrc.example to .envrc and fill in the values
+
+#### Test Claude
+
+start claude (shouldn't be any warnings)
+
+### Initialize the mobile app
+
+#### Install packages
 
 (from root)
 
@@ -33,12 +45,7 @@ flutter pub get
 cd widgetbook && flutter pub get
 ```
 
-### Set up Claude
-
-copy .envrc.example to .envrc and fill in the values
-start claude (shouldn't be any warnings)
-
-### Quick test
+#### Quick test
 
 Connect phone (iphone or android) with cable
 
@@ -48,9 +55,9 @@ make flutter-run
 
 ---
 
-## Production Deployment
+### Configure Production Deployment
 
-### Automated Deployment Setup
+#### Automated Deployment Setup
 
 This template includes complete automation for production deployment infrastructure.
 
