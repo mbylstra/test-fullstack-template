@@ -113,11 +113,6 @@ should_exclude_file() {
         return 0
     fi
 
-    # Exclude .github directory
-    if [[ "$file" == .github/* ]]; then
-        return 0
-    fi
-
     return 1
 }
 
