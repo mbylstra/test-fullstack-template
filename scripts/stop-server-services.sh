@@ -19,7 +19,7 @@ echo
 SERVER_HOST=${SERVER_HOST:-"root@flipper2.michaelbylstra.com"}
 
 # Default project directory on server
-SERVER_PROJECT_DIR=${SERVER_PROJECT_DIR:-"~/projects/fllstck-tmplt"}
+SERVER_PROJECT_DIR=${SERVER_PROJECT_DIR:-"~/projects/test-fullstack-template"}
 
 # Optional: Path to docker-compose file on server
 SERVER_COMPOSE_PATH=${SERVER_COMPOSE_PATH:-"${SERVER_PROJECT_DIR}/backend/docker-compose.prod.yml"}
@@ -46,10 +46,10 @@ ssh "$SERVER_HOST" << 'EOF'
     echo "Stopping backend and database services..."
 
     # Navigate to backend directory
-    cd ~/projects/fllstck-tmplt/backend || { echo "Error: ~/projects/fllstck-tmplt/backend directory not found"; exit 1; }
+    cd ~/projects/test-fullstack-template/backend || { echo "Error: ~/projects/test-fullstack-template/backend directory not found"; exit 1; }
 
     # Stop services without removing volumes
-    docker compose -p fllstck-tmplt -f docker-compose.prod.yml down
+    docker compose -p test-fullstack-template -f docker-compose.prod.yml down
 
     echo "✓ Services stopped successfully"
     echo "Note: Database volume preserved - data will be available when services restart"
@@ -60,7 +60,7 @@ if [ $? -eq 0 ]; then
     echo -e "${GREEN}✓ Services stopped successfully on server${NC}"
     echo
     echo -e "${YELLOW}To restart services, SSH into the server and run:${NC}"
-    echo "  cd ~/projects/fllstck-tmplt/backend && docker compose -p fllstck-tmplt -f docker-compose.prod.yml up -d"
+    echo "  cd ~/projects/test-fullstack-template/backend && docker compose -p test-fullstack-template -f docker-compose.prod.yml up -d"
 else
     echo
     echo -e "${RED}✗ Failed to stop services${NC}"

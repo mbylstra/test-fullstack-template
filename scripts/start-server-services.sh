@@ -19,7 +19,7 @@ echo
 SERVER_HOST=${SERVER_HOST:-"root@flipper2.michaelbylstra.com"}
 
 # Default project directory on server
-SERVER_PROJECT_DIR=${SERVER_PROJECT_DIR:-"~/projects/fllstck-tmplt"}
+SERVER_PROJECT_DIR=${SERVER_PROJECT_DIR:-"~/projects/test-fullstack-template"}
 
 # Optional: Path to docker-compose file on server
 SERVER_COMPOSE_PATH=${SERVER_COMPOSE_PATH:-"${SERVER_PROJECT_DIR}/backend/docker-compose.prod.yml"}
@@ -46,20 +46,20 @@ ssh "$SERVER_HOST" << 'EOF'
     echo "Starting backend and database services..."
 
     # Navigate to backend directory
-    cd ~/projects/fllstck-tmplt/backend || { echo "Error: ~/projects/fllstck-tmplt/backend directory not found"; exit 1; }
+    cd ~/projects/test-fullstack-template/backend || { echo "Error: ~/projects/test-fullstack-template/backend directory not found"; exit 1; }
 
     # Pull latest images
     echo "Pulling latest images..."
-    docker compose -p fllstck-tmplt -f docker-compose.prod.yml pull
+    docker compose -p test-fullstack-template -f docker-compose.prod.yml pull
 
     # Start services
     echo "Starting services..."
-    docker compose -p fllstck-tmplt -f docker-compose.prod.yml up -d --wait
+    docker compose -p test-fullstack-template -f docker-compose.prod.yml up -d --wait
 
     echo "✓ Services started successfully"
     echo ""
     echo "Service status:"
-    docker compose -p fllstck-tmplt -f docker-compose.prod.yml ps
+    docker compose -p test-fullstack-template -f docker-compose.prod.yml ps
 EOF
 
 if [ $? -eq 0 ]; then
@@ -67,7 +67,7 @@ if [ $? -eq 0 ]; then
     echo -e "${GREEN}✓ Services started successfully on server${NC}"
     echo
     echo -e "${YELLOW}To check logs, SSH into the server and run:${NC}"
-    echo "  cd ~/projects/fllstck-tmplt/backend && docker compose -p fllstck-tmplt -f docker-compose.prod.yml logs -f"
+    echo "  cd ~/projects/test-fullstack-template/backend && docker compose -p test-fullstack-template -f docker-compose.prod.yml logs -f"
 else
     echo
     echo -e "${RED}✗ Failed to start services${NC}"
