@@ -147,27 +147,6 @@ replace_in_directory "android" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 replace_in_directory "android" "$OLD_SNAKE_CASE_NAME" "$NEW_KEBAB_CASE_NAME"
 replace_in_directory "android" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
 
-# Move MainActivity.kt to new package directory structure
-OLD_ANDROID_PATH="android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | tr '.' '/')"
-NEW_ANDROID_PATH="android/app/src/main/kotlin/$(echo $NEW_ANDROID_PACKAGE | tr '.' '/')"
-
-if [ -f "$OLD_ANDROID_PATH/MainActivity.kt" ]; then
-    echo "  - Moving MainActivity.kt to new package directory"
-    mkdir -p "$NEW_ANDROID_PATH"
-    mv "$OLD_ANDROID_PATH/MainActivity.kt" "$NEW_ANDROID_PATH/MainActivity.kt"
-    # Remove old directory structure if empty, working from deepest to shallowest
-    # Stop if directory is not empty or if it's part of the new path
-    CURRENT_DIR="$OLD_ANDROID_PATH"
-    while [ "$CURRENT_DIR" != "android/app/src/main/kotlin" ] && [ -d "$CURRENT_DIR" ]; do
-        # Only remove if directory is empty and not part of new path
-        if [ -z "$(ls -A "$CURRENT_DIR")" ] && [[ "$NEW_ANDROID_PATH" != "$CURRENT_DIR"* ]]; then
-            rmdir "$CURRENT_DIR"
-            CURRENT_DIR="$(dirname "$CURRENT_DIR")"
-        else
-            break
-        fi
-    done
-fi
 
 # Update iOS directory
 echo "  - ios/"
@@ -218,6 +197,28 @@ echo "  - widgetbook/"
 replace_in_directory "widgetbook" "$OLD_PACKAGE_NAME" "$NEW_PACKAGE_NAME"
 replace_in_directory "widgetbook" "$OLD_SNAKE_CASE_NAME" "$NEW_KEBAB_CASE_NAME"
 replace_in_directory "widgetbook" "package:$OLD_PACKAGE_NAME" "package:$NEW_PACKAGE_NAME"
+
+# Move MainActivity.kt to new package directory structure
+OLD_ANDROID_PATH="android/app/src/main/kotlin/$(echo $OLD_ANDROID_PACKAGE | tr '.' '/')"
+NEW_ANDROID_PATH="android/app/src/main/kotlin/$(echo $NEW_ANDROID_PACKAGE | tr '.' '/')"
+
+if [ -f "$OLD_ANDROID_PATH/MainActivity.kt" ]; then
+    echo "  - Moving MainActivity.kt to new package directory"
+    mkdir -p "$NEW_ANDROID_PATH"
+    mv "$OLD_ANDROID_PATH/MainActivity.kt" "$NEW_ANDROID_PATH/MainActivity.kt"
+    # Remove old directory structure if empty, working from deepest to shallowest
+    # Stop if directory is not empty or if it's part of the new path
+    CURRENT_DIR="$OLD_ANDROID_PATH"
+    while [ "$CURRENT_DIR" != "android/app/src/main/kotlin" ] && [ -d "$CURRENT_DIR" ]; do
+        # Only remove if directory is empty and not part of new path
+        if [ -z "$(ls -A "$CURRENT_DIR")" ] && [[ "$NEW_ANDROID_PATH" != "$CURRENT_DIR"* ]]; then
+            rmdir "$CURRENT_DIR"
+            CURRENT_DIR="$(dirname "$CURRENT_DIR")"
+        else
+            break
+        fi
+    done
+fi
 
 echo
 echo -e "${GREEN}Committing changes...${NC}"
