@@ -36,7 +36,7 @@ dev-all:
 	@lsof -ti:5173 | xargs kill -9 2>/dev/null || true
 	@echo ""
 	@echo "Starting database and waiting for health check..."
-	@cd backend && docker compose -p fllstck-tmplt -f docker-compose.dev.yml up -d --wait
+	@cd backend && docker compose -p test-fullstack-template -f docker-compose.dev.yml up -d --wait
 	@echo ""
 	@echo "Running database migrations..."
 	@cd backend && $(MAKE) db-migrate
@@ -63,7 +63,7 @@ dev-debug:
 	@lsof -ti:5173 | xargs kill -9 2>/dev/null || true
 	@echo ""
 	@echo "Starting database and waiting for health check..."
-	@cd backend && docker compose -p fllstck-tmplt -f docker-compose.dev.yml up -d --wait
+	@cd backend && docker compose -p test-fullstack-template -f docker-compose.dev.yml up -d --wait
 	@echo ""
 	@echo "Running database migrations..."
 	@cd backend && $(MAKE) db-migrate

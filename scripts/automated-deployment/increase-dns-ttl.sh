@@ -13,8 +13,8 @@ set -e
 # ============================================================================
 
 DO_DOMAIN="michaelbylstra.com"
-BACKEND_SUBDOMAIN="fllstck-tmplt-backend"
-FRONTEND_SUBDOMAIN="fllstck-tmplt-frontend"
+BACKEND_SUBDOMAIN="test-fullstack-template-backend"
+FRONTEND_SUBDOMAIN="test-fullstack-template-frontend"
 
 # TTL Configuration
 NEW_TTL=3600  # 1 hour - good balance between performance and flexibility

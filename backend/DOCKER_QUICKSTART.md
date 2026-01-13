@@ -55,8 +55,8 @@ Expected output:
 
 ```
 NAME               STATUS                PORTS
-fllstck-tmplt-backend    Up (healthy)          0.0.0.0:8000->8000/tcp
-fllstck-tmplt-postgres   Up (healthy)          0.0.0.0:5432->5432/tcp
+test-fullstack-template-backend    Up (healthy)          0.0.0.0:8000->8000/tcp
+test-fullstack-template-postgres   Up (healthy)          0.0.0.0:5432->5432/tcp
 ```
 
 ## Development Workflow

@@ -404,7 +404,7 @@ wheels = [
 ]
 
 [[package]]
-name = "fllstck-tmplt-backend"
+name = "test-fullstack-template-backend"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

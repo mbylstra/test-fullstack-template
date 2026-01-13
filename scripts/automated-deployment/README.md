@@ -177,10 +177,10 @@ Open `setup-automated-deployment.sh` and update these constants:
 
 ```bash
 # Project Configuration
-PROJECT_NAME="fllstck-tmplt"                # Change this for your project
+PROJECT_NAME="test-fullstack-template"                # Change this for your project
 
 # GitHub Configuration
-GITHUB_REPO="mbylstra/fllstck-tmplt"        # Your repository
+GITHUB_REPO="mbylstra/test-fullstack-template"        # Your repository
 GITHUB_USERNAME="mbylstra"                   # Your GitHub username
 
 # Droplet Configuration
@@ -188,11 +188,11 @@ DROPLET_HOST="flipper2.michaelbylstra.com"  # Your droplet (usually stays the sa
 
 # Digital Ocean DNS Configuration
 DO_DOMAIN="michaelbylstra.com"              # Your domain (usually stays the same)
-BACKEND_SUBDOMAIN="fllstck-tmplt-backend"   # Change this for your project
-FRONTEND_SUBDOMAIN="fllstck-tmplt-frontend" # Change this for your project
+BACKEND_SUBDOMAIN="test-fullstack-template-backend"   # Change this for your project
+FRONTEND_SUBDOMAIN="test-fullstack-template-frontend" # Change this for your project
 
 # Netlify Configuration
-NETLIFY_SITE_NAME="mb-fllstck-tmplt"        # Change this (use mb- prefix)
+NETLIFY_SITE_NAME="mb-test-fullstack-template"        # Change this (use mb- prefix)
 ```
 
 **Naming Convention:**

@@ -6,8 +6,8 @@ This document explains how the automated deployment script handles Netlify domai
 
 The script automates setting up a custom domain on Netlify with automatic SSL:
 
-- **Custom Domain**: `fllstck-tmplt-frontend.michaelbylstra.com`
-- **Netlify Site**: `mb-mb-fllstck-tmplt.netlify.app` (note the `mb-` prefix)
+- **Custom Domain**: `test-fullstack-template-frontend.michaelbylstra.com`
+- **Netlify Site**: `mb-mb-test-fullstack-template.netlify.app` (note the `mb-` prefix)
 - **SSL**: Automatically provisioned by Netlify (Let's Encrypt)
 - **DNS**: Managed via Digital Ocean
 - **Initial TTL**: 60 seconds (for quick testing)
@@ -20,7 +20,7 @@ The script automates setting up a custom domain on Netlify with automatic SSL:
 The script follows the `mb-` prefix convention to avoid naming conflicts:
 
 - **Pattern**: `mb-{project-name}`
-- **Example**: `mb-fllstck-tmplt` becomes `mb-mb-fllstck-tmplt.netlify.app`
+- **Example**: `mb-test-fullstack-template` becomes `mb-mb-test-fullstack-template.netlify.app`
 - **Why**: Prevents conflicts with other projects that might have similar names
 
 This matches your existing setup (e.g., `mb-tododoo.netlify.app` for the todo app).
@@ -59,7 +59,7 @@ The script uses a **two-phase TTL approach**:
 The script creates a CNAME record in Digital Ocean DNS:
 
 ```
-fllstck-tmplt-frontend.michaelbylstra.com → mb-mb-fllstck-tmplt.netlify.app
+test-fullstack-template-frontend.michaelbylstra.com → mb-mb-test-fullstack-template.netlify.app
 ```
 
 **Why CNAME instead of A record?**
@@ -95,7 +95,7 @@ You have two options for creating your Netlify site:
 The script can create the Netlify site for you automatically! When it detects the site doesn't exist, it will:
 
 1. Prompt if you want to create it
-2. Create a new site with name `mb-fllstck-tmplt`
+2. Create a new site with name `mb-test-fullstack-template`
 3. Link it to your GitHub repository for auto-deploys
 4. Deploy your frontend code
 5. Configure custom domain and SSL
@@ -108,7 +108,7 @@ The script can create the Netlify site for you automatically! When it detects th
 **What happens:**
 ```bash
 # The script will run these commands for you:
-netlify sites:create --name mb-fllstck-tmplt
+netlify sites:create --name mb-test-fullstack-template
 netlify link --id <site_id>
 netlify deploy --prod --dir=dist
 netlify api createSiteDomain --data '{"site_id": "...", "domain": "..."}'
@@ -148,7 +148,7 @@ The script needs to know your Netlify site name. Update in the script:
 
 ```bash
 # In setup-automated-deployment.sh
-NETLIFY_SITE_NAME="mb-fllstck-tmplt"  # Your site name from *.netlify.app (with mb- prefix)
+NETLIFY_SITE_NAME="mb-test-fullstack-template"  # Your site name from *.netlify.app (with mb- prefix)
 ```
 
 **How to find your site name:**
@@ -156,7 +156,7 @@ NETLIFY_SITE_NAME="mb-fllstck-tmplt"  # Your site name from *.netlify.app (with 
 1. Go to https://app.netlify.com
 2. Click on your site
 3. Look at the URL or the site name under "Site overview"
-4. Example: If your site is `mb-fllstck-tmplt.netlify.app`, the site name is `mb-fllstck-tmplt`
+4. Example: If your site is `mb-test-fullstack-template.netlify.app`, the site name is `mb-test-fullstack-template`
 
 **Note**: Use the `mb-` prefix to avoid naming conflicts, matching the existing convention (e.g., `mb-tododoo`).
 
@@ -168,19 +168,19 @@ The script performs these actions:
 
 ```bash
 # 1. Verify site exists
-netlify api getSite --data '{"site_id": "fllstck-tmplt"}'
+netlify api getSite --data '{"site_id": "test-fullstack-template"}'
 
 # 2. Add custom domain to Netlify
 netlify api createSiteDomain --data '{
-  "site_id": "fllstck-tmplt",
-  "domain": "fllstck-tmplt-frontend.michaelbylstra.com"
+  "site_id": "test-fullstack-template",
+  "domain": "test-fullstack-template-frontend.michaelbylstra.com"
 }'
 
 # 3. Create CNAME record in Digital Ocean DNS
 doctl compute domain records create michaelbylstra.com \
   --record-type CNAME \
-  --record-name fllstck-tmplt-frontend \
-  --record-data mb-fllstck-tmplt.netlify.app. \
+  --record-name test-fullstack-template-frontend \
+  --record-data mb-test-fullstack-template.netlify.app. \
   --record-ttl 3600
 
 # 4. Netlify automatically provisions SSL (no manual step needed)
@@ -193,8 +193,8 @@ After the script runs, verify the setup:
 ### 1. Check DNS Propagation
 
 ```bash
-# Should return: mb-fllstck-tmplt.netlify.app
-dig +short fllstck-tmplt-frontend.michaelbylstra.com CNAME
+# Should return: mb-test-fullstack-template.netlify.app
+dig +short test-fullstack-template-frontend.michaelbylstra.com CNAME
 
 # Or use online tool
 # https://dnschecker.org
@@ -203,15 +203,15 @@ dig +short fllstck-tmplt-frontend.michaelbylstra.com CNAME
 ### 2. Check Netlify Domain Status
 
 Visit your Netlify dashboard:
-- Go to: https://app.netlify.com/sites/fllstck-tmplt/settings/domain
-- You should see `fllstck-tmplt-frontend.michaelbylstra.com` listed
+- Go to: https://app.netlify.com/sites/test-fullstack-template/settings/domain
+- You should see `test-fullstack-template-frontend.michaelbylstra.com` listed
 - SSL status should show "HTTPS enabled" (may take a few minutes)
 
 ### 3. Test the Site
 
 ```bash
 # Should redirect to HTTPS and show your site
-curl -I https://fllstck-tmplt-frontend.michaelbylstra.com
+curl -I https://test-fullstack-template-frontend.michaelbylstra.com
 
 # Should see:
 # HTTP/2 200
@@ -224,14 +224,14 @@ If the automated setup doesn't work, you can configure manually:
 
 ### Option 1: Via Netlify Dashboard (Easiest)
 
-1. Go to https://app.netlify.com/sites/fllstck-tmplt
+1. Go to https://app.netlify.com/sites/test-fullstack-template
 2. Navigate to **Domain management** → **Domains**
 3. Click **Add custom domain**
-4. Enter: `fllstck-tmplt-frontend.michaelbylstra.com`
+4. Enter: `test-fullstack-template-frontend.michaelbylstra.com`
 5. Netlify shows DNS instructions:
    - **Type**: CNAME
-   - **Name**: `fllstck-tmplt-frontend`
-   - **Value**: `mb-fllstck-tmplt.netlify.app`
+   - **Name**: `test-fullstack-template-frontend`
+   - **Value**: `mb-test-fullstack-template.netlify.app`
 6. Add CNAME to Digital Ocean DNS
 7. Wait for SSL provisioning (automatic)
 
@@ -239,13 +239,13 @@ If the automated setup doesn't work, you can configure manually:
 
 ```bash
 # Add domain to Netlify
-netlify domains:add fllstck-tmplt-frontend.michaelbylstra.com --site fllstck-tmplt
+netlify domains:add test-fullstack-template-frontend.michaelbylstra.com --site test-fullstack-template
 
 # Add CNAME in Digital Ocean
 doctl compute domain records create michaelbylstra.com \
   --record-type CNAME \
-  --record-name fllstck-tmplt-frontend \
-  --record-data mb-fllstck-tmplt.netlify.app. \
+  --record-name test-fullstack-template-frontend \
+  --record-data mb-test-fullstack-template.netlify.app. \
   --record-ttl 3600
 ```
 
@@ -292,8 +292,8 @@ Netlify handles everything automatically.
 
 1. **Check DNS is correct:**
    ```bash
-   dig fllstck-tmplt-frontend.michaelbylstra.com CNAME
-   # Should return: mb-fllstck-tmplt.netlify.app
+   dig test-fullstack-template-frontend.michaelbylstra.com CNAME
+   # Should return: mb-test-fullstack-template.netlify.app
    ```
 
 2. **Wait for DNS propagation:**
@@ -306,7 +306,7 @@ Netlify handles everything automatically.
 
 4. **Force certificate renewal:**
    ```bash
-   netlify api provisionSiteTLSCertificate --data '{"site_id": "fllstck-tmplt"}'
+   netlify api provisionSiteTLSCertificate --data '{"site_id": "test-fullstack-template"}'
    ```
 
 5. **Contact Netlify Support:**
@@ -321,12 +321,12 @@ Netlify handles everything automatically.
 
 1. **Verify CNAME exists:**
    ```bash
-   doctl compute domain records list michaelbylstra.com | grep fllstck-tmplt-frontend
+   doctl compute domain records list michaelbylstra.com | grep test-fullstack-template-frontend
    ```
 
 2. **Check CNAME target has trailing dot:**
-   - Incorrect: `mb-fllstck-tmplt.netlify.app`
-   - Correct: `mb-fllstck-tmplt.netlify.app.`
+   - Incorrect: `mb-test-fullstack-template.netlify.app`
+   - Correct: `mb-test-fullstack-template.netlify.app.`
    - The trailing dot matters for some DNS providers
 
 3. **Wait longer:**
@@ -349,7 +349,7 @@ Netlify handles everything automatically.
 
 2. **Force HTTPS in your code:**
    ```javascript
-   const apiUrl = 'https://fllstck-tmplt-backend.michaelbylstra.com';
+   const apiUrl = 'https://test-fullstack-template-backend.michaelbylstra.com';
    ```
 
 3. **Check environment variables:**
@@ -399,7 +399,7 @@ If you want, you can use Netlify's DNS instead:
 
 ### How to Switch:
 
-1. Go to: https://app.netlify.com/sites/fllstck-tmplt/settings/domain
+1. Go to: https://app.netlify.com/sites/test-fullstack-template/settings/domain
 2. Click "Set up Netlify DNS"
 3. Netlify provides nameservers
 4. Update nameservers at your domain registrar

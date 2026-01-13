@@ -16,7 +16,7 @@
       ],
       "cwd": "${workspaceFolder}/backend",
       "env": {
-        "DATABASE_URL": "postgresql://fllstck-tmplt:fllstck-tmplt@localhost:5432/fllstck-tmplt",
+        "DATABASE_URL": "postgresql://test-fullstack-template:test-fullstack-template@localhost:5432/test-fullstack-template",
         "SECRET_KEY": "dev-secret-key-change-in-production"
       },
       "justMyCode": false,
@@ -29,7 +29,7 @@
       "program": "${file}",
       "cwd": "${workspaceFolder}/backend",
       "env": {
-        "DATABASE_URL": "postgresql://fllstck-tmplt:fllstck-tmplt@localhost:5432/fllstck-tmplt",
+        "DATABASE_URL": "postgresql://test-fullstack-template:test-fullstack-template@localhost:5432/test-fullstack-template",
         "SECRET_KEY": "dev-secret-key-change-in-production"
       },
       "justMyCode": false,
@@ -43,7 +43,7 @@
       "args": ["${file}", "-v"],
       "cwd": "${workspaceFolder}/backend",
       "env": {
-        "DATABASE_URL": "postgresql://fllstck-tmplt:fllstck-tmplt@localhost:5432/fllstck-tmplt",
+        "DATABASE_URL": "postgresql://test-fullstack-template:test-fullstack-template@localhost:5432/test-fullstack-template",
         "SECRET_KEY": "dev-secret-key-change-in-production"
       },
       "justMyCode": false,

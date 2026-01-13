@@ -38,9 +38,9 @@ fi
 if [ -f "${BACKEND_DIR}/.env.local" ]; then
     source "${BACKEND_DIR}/.env.local"
 fi
-LOCAL_DB_USER="${DB_USER:-fllstck-tmplt-user}"
-LOCAL_DB_PASSWORD="${DB_PASSWORD:-fllstck-tmplt-pass}"
-LOCAL_DB_NAME="${DB_NAME:-fllstck-tmplt}"
+LOCAL_DB_USER="${DB_USER:-test-fullstack-template-user}"
+LOCAL_DB_PASSWORD="${DB_PASSWORD:-test-fullstack-template-pass}"
+LOCAL_DB_NAME="${DB_NAME:-test-fullstack-template}"
 LOCAL_DB_HOST="${DB_HOST:-localhost}"
 LOCAL_DB_PORT="${DB_PORT:-5432}"
 
@@ -50,7 +50,7 @@ LOCAL_MAIN_USER_PASSWORD="${LOCAL_MAIN_USER_PASSWORD:-}"
 
 # Production server configuration
 PROD_SERVER="${PROD_SERVER:-}"
-PROD_DIR="${PROD_DIR:-~/fllstck-tmplt/backend}"
+PROD_DIR="${PROD_DIR:-~/test-fullstack-template/backend}"
 PROD_COMPOSE_FILE="docker-compose.prod.yml"
 
 # ============================================================================
@@ -87,7 +87,7 @@ check_prerequisites() {
     print_success "Docker is available"
 
     # Check if local database is running
-    if ! docker ps | grep -q fllstck-tmplt-postgres; then
+    if ! docker ps | grep -q test-fullstack-template-postgres; then
         print_error "Local database container is not running"
         echo "Please start it with: make db-up"
         exit 1
@@ -226,7 +226,7 @@ verify_local() {
 
     echo -e "${BLUE}Checking database connection...${NC}"
     cd "$BACKEND_DIR"
-    if docker compose exec -T postgres psql -U "$LOCAL_DB_USER" -d "$LOCAL_DB_NAME" -c "SELECT COUNT(*) FROM fllstck-tmplt-s;" > /dev/null 2>&1; then
+    if docker compose exec -T postgres psql -U "$LOCAL_DB_USER" -d "$LOCAL_DB_NAME" -c "SELECT COUNT(*) FROM test-fullstack-template-s;" > /dev/null 2>&1; then
         print_success "Local database is accessible"
     else
         print_warning "Could not verify local database"

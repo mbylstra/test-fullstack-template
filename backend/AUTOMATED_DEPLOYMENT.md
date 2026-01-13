@@ -82,8 +82,8 @@ ssh root@<your-droplet-ip>
 
 ```bash
 cd ~
-git clone https://github.com/mbylstra/fllstck-tmplt.git
-cd fllstck-tmplt/backend
+git clone https://github.com/mbylstra/test-fullstack-template.git
+cd test-fullstack-template/backend
 ```
 
 #### 2.3 Create Environment File
@@ -97,9 +97,9 @@ Update with production values:
 
 ```env
 # Database Configuration
-DB_USER=fllstck-tmplt-user
+DB_USER=test-fullstack-template-user
 DB_PASSWORD=<strong-password>
-DB_NAME=fllstck-tmplt
+DB_NAME=test-fullstack-template
 DB_HOST=postgres
 DB_PORT=5432
 
@@ -108,8 +108,8 @@ SECRET_KEY=<generate-with-command-below>
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 # Production Deployment (Traefik)
-API_DOMAIN=fllstck-tmplt-backend.michaelbylstra.com
-CORS_ORIGINS=https://fllstck-tmplt-frontend.michaelbylstra.com,https://fllstck-tmplt.netlify.app
+API_DOMAIN=test-fullstack-template-backend.michaelbylstra.com
+CORS_ORIGINS=https://test-fullstack-template-frontend.michaelbylstra.com,https://test-fullstack-template.netlify.app
 ```
 
 **Generate SECRET_KEY:**
@@ -135,7 +135,7 @@ echo "YOUR_GITHUB_PAT" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password
 #### 2.5 Run Initial Deployment
 
 ```bash
-cd ~/fllstck-tmplt/backend
+cd ~/test-fullstack-template/backend
 ./deploy.sh
 ```
 
@@ -155,7 +155,7 @@ docker ps
 docker compose -f docker-compose.prod.yml logs -f
 
 # Test the API
-curl https://fllstck-tmplt-backend.michaelbylstra.com/health
+curl https://test-fullstack-template-backend.michaelbylstra.com/health
 ```
 
 Expected response:
@@ -200,7 +200,7 @@ GitHub Actions will automatically:
 ssh root@<your-droplet-ip>
 
 # View backend logs
-cd ~/fllstck-tmplt/backend
+cd ~/test-fullstack-template/backend
 docker compose -f docker-compose.prod.yml logs -f backend
 
 # View all logs
@@ -216,7 +216,7 @@ If you need to deploy manually without pushing to GitHub:
 ssh root@<your-droplet-ip>
 
 # Navigate to backend directory
-cd ~/fllstck-tmplt/backend
+cd ~/test-fullstack-template/backend
 
 # Run deployment script
 ./deploy.sh
@@ -255,7 +255,7 @@ The deployment uses the automatic `GITHUB_TOKEN` which should have permissions. 
 ```bash
 # SSH into droplet
 ssh root@<your-droplet-ip>
-cd ~/fllstck-tmplt/backend
+cd ~/test-fullstack-template/backend
 
 # Check migration status
 docker compose -f docker-compose.prod.yml exec backend uv run alembic current
@@ -274,7 +274,7 @@ docker compose -f docker-compose.prod.yml exec backend uv run alembic upgrade he
 **Solution:**
 
 1. Check GitHub Actions completed successfully
-2. Verify image exists at: https://github.com/mbylstra/fllstck-tmplt/pkgs/container/fllstck-tmplt%2Fbackend
+2. Verify image exists at: https://github.com/mbylstra/test-fullstack-template/pkgs/container/test-fullstack-template%2Fbackend
 3. Ensure image is public or droplet has GHCR authentication
 
 To make GHCR package public:
@@ -353,15 +353,15 @@ If a deployment breaks production:
 ```bash
 # SSH into droplet
 ssh root@<your-droplet-ip>
-cd ~/fllstck-tmplt/backend
+cd ~/test-fullstack-template/backend
 
 # Pull a specific version (use git SHA from previous working deployment)
-docker pull ghcr.io/mbylstra/fllstck-tmplt/backend:sha-abc123
+docker pull ghcr.io/mbylstra/test-fullstack-template/backend:sha-abc123
 
 # Update docker-compose to use specific tag
 nano docker-compose.prod.yml
-# Change: ghcr.io/mbylstra/fllstck-tmplt/backend:latest
-# To: ghcr.io/mbylstra/fllstck-tmplt/backend:sha-abc123
+# Change: ghcr.io/mbylstra/test-fullstack-template/backend:latest
+# To: ghcr.io/mbylstra/test-fullstack-template/backend:sha-abc123
 
 # Restart
 docker compose -f docker-compose.prod.yml up -d

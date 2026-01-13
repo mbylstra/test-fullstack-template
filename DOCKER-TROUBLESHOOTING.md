@@ -85,10 +85,10 @@ Docker Compose caches container IDs based on the project name (derived from the 
 This is already fixed in the Makefile by using explicit project names:
 
 ```bash
-docker compose -p fllstck-tmplt -f docker-compose.dev.yml up -d --wait
+docker compose -p test-fullstack-template -f docker-compose.dev.yml up -d --wait
 ```
 
-The `-p fllstck-tmplt` flag ensures consistent project naming and prevents cache corruption.
+The `-p test-fullstack-template` flag ensures consistent project naming and prevents cache corruption.
 
 ### Solution 2: Clean Up Corrupted State
 
@@ -111,4 +111,4 @@ If you encounter a phantom container error:
 
 ### Prevention
 
-Always use explicit project names in `docker compose` commands to avoid this issue. The Makefile in this project has been updated to use `-p fllstck-tmplt` for all Docker Compose commands.
+Always use explicit project names in `docker compose` commands to avoid this issue. The Makefile in this project has been updated to use `-p test-fullstack-template` for all Docker Compose commands.

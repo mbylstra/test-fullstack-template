@@ -3,7 +3,7 @@
   publish = "dist"
 
 [build.environment]
-  VITE_API_URL = "https://fllstck-tmplt-backend.michaelbylstra.com"
+  VITE_API_URL = "https://test-fullstack-template-backend.michaelbylstra.com"
 
 [[redirects]]
   from = "/*"

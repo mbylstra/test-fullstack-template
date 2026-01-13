@@ -1,6 +1,6 @@
 {
-  "name": "fllstck_tmplt",
-  "short_name": "fllstck_tmplt",
+  "name": "test_fullstack_template",
+  "short_name": "test_fullstack_template",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",

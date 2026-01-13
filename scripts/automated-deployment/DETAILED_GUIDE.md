@@ -78,15 +78,15 @@ netlify status
 
 The script sets up your custom domain on Netlify using Digital Ocean DNS:
 
-1. **Adds custom domain to Netlify**: Configures `fllstck-tmplt-frontend.michaelbylstra.com` on your Netlify site
-2. **Creates CNAME record**: Points your subdomain to `fllstck-tmplt.netlify.app` in Digital Ocean DNS
+1. **Adds custom domain to Netlify**: Configures `test-fullstack-template-frontend.michaelbylstra.com` on your Netlify site
+2. **Creates CNAME record**: Points your subdomain to `test-fullstack-template.netlify.app` in Digital Ocean DNS
 3. **Automatic SSL**: Netlify automatically provisions a Let's Encrypt SSL certificate (takes 1-5 minutes)
 4. **No manual work**: Everything is configured automatically via APIs
 
 **DNS Flow:**
 ```
-fllstck-tmplt-frontend.michaelbylstra.com (your domain)
-  → CNAME → fllstck-tmplt.netlify.app (Netlify's domain)
+test-fullstack-template-frontend.michaelbylstra.com (your domain)
+  → CNAME → test-fullstack-template.netlify.app (Netlify's domain)
   → Netlify CDN → Your site with SSL
 ```
 
@@ -121,16 +121,16 @@ DROPLET_USER="root"                          # SSH user
 DROPLET_SSH_PORT="22"                        # SSH port
 
 # GitHub Configuration
-GITHUB_REPO="mbylstra/fllstck-tmplt"        # Your repository
+GITHUB_REPO="mbylstra/test-fullstack-template"        # Your repository
 GITHUB_USERNAME="mbylstra"                   # Your GitHub username
 
 # Digital Ocean DNS Configuration
 DO_DOMAIN="michaelbylstra.com"              # Your domain
-BACKEND_SUBDOMAIN="fllstck-tmplt-backend"   # Backend subdomain
-FRONTEND_SUBDOMAIN="fllstck-tmplt-frontend" # Frontend subdomain
+BACKEND_SUBDOMAIN="test-fullstack-template-backend"   # Backend subdomain
+FRONTEND_SUBDOMAIN="test-fullstack-template-frontend" # Frontend subdomain
 
 # Netlify Configuration
-NETLIFY_SITE_NAME="mb-fllstck-tmplt"        # Your Netlify site name with mb- prefix (from *.netlify.app)
+NETLIFY_SITE_NAME="mb-test-fullstack-template"        # Your Netlify site name with mb- prefix (from *.netlify.app)
 NETLIFY_CUSTOM_DOMAIN="${FRONTEND_SUBDOMAIN}.${DO_DOMAIN}"  # Custom domain
 
 # DNS TTL Configuration
@@ -138,7 +138,7 @@ DNS_TTL_INITIAL=60                           # Low TTL for initial testing (60 s
 DNS_TTL_PRODUCTION=3600                      # Higher TTL for production (1 hour)
 
 # Project Configuration
-PROJECT_NAME="fllstck-tmplt"                # Project name
+PROJECT_NAME="test-fullstack-template"                # Project name
 ```
 
 ### Usage
@@ -195,7 +195,7 @@ The script uses a **low TTL initially** for quick testing and iteration:
 The script uses the `mb-` prefix for Netlify site names:
 
 - **Pattern**: `mb-{project-name}.netlify.app`
-- **Example**: `mb-fllstck-tmplt.netlify.app`
+- **Example**: `mb-test-fullstack-template.netlify.app`
 - **Purpose**: Avoid naming conflicts with other projects
 
 This matches your existing setup (e.g., `mb-tododoo.netlify.app`).
@@ -207,10 +207,10 @@ Once the script completes successfully:
 1. **Test Your Domains**: Verify both are working
    ```bash
    # Backend health check
-   curl https://fllstck-tmplt-backend.michaelbylstra.com/health
+   curl https://test-fullstack-template-backend.michaelbylstra.com/health
 
    # Frontend (open in browser)
-   open https://fllstck-tmplt-frontend.michaelbylstra.com
+   open https://test-fullstack-template-frontend.michaelbylstra.com
    ```
 
 2. **Increase DNS TTL**: Once domains are working, improve performance
@@ -226,13 +226,13 @@ Once the script completes successfully:
    ```
 
 4. **Monitor Deployment**: Watch GitHub Actions
-   - Go to: https://github.com/mbylstra/fllstck-tmplt/actions
+   - Go to: https://github.com/mbylstra/test-fullstack-template/actions
    - Watch the build-and-push and deploy jobs
 
 5. **View Logs**: SSH into your droplet
    ```bash
    ssh root@flipper2.michaelbylstra.com
-   cd ~/projects/fllstck-tmplt/backend
+   cd ~/projects/test-fullstack-template/backend
    docker compose -f docker-compose.prod.yml logs -f
    ```
 
@@ -279,12 +279,12 @@ SSL certificates usually provision in 1-5 minutes. If it takes longer:
 
 1. **Verify DNS is correct:**
    ```bash
-   dig fllstck-tmplt-frontend.michaelbylstra.com
+   dig test-fullstack-template-frontend.michaelbylstra.com
    # Should show CNAME pointing to *.netlify.app
    ```
 
 2. **Check Netlify domain status:**
-   - Go to: https://app.netlify.com/sites/fllstck-tmplt/settings/domain
+   - Go to: https://app.netlify.com/sites/test-fullstack-template/settings/domain
    - Look for any error messages or warnings
 
 3. **Common issues:**
@@ -294,7 +294,7 @@ SSL certificates usually provision in 1-5 minutes. If it takes longer:
 
 4. **Force certificate renewal:**
    ```bash
-   netlify api provisionSiteTLSCertificate --data '{"site_id": "fllstck-tmplt"}'
+   netlify api provisionSiteTLSCertificate --data '{"site_id": "test-fullstack-template"}'
    ```
 
 #### "Cannot connect to droplet via SSH"
@@ -312,7 +312,7 @@ If you can't connect, check:
 Manually copy the public key:
 ```bash
 # On your local machine, copy the public key
-cat ~/.ssh/github_actions_deploy_fllstck-tmplt.pub
+cat ~/.ssh/github_actions_deploy_test-fullstack-template.pub
 
 # SSH into the droplet
 ssh root@flipper2.michaelbylstra.com
@@ -328,10 +328,10 @@ If you don't have Netlify CLI or it fails, you can set up the custom domain manu
 
 #### Option 1: Via Netlify Dashboard (Recommended)
 
-1. Go to your Netlify site: https://app.netlify.com/sites/fllstck-tmplt
+1. Go to your Netlify site: https://app.netlify.com/sites/test-fullstack-template
 2. Navigate to **Domain management** → **Domains**
 3. Click **Add custom domain**
-4. Enter: `fllstck-tmplt-frontend.michaelbylstra.com`
+4. Enter: `test-fullstack-template-frontend.michaelbylstra.com`
 5. Netlify will show you DNS instructions
 6. Add the CNAME record to Digital Ocean DNS (see below)
 
@@ -341,19 +341,19 @@ If you don't have Netlify CLI or it fails, you can set up the custom domain manu
    - Go to: https://cloud.digitalocean.com/networking/domains
    - Select domain: `michaelbylstra.com`
    - Add CNAME record:
-     - **Hostname**: `fllstck-tmplt-frontend`
-     - **Is an alias of**: `fllstck-tmplt.netlify.app.` (note the trailing dot)
+     - **Hostname**: `test-fullstack-template-frontend`
+     - **Is an alias of**: `test-fullstack-template.netlify.app.` (note the trailing dot)
      - **TTL**: 3600 seconds
 
 2. **Configure in Netlify:**
-   - Go to: https://app.netlify.com/sites/fllstck-tmplt/settings/domain
+   - Go to: https://app.netlify.com/sites/test-fullstack-template/settings/domain
    - Click **Add custom domain**
-   - Enter: `fllstck-tmplt-frontend.michaelbylstra.com`
+   - Enter: `test-fullstack-template-frontend.michaelbylstra.com`
    - Netlify will verify DNS and provision SSL automatically
 
 3. **Wait for SSL:**
    - SSL certificate provisioning takes 1-5 minutes
-   - Check status at: https://app.netlify.com/sites/fllstck-tmplt/settings/domain
+   - Check status at: https://app.netlify.com/sites/test-fullstack-template/settings/domain
 
 ### Manual Steps if DNS Automation is Skipped
 
@@ -362,7 +362,7 @@ If you don't have `doctl` installed, you'll need to manually create DNS records:
 1. Go to Digital Ocean control panel: https://cloud.digitalocean.com/networking/domains
 2. Select your domain: `michaelbylstra.com`
 3. Add an A record:
-   - **Hostname**: `fllstck-tmplt-backend`
+   - **Hostname**: `test-fullstack-template-backend`
    - **Will Direct To**: Get IP of `flipper2.michaelbylstra.com` (run `dig +short flipper2.michaelbylstra.com`)
    - **TTL**: 3600 seconds
 

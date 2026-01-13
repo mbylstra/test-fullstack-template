@@ -1,6 +1,6 @@
 # Docker Setup Guide
 
-This guide covers running the Fllstck Tmplt backend with Docker.
+This guide covers running the Test Fullstack Template backend with Docker.
 
 ## Overview
 
@@ -60,7 +60,7 @@ make db-shell
 Or from outside Docker:
 
 ```bash
-psql -h localhost -U fllstck-tmplt-user -d fllstck-tmplt
+psql -h localhost -U test-fullstack-template-user -d test-fullstack-template
 ```
 
 ## Production Deployment
@@ -71,9 +71,9 @@ psql -h localhost -U fllstck-tmplt-user -d fllstck-tmplt
    Create a `.env` file with production values:
 
     ```bash
-    DB_USER=fllstck-tmplt-user
+    DB_USER=test-fullstack-template-user
     DB_PASSWORD=<strong-password>
-    DB_NAME=fllstck-tmplt
+    DB_NAME=test-fullstack-template
     SECRET_KEY=<strong-secret-key>
     ACCESS_TOKEN_EXPIRE_MINUTES=30
     ```

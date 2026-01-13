@@ -294,8 +294,8 @@ cd ..
 ./scripts/setup-automated-deployment.sh
 
 # 5. Test domains
-curl https://fllstck-tmplt-backend.michaelbylstra.com/health
-open https://fllstck-tmplt-frontend.michaelbylstra.com
+curl https://test-fullstack-template-backend.michaelbylstra.com/health
+open https://test-fullstack-template-frontend.michaelbylstra.com
 
 # 6. Increase TTL
 ./scripts/increase-dns-ttl.sh

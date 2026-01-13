@@ -38,15 +38,15 @@ fi
 if [ -f "${BACKEND_DIR}/.env.local" ]; then
     source "${BACKEND_DIR}/.env.local"
 fi
-LOCAL_DB_USER="${DB_USER:-fllstck-tmplt-user}"
-LOCAL_DB_PASSWORD="${DB_PASSWORD:-fllstck-tmplt-pass}"
-LOCAL_DB_NAME="${DB_NAME:-fllstck-tmplt}"
+LOCAL_DB_USER="${DB_USER:-test-fullstack-template-user}"
+LOCAL_DB_PASSWORD="${DB_PASSWORD:-test-fullstack-template-pass}"
+LOCAL_DB_NAME="${DB_NAME:-test-fullstack-template}"
 LOCAL_DB_HOST="${DB_HOST:-localhost}"
 LOCAL_DB_PORT="${DB_PORT:-5432}"
 
 # Production server configuration
 PROD_SERVER="${PROD_SERVER:-}"
-PROD_DIR="${PROD_DIR:-~/fllstck-tmplt/backend}"
+PROD_DIR="${PROD_DIR:-~/test-fullstack-template/backend}"
 PROD_COMPOSE_FILE="docker-compose.prod.yml"
 
 # ============================================================================
@@ -83,7 +83,7 @@ check_prerequisites() {
     print_success "Docker is available"
 
     # Check if local database is running
-    if ! docker ps | grep -q fllstck-tmplt-postgres; then
+    if ! docker ps | grep -q test-fullstack-template-postgres; then
         print_error "Local database container is not running"
         echo "Please start it with: make db-up"
         exit 1
@@ -208,7 +208,7 @@ verify_production() {
     print_header "Verifying Production"
 
     echo -e "${BLUE}Testing production API health endpoint...${NC}"
-    if curl -sf https://fllstck-tmplt--backend.michaelbylstra.com/health > /dev/null; then
+    if curl -sf https://test-fullstack-template--backend.michaelbylstra.com/health > /dev/null; then
         print_success "Production API is responding"
     else
         print_warning "Could not verify production API health"

@@ -119,28 +119,28 @@ typecheck:
 
 # Database Commands
 db-up:
-	docker compose -p fllstck-tmplt -f docker-compose.dev.yml up -d
+	docker compose -p test-fullstack-template -f docker-compose.dev.yml up -d
 
 db-down:
-	docker compose -p fllstck-tmplt -f docker-compose.dev.yml down
+	docker compose -p test-fullstack-template -f docker-compose.dev.yml down
 
 db-logs:
-	docker compose -p fllstck-tmplt -f docker-compose.dev.yml logs -f postgres
+	docker compose -p test-fullstack-template -f docker-compose.dev.yml logs -f postgres
 
 db-reset:
-	docker compose -p fllstck-tmplt -f docker-compose.dev.yml down -v
+	docker compose -p test-fullstack-template -f docker-compose.dev.yml down -v
 
 db-shell:
-	docker compose -p fllstck-tmplt -f docker-compose.dev.yml exec postgres psql -U $${DB_USER:-fllstck-tmplt-user} -d $${DB_NAME:-fllstck-tmplt}
+	docker compose -p test-fullstack-template -f docker-compose.dev.yml exec postgres psql -U $${DB_USER:-test-fullstack-template-user} -d $${DB_NAME:-test-fullstack-template}
 
 db-dump:
 	@mkdir -p db-dumps
 	@TIMESTAMP=$$(date +%Y%m%d_%H%M%S); \
 	DUMP_FILE="db-dumps/local_dump_$${TIMESTAMP}.sql"; \
 	echo "Dumping local database to $${DUMP_FILE}..."; \
-	docker compose -p fllstck-tmplt -f docker-compose.dev.yml exec -T postgres pg_dump \
-		-U $${DB_USER:-fllstck-tmplt-user} \
-		-d $${DB_NAME:-fllstck-tmplt} \
+	docker compose -p test-fullstack-template -f docker-compose.dev.yml exec -T postgres pg_dump \
+		-U $${DB_USER:-test-fullstack-template-user} \
+		-d $${DB_NAME:-test-fullstack-template} \
 		--clean \
 		--if-exists \
 		--no-owner \

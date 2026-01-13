@@ -1,7 +1,7 @@
 [project]
-name = "fllstck-tmplt-backend"
+name = "test-fullstack-template-backend"
 version = "0.1.0"
-description = "FastAPI backend for Fllstck Tmplt application"
+description = "FastAPI backend for Test Fullstack Template application"
 requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.17.2",

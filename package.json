@@ -1,7 +1,7 @@
 {
-  "name": "fllstck-tmplt-api",
+  "name": "test-fullstack-template-api",
   "version": "1.0.0",
-  "description": "TypeSpec API specification for Fllstck Tmplt",
+  "description": "TypeSpec API specification for Test Fullstack Template",
   "main": "index.js",
   "keywords": [],
   "author": "",

@@ -36,11 +36,11 @@ DROPLET_USER="root"
 DROPLET_SSH_PORT="22"
 
 # GitHub Configuration
-GITHUB_REPO="mbylstra/fllstck-tmplt"
+GITHUB_REPO="mbylstra/test-fullstack-template"
 GITHUB_USERNAME="mbylstra"
 
 # Project Configuration
-PROJECT_NAME="fllstck-tmplt"
+PROJECT_NAME="test-fullstack-template"
 
 # Digital Ocean DNS Configuration
 DO_DOMAIN="michaelbylstra.com"
@@ -60,7 +60,7 @@ FRONTEND_DOMAIN="${FRONTEND_SUBDOMAIN}.${DO_DOMAIN}"
 CORS_ORIGINS="https://${FRONTEND_DOMAIN},https://${NETLIFY_SITE_NAME}.netlify.app"
 
 # Netlify Configuration
-NETLIFY_SITE_NAME="mb-${PROJECT_NAME}"  # Your Netlify site name with mb- prefix (e.g., mb-fllstck-tmplt.netlify.app)
+NETLIFY_SITE_NAME="mb-${PROJECT_NAME}"  # Your Netlify site name with mb- prefix (e.g., mb-test-fullstack-template.netlify.app)
 NETLIFY_CUSTOM_DOMAIN="${FRONTEND_SUBDOMAIN}.${DO_DOMAIN}"  # Custom domain
 NETLIFY_ACCESS_TOKEN=""  # Set via prompt during setup (get from https://app.netlify.com/user/access-tokens)
 NETLIFY_ACCOUNT_SLUG="mbylstra"  # Your Netlify team slug (find at https://app.netlify.com/teams/YOUR-TEAM/settings)

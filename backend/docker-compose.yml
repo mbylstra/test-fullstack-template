@@ -1,13 +1,13 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: fllstck-tmplt-postgres
+    container_name: test-fullstack-template-postgres
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: ${DB_USER:-fllstck-tmplt-user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-fllstck-tmplt-pass}
-      POSTGRES_DB: ${DB_NAME:-fllstck-tmplt}
+      POSTGRES_USER: ${DB_USER:-test-fullstack-template-user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-test-fullstack-template-pass}
+      POSTGRES_DB: ${DB_NAME:-test-fullstack-template}
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -16,25 +16,25 @@ services:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U ${DB_USER:-fllstck-tmplt-user} -d ${DB_NAME:-fllstck-tmplt}",
+          "pg_isready -U ${DB_USER:-test-fullstack-template-user} -d ${DB_NAME:-test-fullstack-template}",
         ]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - fllstck-tmplt-network
+      - test-fullstack-template-network
 
   backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: fllstck-tmplt-backend
+    container_name: test-fullstack-template-backend
     ports:
       - "8000:8000"
     environment:
-      DB_USER: ${DB_USER:-fllstck-tmplt-user}
-      DB_PASSWORD: ${DB_PASSWORD:-fllstck-tmplt-pass}
-      DB_NAME: ${DB_NAME:-fllstck-tmplt}
+      DB_USER: ${DB_USER:-test-fullstack-template-user}
+      DB_PASSWORD: ${DB_PASSWORD:-test-fullstack-template-pass}
+      DB_NAME: ${DB_NAME:-test-fullstack-template}
       DB_HOST: postgres
       DB_PORT: 5432
       SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-this-in-production}
@@ -46,7 +46,7 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - fllstck-tmplt-network
+      - test-fullstack-template-network
     restart: unless-stopped
 
 volumes:
@@ -54,5 +54,5 @@ volumes:
     driver: local
 
 networks:
-  fllstck-tmplt-network:
+  test-fullstack-template-network:
     driver: bridge

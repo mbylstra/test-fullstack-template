@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Fllstck Tmplt API
+  title: Test Fullstack Template API
   version: 0.0.0
 tags:
   - name: Authentication

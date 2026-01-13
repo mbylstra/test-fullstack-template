@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: fllstck-tmplt-postgres-prod
+    container_name: test-fullstack-template-postgres-prod
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -15,12 +15,12 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - fllstck-tmplt-network
+      - test-fullstack-template-network
     restart: always
 
   backend:
-    image: ghcr.io/mbylstra/fllstck-tmplt/backend:latest
-    container_name: fllstck-tmplt-backend-prod
+    image: ghcr.io/mbylstra/test-fullstack-template/backend:latest
+    container_name: test-fullstack-template-backend-prod
     pull_policy: always
     environment:
       DB_USER: ${DB_USER}
@@ -30,38 +30,38 @@ services:
       DB_PORT: 5432
       SECRET_KEY: ${SECRET_KEY}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
-      API_DOMAIN: ${API_DOMAIN:-fllstck-tmplt-backend.michaelbylstra.com}
-      CORS_ORIGINS: ${CORS_ORIGINS:-https://fllstck-tmplt.michaelbylstra.com}
+      API_DOMAIN: ${API_DOMAIN:-test-fullstack-template-backend.michaelbylstra.com}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://test-fullstack-template.michaelbylstra.com}
     depends_on:
       postgres:
         condition: service_healthy
     networks:
-      - fllstck-tmplt-network
+      - test-fullstack-template-network
       - traefik-network
     restart: always
     labels:
       # Enable Traefik
       - "traefik.enable=true"
       # Router configuration
-      - "traefik.http.routers.fllstck-tmplt-backend.rule=Host(`fllstck-tmplt-backend.michaelbylstra.com`)"
-      - "traefik.http.routers.fllstck-tmplt-backend.entrypoints=websecure"
-      - "traefik.http.routers.fllstck-tmplt-backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.test-fullstack-template-backend.rule=Host(`test-fullstack-template-backend.michaelbylstra.com`)"
+      - "traefik.http.routers.test-fullstack-template-backend.entrypoints=websecure"
+      - "traefik.http.routers.test-fullstack-template-backend.tls.certresolver=letsencrypt"
       # Service configuration
-      - "traefik.http.services.fllstck-tmplt-backend.loadbalancer.server.port=8000"
+      - "traefik.http.services.test-fullstack-template-backend.loadbalancer.server.port=8000"
       # Health check
-      - "traefik.http.services.fllstck-tmplt-backend.loadbalancer.healthcheck.path=/health"
-      - "traefik.http.services.fllstck-tmplt-backend.loadbalancer.healthcheck.interval=30s"
+      - "traefik.http.services.test-fullstack-template-backend.loadbalancer.healthcheck.path=/health"
+      - "traefik.http.services.test-fullstack-template-backend.loadbalancer.healthcheck.interval=30s"
       # Network (specify which network Traefik should use)
       - "traefik.docker.network=traefik-network"
 
 volumes:
   postgres_data:
-    name: fllstck-tmplt-postgres-data
+    name: test-fullstack-template-postgres-data
     driver: local
 
 networks:
-  fllstck-tmplt-network:
-    name: fllstck-tmplt-network
+  test-fullstack-template-network:
+    name: test-fullstack-template-network
     driver: bridge
   traefik-network:
     external: true

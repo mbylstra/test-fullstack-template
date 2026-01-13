@@ -3,10 +3,10 @@ import "@typespec/openapi3";
 
 using TypeSpec.Http;
 
-@service(#{ title: "Fllstck Tmplt API" })
+@service(#{ title: "Test Fullstack Template API" })
 @server("http://localhost:8000", "Development server")
 @useAuth(BearerAuth)
-namespace FllstckTmpltAPI;
+namespace TestFullstackTemplateAPI;
 
 @route("/api/auth")
 @tag("Authentication")
