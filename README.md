@@ -1,6 +1,6 @@
 # Fullstack Template
 
-## Follow these steps
+## Follow these steps to get started
 
 ### Initialize the project
 
@@ -57,3 +57,21 @@ make flutter-run
 cd scripts/automated-deployment
 ./setup-automated-deployment.sh
 ```
+
+## Maintenance
+
+To keep in sync with the latest version of the template, do either:
+
+(if there have only been minor changes, and unlikely to have many conflicts)
+
+```
+make rebase-from-latest-template
+```
+
+(if there have been major changes)
+
+```
+make merge-latest-template
+```
+
+This might be a little or a huge amount of work depending on how behind it is.
