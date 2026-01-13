@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help dev-all dev-debug test typecheck install customize-template rebase-from-latest-template merge-latest-template track-template-repo api-compile api-watch api-format api-generate
+.PHONY: help dev-all dev-debug test typecheck install customize-template rebase-from-latest-template merge-latest-template track-template-repo api-compile api-watch api-format api-generate start-server-services stop-server-services
 
 help:
 	@echo "Root Level Commands:"
@@ -23,6 +23,10 @@ help:
 	@echo "  make rebase-from-latest-template  - Rebase current branch on latest template changes"
 	@echo "  make merge-latest-template        - Merge latest template changes into current branch"
 	@echo "  make track-template-repo          - Set up git remote to track template repository"
+	@echo ""
+	@echo "Server Commands:"
+	@echo "  make start-server-services        - Start backend and database on server"
+	@echo "  make stop-server-services         - Stop backend and database on server (preserves data)"
 
 dev-all:
 	@echo "Starting all services..."
@@ -149,3 +153,9 @@ typecheck:
 	@cd backend && $(MAKE) typecheck
 	@echo ""
 	@echo "✓ All typecheck passed!"
+
+start-server-services:
+	./scripts/start-server-services.sh
+
+stop-server-services:
+	./scripts/stop-server-services.sh
